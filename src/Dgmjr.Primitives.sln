@@ -1,0 +1,13 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A5FEF63-81D0-41DB-9A5E-12C54E6FD627}
+	EndGlobalSection
+EndGlobal
