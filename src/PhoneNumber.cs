@@ -102,7 +102,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             Validation.Ok :
             Validation.Invalid("Phone number is not valid.");
 #endif
-    public static PhoneNumber Parse(string value) =>  From(value);
+    public static PhoneNumber Parse(string value) => From(value);
     public int CompareTo(object? obj) => obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
 
 #if !NET7_0_OR_GREATER

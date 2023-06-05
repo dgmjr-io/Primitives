@@ -4,7 +4,7 @@ public class Validation
 {
     public string ErrorMessage { get; }
 
-    public static readonly Validation Ok = new (string.Empty);
+    public static readonly Validation Ok = new(string.Empty);
 
     private Validation(string reason) => ErrorMessage = reason;
 
