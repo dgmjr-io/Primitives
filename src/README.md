@@ -27,8 +27,8 @@ categories:
 This package contains the following types:
 
 - [`EmailAddress`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/EmailAddress.cs)
-- [`ObjectId`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/ObjectId.cs)]
-- [`uri`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/uri.cs)]
-- [`PhoneNumber`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/PhoneNumber.cs)]
-- [`YesNo`/`YesNoEnum`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/YesNo.cs)]
-- [`YesNoIdc`/`YesNoIdcEnum`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/YesNoIdc.cs)]
+- [`ObjectId`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/ObjectId.cs)
+- [`uri`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/uri.cs)
+- [`PhoneNumber`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/PhoneNumber.cs)
+- [`YesNo`/`YesNoEnum`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/YesNo.cs)
+- [`YesNoIdc`/`YesNoIdcEnum`](https://github.com/justinwritescode/Types/tree/main/src/Primitives/src/YesNoIdc.cs)
