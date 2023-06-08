@@ -1,0 +1,45 @@
+<Project>
+    <ItemGroup>
+        <Using Include="System.Int24" Alias="i24"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('net6')) Or $(TargetFramework.Contains('net7'))">
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+    <ItemGroup Condition="!$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER'))">
+        <PackageReference Include="System.AppDomain" />
+        <PackageReference Include="System.Runtime.NetCoreApp" />
+    </ItemGroup>
+    <ItemGroup Condition="$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER'))">
+        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+        <PackageReference Include="System.Text.Json"/>
+        <PackageReference Include="Vogen" IncludeAssets="Analyzers; Build; Lib; Runtime; Compile" PrivateAssets="All"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
+        <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
+        <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
+        <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/>
+        <PackageReference Include="System.AppDomain" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Text.RegularExpressions.Usings"/>
+        <PackageReference Include="libphonenumber-csharp"/>
+        <PackageReference Include="System.Compat" IncludeAssets="Compile" ExcludeAssets="None" PrivateAssets="All"/>
+        <PackageReference Include="System.ComponentModel.Usings"/>
+        <PackageReference Include="System.ComponentModel.Annotations"/>
+        <PackageReference Include="System.Text.RegularExpressions.Usings"/>
+        <PackageReference Include="System.Usings"/>
+        <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Using Include="System.Text.RegularExpressions"/>
+        <Using Include="System.Text.RegularExpressions.Regex" Alias="REx"/>
+        <Using Include="System.Text.RegularExpressions.Regex" Alias="Rx"/>
+        <Using Include="System.Text.RegularExpressions.Regex" Alias="RegX"/>
+        <Using Include="System.Text.RegularExpressions.Regex" Alias="Regx"/>
+        <Using Include="System.Text.RegularExpressions.Regex" Static="true"/>
+        <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true"/>
+        <Using Include="System.Text.RegularExpressions.RegexOptions" Alias="Rxo"/>
+        <Using Include="System.Console" Static="true"/>
+    </ItemGroup>
+</Project>
