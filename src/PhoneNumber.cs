@@ -91,7 +91,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static bool operator >=(PhoneNumber? a, PhoneNumber? b)
         => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) >= 0;
 
-    public virtual uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
+    public uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
 
 #if NET6_0_OR_GREATER
     public static Validation Validate(string s)
