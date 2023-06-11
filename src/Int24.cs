@@ -153,8 +153,8 @@ namespace System
 
             return result;
         }
-            
-        private const int Bits = 24;   
+
+        private const int Bits = 24;
         private const int SignBit = 1 << (Bits - 1);
         private const int MaxValueWithoutSignBit = SignBit - 1;
 
@@ -198,15 +198,15 @@ namespace System
             {
                 return CompareTo(i24);
             }
-            else if(obj is decimal d && d >= Int32MinValue && d <= Int32MaxValue)
+            else if (obj is decimal d && d >= Int32MinValue && d <= Int32MaxValue)
             {
                 return CompareTo(new Int24((int)d));
             }
-            else if(obj is int i32 && i32 >= Int32MinValue && i32 <= Int32MaxValue)
+            else if (obj is int i32 && i32 >= Int32MinValue && i32 <= Int32MaxValue)
             {
                 return CompareTo(new Int24(i32));
             }
-            else if(obj is uint ui32 && ui32 >= Int32MinValue && ui32 <= Int32MaxValue)
+            else if (obj is uint ui32 && ui32 >= Int32MinValue && ui32 <= Int32MaxValue)
             {
                 return CompareTo(new Int24(ui32));
             }
@@ -218,7 +218,7 @@ namespace System
             {
                 return CompareTo(new Int24((int)ui64));
             }
-            else if(obj is short s)
+            else if (obj is short s)
             {
                 return CompareTo(new Int24(s));
             }
@@ -226,7 +226,7 @@ namespace System
         }
 
 
-        public static  readonly Int24 MaxValue = new(MaxValue);
+        public static readonly Int24 MaxValue = new(MaxValue);
         public static readonly Int24 MinValue = new(MinValue);
         public static explicit operator Int24(sbyte value) => new Int24(value);
     }
