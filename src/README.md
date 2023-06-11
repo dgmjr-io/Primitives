@@ -1,4 +1,5 @@
 ---
+
 title: Primitives
 description: |-
   This package contains several &quot;primitive&quot; types that are used throughout the rest of the Types package.
@@ -14,13 +15,14 @@ license: MIT
 keywords:
   - primitives
   - types
+lastmod: 2023-01-11T11:35:59.938Z
 type: readme
 lastMod: 2023-03-19T03:27:38.342Z
 slug: primitives
 categories:
-  - documentation
-  - readme
----
+- documentation
+- readme
+--------
 
 # Primitives
 
