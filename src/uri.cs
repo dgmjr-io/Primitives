@@ -22,10 +22,13 @@ using Vogen;
 #endif
 [DebuggerDisplay("{ToString()}")]
 public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri>
+#if NET7_0_OR_GREATER
+, IUriConvertible<uri>
+#endif
 {
     public static string Description => "a uniform resource identifier (uri)";
     public static uri ExampleValue => "https://www.google.com/";
-    public const string RegexString = @"\w+:(\/?\/?)[^\s]+";
+    public const string RegexString = @"^(?<Scheme>[^:]+):(?<Address>(\/?\/?).+)&";
     public const string EmptyValue = "about:blank";
     public static uri Empty => From(EmptyValue);
     public bool IsEmpty => base.ToString() == EmptyValue;
@@ -49,6 +52,9 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
 #if NET70_OR_GREATER
     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
     public static partial REx Regex();
+
+    static uri IUriConvertible<uri>.FromUri(Uri uri) => From(uri.ToString());
+    static uri IUriConvertible<uri>.FromUri(string s) => From(s);
 #else
     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
 #endif

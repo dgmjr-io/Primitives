@@ -1,18 +1,18 @@
 <!--
  Domain.csproj
- 
+
    Created: 2022-10-16-06:30:42
    Modified: 2022-10-30-06:38:19
- 
+
    Author: David G. Mooore, Jr. <david@dgmjr.io>
-   
+
    Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
       License: MIT (https://opensource.org/licenses/MIT)
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard1.3;netstandard1.5;netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
         <!-- <TargetFramework>net7.0</TargetFramework> -->
         <LangVersion>preview</LangVersion>
         <AssemblyName>Dgmjr.Primitives</AssemblyName>
@@ -27,47 +27,10 @@
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
         <NoWarn>$(NoWarn);CA2252;</NoWarn>
-    </PropertyGroup>        
+    </PropertyGroup>
 
     <!-- <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Local|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>DEBUG;TRACE;LOCAL;NETSTANDARD;NETSTANDARD1_5;</DefineConstants>
   </PropertyGroup> -->
-    <ItemGroup Condition="$(TargetFramework.Contains('net6')) Or $(TargetFramework.Contains('net7'))">
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-    <ItemGroup Condition="$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER'))">
-        <PackageReference Include="Microsoft.EntityFrameworkCore" />
-        <PackageReference Include="System.Text.Json" />
-        <PackageReference Include="Vogen" IncludeAssets="Analyzers; Build; Lib; Runtime; Compile" PrivateAssets="All" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
-        <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All" />
-        <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All" />
-        <SourceGenerator  Include="Dgmjr.Enumerations.CodeGenerator" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="System.Text.RegularExpressions.Usings" />
-        <PackageReference Include="libphonenumber-csharp" />
-        <PackageReference Include="System.Compat" IncludeAssets="Compile" ExcludeAssets="None" PrivateAssets="All" />
-        <PackageReference Include="System.ComponentModel.Usings" />
-        <PackageReference Include="System.ComponentModel.Annotations" />
-        <PackageReference Include="System.Text.RegularExpressions.Usings" />
-        <PackageReference Include="System.Usings" />
-        <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None" />
-    </ItemGroup>
-    <ItemGroup>
-        <Using Include="System.Text.RegularExpressions" />
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="REx" />
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="Rx" />
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="RegX" />
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="Regx" />
-        <Using Include="System.Text.RegularExpressions.Regex" Static="true" />
-        <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true" />
-        <Using Include="System.Text.RegularExpressions.RegexOptions" Alias="Rxo" />
-        <Using Include="System.Console" Static="true" />
-    </ItemGroup>
-    <!-- <ItemGroup Condition="$(TargetFramework.Contains('netstandard2'))">
-    <Compile Include="$(PkgSystem_Compat)/**/*.cs" />
-  </ItemGroup> -->
 </Project>
