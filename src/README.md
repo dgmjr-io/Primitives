@@ -5,8 +5,8 @@ description: |-
 date: 2023-01-11T11:30:41.132Z
 tags:
   - DGMJR-IO
-  - readme
   - Dgmjr.Primitiives
+  - readme
 authors:
   - dgmjr
 author_email: david@dgmjr.io
