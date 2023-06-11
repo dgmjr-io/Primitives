@@ -29,7 +29,7 @@ This package contains the following types:
 - [`EmailAddress`](https://github.com/dgmjr-io/Primitives/blob/main/src/EmailAddress.cs)
 - [`Int24`](https://github.com/dgmjr-io/Primitives/blob/main/src/Int24.cs) - a 24-bit integer (*alias: i24*)
 - [`ObjectId`](https://github.com/dgmjr-io/Primitives/blob/main/src/ObjectId.cs)
-- [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs)
 - [`PhoneNumber`](https://github.com/dgmjr-io/Primitives/blob/main/src/PhoneNumber.cs)
+- [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs)
 - [`YesNo`/`YesNoEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/Primitives/src/YesNo.cs)
 - [`YesNoIdc`/`YesNoIdcEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/YesNoIdc.cs)
