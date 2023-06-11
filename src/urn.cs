@@ -44,8 +44,6 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
 #endif
     public static urn Parse(string urn) => From(urn);
 
-
-
 #if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<urn>.RegexString => RegexString;
     REx IStringWithRegexValueObject<urn>.Regex() => Regex();
