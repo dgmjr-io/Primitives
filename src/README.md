@@ -2,19 +2,19 @@
 
 title: Primitives
 description: |-
-  This package contains several &quot;primitive&quot; types that are used throughout the rest of the Types package.
+This package contains several &quot;primitive&quot; types that are used throughout the rest of the Types package.
 date: 2023-01-11T11:30:41.132Z
 tags:
-  - DGMJR-IO
-  - Dgmjr.Primitiives
-  - readme
+- DGMJR-IO
+- Dgmjr.Primitiives
+- readme
 authors:
-  - dgmjr
+- dgmjr
 author_email: david@dgmjr.io
 license: MIT
 keywords:
-  - primitives
-  - types
+- primitives
+- types
 lastmod: 2023-01-11T11:35:59.938Z
 type: readme
 lastMod: 2023-03-19T03:27:38.342Z
@@ -35,3 +35,4 @@ This package contains the following types:
 - [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs)
 - [`YesNo`/`YesNoEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/Primitives/src/YesNo.cs)
 - [`YesNoIdc`/`YesNoIdcEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/YesNoIdc.cs)
+
