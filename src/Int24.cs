@@ -7,9 +7,19 @@ namespace System
     [StructLayout(LayoutKind.Explicit, Size = 3)]
     public readonly struct Int24 : IEquatable<Int24>, IComparable<Int24>, IFormattable
 #if NE7_0_OR_GREATER
-, IAdditionOperators<Int24, Int24, Int24>, ISubtractionOperators<Int24, Int24, Int24>, IMultiplicationOperators<Int24, Int24, Int24>, IDivisionOperators<Int24, Int24, Int24>, IUnaryNegationOperators<Int24, Int24>, IBinaryIntegerOperators<Int24, Int24, Int24>, IComparisonOperators<Int24, Int24>, IMinMaxValue<Int24>, IIncrementOperators<Int24>, IDecrementOperators<Int24>
+    , IAdditionOperators<Int24, Int24, Int24>, ISubtractionOperators<Int24, Int24, Int24>, 
+    IMultiplicationOperators<Int24, Int24, Int24>, IDivisionOperators<Int24, Int24, Int24>, 
+    IUnaryNegationOperators<Int24, Int24>, IBinaryIntegerOperators<Int24, Int24, Int24>, 
+    IComparisonOperators<Int24, Int24>, IMinMaxValue<Int24>, IIncrementOperators<Int24>,
+    IDecrementOperators<Int24>
 #endif
     {
+        private const int BitOffset = 8;
+        private const string BitsSize = 24;
+        private const uint Zero = 0x00800000;
+        private const uint NegativeSignMask = 0xFF000000;
+        private const uint PositiveSignMask = 0x00FFFFFF;
+
         [FieldOffset(0)]
         private readonly byte _b0;
 
@@ -39,27 +49,27 @@ namespace System
         public Int24(short value)
         {
             _b0 = (byte)value;
-            _b1 = (byte)(value >> 8);
-            _b2 = (byte)(value >> 16);
+            _b1 = (byte)(value >> BitOffset);
+            _b2 = (byte)(value >> BitOffset * 2);
         }
 
         public Int24(int value)
         {
             _b0 = (byte)value;
-            _b1 = (byte)(value >> 8);
-            _b2 = (byte)(value >> 16);
+            _b1 = (byte)(value >> BitOffset);
+            _b2 = (byte)(value >> BitOffset * 2);
         }
 
         public Int24(uint value)
         {
-            if (value > (1 << 23) - 1)
+            if (value > (1 << BitsSize - 1) - 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), "Value too large for Int24");
             }
 
             _b0 = (byte)value;
-            _b1 = (byte)(value >> 8);
-            _b2 = (byte)(value >> 16);
+            _b1 = (byte)(value >> BitOffset);
+            _b2 = (byte)(value >> BitOffset * 2);
         }
 
         public Int24(ReadOnlySpan<byte> bytes)
@@ -106,15 +116,15 @@ namespace System
 
         public Int24 SignExtend()
         {
-            if ((Value & 0x00800000) != 0)
+            if ((Value & Zero) != 0)
             {
                 // Negative number: fill upper 8 bits with 1's
-                return new Int24((int)(Value | 0xFF000000));
+                return new Int24((int)(Value | NegativeSignMask));
             }
             else
             {
                 // Positive number: fill upper 8 bits with 0's
-                return new Int24((int)(Value & 0x00FFFFFF));
+                return new Int24((int)(Value & PositiveSignMask));
             }
         }
 
@@ -153,8 +163,8 @@ namespace System
 
             return result;
         }
-            
-        private const int Bits = 24;   
+
+        private const int Bits = 24;
         private const int SignBit = 1 << (Bits - 1);
         private const int MaxValueWithoutSignBit = SignBit - 1;
 
@@ -198,15 +208,15 @@ namespace System
             {
                 return CompareTo(i24);
             }
-            else if(obj is decimal d && d >= Int32MinValue && d <= Int32MaxValue)
+            else if (obj is decimal d && d >= Int32MinValue && d <= Int32MaxValue)
             {
                 return CompareTo(new Int24((int)d));
             }
-            else if(obj is int i32 && i32 >= Int32MinValue && i32 <= Int32MaxValue)
+            else if (obj is int i32 && i32 >= Int32MinValue && i32 <= Int32MaxValue)
             {
                 return CompareTo(new Int24(i32));
             }
-            else if(obj is uint ui32 && ui32 >= Int32MinValue && ui32 <= Int32MaxValue)
+            else if (obj is uint ui32 && ui32 >= Int32MinValue && ui32 <= Int32MaxValue)
             {
                 return CompareTo(new Int24(ui32));
             }
@@ -218,7 +228,7 @@ namespace System
             {
                 return CompareTo(new Int24((int)ui64));
             }
-            else if(obj is short s)
+            else if (obj is short s)
             {
                 return CompareTo(new Int24(s));
             }
@@ -226,7 +236,7 @@ namespace System
         }
 
 
-        public static  readonly Int24 MaxValue = new(MaxValue);
+        public static readonly Int24 MaxValue = new(MaxValue);
         public static readonly Int24 MinValue = new(MinValue);
         public static explicit operator Int24(sbyte value) => new Int24(value);
     }
