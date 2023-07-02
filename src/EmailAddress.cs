@@ -31,11 +31,11 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <summary>
     /// The example value string.
     /// </summary>
-    public const string ExampleValueString = "somewhere@overtherainbow.com";
+    public const string ExampleStringValue = "somewhere@overtherainbow.gay";
     /// <summary>
     /// The empty value string.
     /// </summary>
-    public const string EmptyValueString = "nobody@nowhere.com";
+    public const string EmptyStringValue = "example@example.example";
     /// <summary>
     /// The description.
     /// </summary>
@@ -48,26 +48,43 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
+    static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleStringValue);
     /// <summary>
     /// Gets the regex string.
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
 #else
-    REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
-    string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
-    string IStringWithRegexValueObject<EmailAddress>.Description => Description;
-    EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
+    /// <summary>
+    /// This code implements an interface for a regular expression that validates email addresses.
+    /// </summary>
+    readonly REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
+
+    /// <summary> 
+    /// This line of code is implementing an interface method
+    /// `IStringWithRegexValueObject<EmailAddress>.RegexString` which returns the regular expression string
+    /// used to validate an `EmailAddress` object. It is using the `RegexString` constant defined in the
+    /// `EmailAddress` struct. The `readonly` keyword indicates that the value of this property cannot be
+    /// changed once it is set.
+    /// </summary>
+    readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
+
+    readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
+
+    /// <summary>
+    /// This property returns an example value for an email address object that implements a specific
+    /// interface.
+    /// </summary>
+    readonly EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleStringValue);
 #endif
 
     /// <summary>
     /// Gets a value indicating whether is empty.
     /// </summary>
-    public bool IsEmpty => Value == Empty.Value;
+    public readonly bool IsEmpty => Value == Empty.Value;
     /// <summary>
     /// Gets the empty.
     /// </summary>
-    public static EmailAddress Empty => From(EmptyValueString);
+    public static EmailAddress Empty => From(EmptyStringValue);
 
     /// <summary>
     /// The regex string.
@@ -151,7 +168,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="formatProvider">The format provider.</param>
     /// <param name="email">The email.</param>
     /// <returns>A bool.</returns>
-    public static bool TryParse(string s, IFormatProvider? formatProvider, out EmailAddress email) => (email = TryParse(s, out var email1) ? email1!.Value : Empty) != Empty;
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out EmailAddress email) => (email = TryParse(s, out var email1) ? email1!.Value : Empty) != Empty;
     /// <summary>
     /// Try parse.
     /// </summary>
@@ -160,8 +177,16 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <returns>A bool.</returns>
     public static bool TryParse(string s, out EmailAddress? email)
     {
-        try { email = From(s); return true; }
-        catch { email = null; return false; }
+        try
+        {
+            email = From(s);
+            return true;
+        }
+        catch
+        {
+            email = null;
+            return false;
+        }
     }
 
 

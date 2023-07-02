@@ -21,24 +21,28 @@ using Vogen;
 [global::System.Text.Json.Serialization.JsonConverter(typeof(uri.JsonConverter))]
 #endif
 [DebuggerDisplay("{ToString()}")]
-public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri>
+public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegexValueObject<uri>
 #if NET7_0_OR_GREATER
-, IUriConvertible<uri>
+// , IUriConvertible<uri>
 #endif
 {
-    public static string Description => "a uniform resource identifier (uri)";
-    public static uri ExampleValue => "https://www.google.com/";
-    public const string RegexString = @"^(?<Scheme>[^:]+):(?<Address>(\/?\/?).+)&";
-    public const string EmptyValue = "about:blank";
-    public static uri Empty => From(EmptyValue);
-    public bool IsEmpty => base.ToString() == EmptyValue;
+    public const string Description = "a uniform resource identifier (uri)";
+    public const string ExampleStringValue = "tel:+2026701835";
+    public const string RegexString = @"^(?<Scheme>[^:]+):(?<Address>\w+)&";
+    public const string EmptyStringValue = "about:blank";
+    public static uri Empty => From(EmptyStringValue);
+    public virtual bool IsEmpty => base.ToString() == EmptyStringValue;
 
-    public string Value => ToString();
+    public virtual string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<uri>.RegexString => RegexString;
+    static string IStringWithRegexValueObject<uri>.Description => Description;
+    static uri IStringWithRegexValueObject<uri>.Empty => EmptyStringValue;
+    static uri IStringWithRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
+    static uri IStringWithRegexValueObject<uri>.Parse(string s) => From(s);
 #else
     string IStringWithRegexValueObject<uri>.Description => Description;
-    uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleValue;
+    uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
 #endif
     public static uri Parse(string uri) => From(uri);
 
@@ -53,14 +57,14 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
     public static partial REx Regex();
 
-    static uri IUriConvertible<uri>.FromUri(Uri uri) => From(uri.ToString());
-    static uri IUriConvertible<uri>.FromUri(string s) => From(s);
+    // static uri IUriConvertible<uri>.FromUri(string s) => From(s);
+    // static uri IUriConvertible<uri>.FromUri(Uri uri) => From(urn.ToString());
 #else
     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
 #endif
     public uri(string uriString) : base(uriString) { }
     public uri(Uri uri) : base(uri.ToString()) { }
-    public uri() : base(EmptyValue) { }
+    public uri() : base(EmptyStringValue) { }
     public static uri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static Validation Validate(string value)
@@ -111,7 +115,7 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
 
     public override string ToString() => IsEmpty ? string.Empty : base.ToString();
 
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri? uri) => TryParse(s, out uri);
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) => TryParse(s, out uri);
     public static bool TryParse(string? s, out uri? uri)
     {
         if (string.IsNullOrEmpty(s))
@@ -128,11 +132,11 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
         return false;
     }
 
-    public bool Equals(uri other) => ToString() == other.ToString();
-    public int CompareTo(string other) => string.CompareOrdinal(ToString(), other);
-    public int CompareTo(object obj) => obj is uri uri ? CompareTo(uri.ToString()) : throw new ArgumentException("Object is not a uri.");
-    public bool Equals(string other) => ToString() == other;
-    public int CompareTo(uri other) => string.CompareOrdinal(ToString(), other.ToString());
+    public bool Equals(uri? other) => ToString() == other.ToString();
+    public virtual int CompareTo(string? other) => string.CompareOrdinal(ToString(), other);
+    public virtual int CompareTo(object? obj) => obj is uri uri ? CompareTo(uri?.ToString()) : throw new ArgumentException("Object is not a uri.");
+    public virtual bool Equals(string? other) => ToString() == other;
+    public int CompareTo(uri? other) => string.CompareOrdinal(ToString(), other?.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
     public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri, string>
@@ -162,12 +166,12 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
 
     public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Type sourceType)
+        public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {
             return sourceType == typeof(global::System.String) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, global::System.Object value)
+        public override global::System.Object? ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value)
         {
             var stringValue = value as global::System.String;
             if (stringValue is not null)
@@ -178,12 +182,12 @@ public partial class uri : Uri, IEquatable<uri>, IStringWithRegexValueObject<uri
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Type sourceType)
+        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {
             return sourceType == typeof(global::System.String) || base.CanConvertTo(context, sourceType);
         }
 
-        public override object ConvertTo(global::System.ComponentModel.ITypeDescriptorContext context, global::System.Globalization.CultureInfo culture, global::System.Object value, global::System.Type destinationType)
+        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value, global::System.Type? destinationType)
         {
             if (value is uri idValue)
             {

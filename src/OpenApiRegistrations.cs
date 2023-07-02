@@ -46,7 +46,7 @@ public static class OpenApiRegistrations
                 Example = new OpenApiString(T.ExampleValue.ToString())
             };
 #else
-            throw new PlatformNotSupportedException();
+            throw new PlatformNotSupportedException("This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it.");
             // options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () => new OpenApiSchema
             // {
             //     Type = "string",
