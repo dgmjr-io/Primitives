@@ -12,7 +12,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
         <!-- <TargetFramework>net7.0</TargetFramework> -->
         <LangVersion>preview</LangVersion>
         <AssemblyName>Dgmjr.Primitives</AssemblyName>
@@ -25,12 +25,13 @@
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
         <NoWarn>$(NoWarn);CA2252;CS8335;</NoWarn>
-        <AllowUnsafeBlocks Condition="!$(DeclareConstants.Contains('NET7_0_OR_GREATER'))">true</AllowUnsafeBlocks>
+        <AllowUnsafeBlocks Condition="!$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="./PreNet7DataStructurePolyfills/*.cs"  Condition="$(DeclareConstants.Contains('NET7_0_OR_GREATER'))" />
+        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))" />
+        <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
         <!-- <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Compile;Runtime" PrivateAssets="All"/> -->
-        <NoWarn Include="CS8335" Condition="!$(DeclareConstants.Contains('NET7_0_OR_GREATER'))" />
+        <NoWarn Include="CS8335" Condition="$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))" />
     </ItemGroup>
 </Project>

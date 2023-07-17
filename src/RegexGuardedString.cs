@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 /* 
  * RegexGuardedString.cs
  * 
@@ -11,28 +10,51 @@ using System.Text.RegularExpressions;
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
+using Microsoft.OpenApi.Expressions;
+
 namespace System;
-using System.Text.RegularExpressions;
 
+public interface IRegexGuardedString<TSelf>
+    where TSelf : RegexGuardedString<TSelf>
+{
+#if NET7_0_OR_GREATER
+    public static abstract REx Regex { get; set; }
+#endif
+}
 
-public class RegexGuardedString
+public abstract class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
+    where TSelf : RegexGuardedString<TSelf>
 {
     private string _value;
-    private readonly Regex _regex;
 
-    public RegexGuardedString(string value, string pattern)
+#if NET7_0_OR_GREATER
+    private static REx _regex => Regex;
+    public static REx Regex { get; set; }
+#else
+    private readonly REx _regex;
+    public REx Regex { get; init; }
+#endif
+
+
+    protected RegexGuardedString(string value, string pattern, RegexOptions options = Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace)
     {
-        if (string.IsNullOrEmpty(value))
+        if (IsNullOrEmpty(value))
+        {
             throw new ArgumentException("Value cannot be null or empty.", nameof(value));
+        }
 
-        if (string.IsNullOrEmpty(pattern))
+        if (IsNullOrEmpty(pattern))
+        {
             throw new ArgumentException("Pattern cannot be null or empty.", nameof(pattern));
+        }
 
         _value = value;
-        _regex = new Regex(pattern);
+        Regex = new(pattern, options);
 
-        if (!_regex.IsMatch(_value))
-            throw new ArgumentException($"Value does not match the specified pattern: {pattern}", nameof(value));
+        if (!Regex.IsMatch(_value))
+        {
+            throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {pattern}", nameof(value));
+        }
     }
 
     public string Value
@@ -40,11 +62,15 @@ public class RegexGuardedString
         get => _value;
         set
         {
-            if (string.IsNullOrEmpty(value))
+            if (IsNullOrEmpty(value))
+            {
                 throw new ArgumentException("Value cannot be null or empty.");
+            }
 
             if (!_regex.IsMatch(value))
-                throw new ArgumentException($"Value does not match the specified pattern: {_regex.ToString()}");
+            {
+                throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {_regex}");
+            }
 
             _value = value;
         }
@@ -55,8 +81,15 @@ public class RegexGuardedString
         return _value;
     }
 
-    public static implicit operator string(RegexGuardedString value)
+    public static implicit operator string(RegexGuardedString<TSelf> value)
     {
         return value._value;
     }
+
+#if NET7_0_OR_GREATER
+    public static implicit operator RegexGuardedString<TSelf>(string value)
+    {
+        return (TSelf)Activator.CreateInstance(typeof(TSelf), value, RegexGuardedString<TSelf>.Regex.ToString(), RegexGuardedString<TSelf>.Regex.Options);
+    }
+#endif
 }
