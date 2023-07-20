@@ -31,7 +31,7 @@ public abstract class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
     private static REx _regex => Regex;
     public static REx Regex { get; set; }
 #else
-    private readonly REx _regex;
+    private REx _regex => Regex;
     public REx Regex { get; init; }
 #endif
 
