@@ -15,11 +15,11 @@ using System.Threading;
 
 namespace System.Resources;
 
-public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
+internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposable
 {
     internal sealed class ResourceEnumerator : IDictionaryEnumerator, IEnumerator
     {
-        private readonly ResourceReader _reader;
+        private readonly _ResourceReader _reader;
 
         private bool _currentIsValid;
 
@@ -104,7 +104,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
             }
         }
 
-        internal ResourceEnumerator(ResourceReader reader)
+        internal ResourceEnumerator(_ResourceReader reader)
         {
             _currentName = -1;
             _reader = reader;
@@ -173,7 +173,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
     internal static bool AllowCustomResourceTypes { get; } = !AppContext.TryGetSwitch("System.Resources.ResourceManager.AllowCustomResourceTypes", out var isEnabled) || isEnabled;
 
 
-    internal ResourceReader(Stream stream, Dictionary<string, ResourceLocator> resCache, bool permitDeserialization)
+    internal _ResourceReader(Stream stream, Dictionary<string, ResourceLocator> resCache, bool permitDeserialization)
     {
         _resCache = resCache;
         _store = new BinaryReader(stream, Encoding.UTF8);
@@ -213,7 +213,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
         {
             Type? type = Type.GetType("System.Runtime.Serialization.Formatters.Binary.BinaryFormatter, System.Runtime.Serialization.Formatters", throwOnError: true);
             MethodInfo? method = type.GetMethod("Deserialize", new Type[1] { typeof(Stream) });
-            MethodInfo? method2 = typeof(ResourceReader)!.GetMethod("CreateUntypedDelegate", BindingFlags.Static | BindingFlags.NonPublic);
+            MethodInfo? method2 = typeof(_ResourceReader)!.GetMethod("CreateUntypedDelegate", BindingFlags.Static | BindingFlags.NonPublic);
             object? obj;
             if ((object)method2 == null)
             {
@@ -300,7 +300,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
         }
     }
 
-    public ResourceReader(string fileName)
+    public _ResourceReader(string fileName)
     {
         _resCache = new Dictionary<string, ResourceLocator>(FastResourceComparer.Default);
         _store = new BinaryReader(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.RandomAccess), Encoding.UTF8);
@@ -315,7 +315,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
         }
     }
 
-    public ResourceReader(Stream stream)
+    public _ResourceReader(Stream stream)
     {
         if (stream is null)
         {
@@ -630,7 +630,7 @@ public sealed class ResourceReader : IResourceReader, IEnumerable, IDisposable
         {
             if (_version == 1)
             {
-                object obj = LoadObjectV1(pos);
+                object? obj = LoadObjectV1(pos);
                 typeCode = ((obj is string) ? ResourceTypeCode.String : ResourceTypeCode.StartOfUserTypes);
                 return obj;
             }

@@ -1,26 +1,23 @@
-#undef NET7_0_OR_GREATER
-// #undef NETSTANDARD2_0_OR_GREATER
-#define NETSTANDARD1_3_OR_GREATER
 namespace System.Domain;
 using System;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PhoneNumbers;
+using Vogen;
 using static System.Text.RegularExpressions.RegexOptions;
 using Phone = PhoneNumbers.PhoneNumber;
 using Util = PhoneNumbers.PhoneNumberUtil;
 
-#if NETSTANDARD2_0_OR_GREATER
-using Vogen;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
-#endif
 [StructLayout(LayoutKind.Auto)]
+[PhoneNumber.JConverter]
 public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumber>
 {
+    public const string UriPrefix = "tel:";
+    public const string UriPattern = $"{UriPrefix}{{0}}";
     public static string Description => "a phone number in e.164 format";
     public static PhoneNumber ExampleValue => From("+19174097331");
     public const string Blank = "+10000000000";
@@ -34,6 +31,11 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public string? Extension => ParsedNumber?.Extension;
     public Phone ParsedNumber => _util.Parse(Value, DefaultRegion);
     public bool IsEmpty => this == Empty;
+
+    public Uri Uri => new(Format(UriPattern, ToString()));
+
+    public static PhoneNumber FromUri(string s) => From(s.Remove(0, UriPrefix.Length));
+    public static PhoneNumber FromUri(Uri u) => FromUri(u.ToString());
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
@@ -56,14 +58,16 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
         catch { number = null; return false; }
     }
 
+    private const RegexOptions RegexOptions = Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
+
 #if NET7_0_OR_GREATER
-    [GeneratedRegex(RegexString, Compiled | CultureInvariant | IgnoreCase | Singleline)]
+    [GeneratedRegex(RegexString, RegexOptions)]
     public static partial REx Regex();
 #elif NET6_0_OR_GREATER
-    public static REx Regex() => new(RegexString, Compiled | CultureInvariant | IgnoreCase | Singleline);
+    public static REx Regex() => new(RegexString, RegexOptions);
     // REx IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
 #else
-    private static REx _regex = new(RegexString, Compiled | CultureInvariant | IgnoreCase | Singleline);
+    private static REx _regex = new(RegexString, RegexOptions);
     REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
@@ -118,15 +122,12 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
 #endif
 
-#if NETSTANDARD2_0_OR_GREATER
-    public sealed class JsonConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public sealed class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
-        public JsonConverterAttribute() : base(typeof(PhoneNumberSystemTextJsonConverter)) { }
+        public JConverterAttribute() : base(typeof(PhoneNumberSystemTextJsonConverter)) { }
     }
-#endif
 }
 
-#if NETSTANDARD2_0_OR_GREATER
 public static class PhoneNumberEfCoreExtensions
 {
     public static void ConfigurePhoneNumber<TEntity>(this ModelBuilder modelBuilder, Expression<Func<TEntity, PhoneNumber>> propertyExpression)
@@ -137,6 +138,5 @@ public static class PhoneNumberEfCoreExtensions
         where TEntity : class
         => entityBuilder.Property(propertyExpression).HasConversion<PhoneNumber.EfCoreValueConverter>();
 }
-#endif
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

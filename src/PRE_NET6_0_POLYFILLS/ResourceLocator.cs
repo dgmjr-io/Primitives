@@ -10,9 +10,9 @@ internal readonly struct ResourceLocator
 {
     internal int DataPosition { get; }
 
-    internal object Value { get; }
+    internal object? Value { get; }
 
-    internal ResourceLocator(int dataPos, object value)
+    internal ResourceLocator(int dataPos, object? value)
     {
         DataPosition = dataPos;
         Value = value;

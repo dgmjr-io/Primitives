@@ -16,7 +16,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
 {
     private Dictionary<string, ResourceLocator> _resCache;
 
-    private ResourceReader _defaultReader;
+    private _ResourceReader _defaultReader;
 
     private Dictionary<string, ResourceLocator> _caseInsensitiveTable;
 
@@ -29,7 +29,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         : base()
     {
         _resCache = new Dictionary<string, ResourceLocator>(FastResourceComparer.Default);
-        _defaultReader = new ResourceReader(stream, _resCache, permitDeserialization);
+        _defaultReader = new _ResourceReader(stream, _resCache, permitDeserialization);
     }
 
     protected override void Dispose(bool disposing)
@@ -40,9 +40,9 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
             {
                 _defaultReader?.Close();
             }
-            _defaultReader = null;
-            _resCache = null;
-            _caseInsensitiveTable = null;
+            _defaultReader = null!;
+            _resCache = null!;
+            _caseInsensitiveTable = null!;
             base.Dispose(disposing);
         }
     }
@@ -59,7 +59,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
 
     private IDictionaryEnumerator GetEnumeratorHelper()
     {
-        ResourceReader defaultReader = _defaultReader;
+        _ResourceReader? defaultReader = _defaultReader;
         if (defaultReader == null)
         {
             throw new ObjectDisposedException(null, SR.ObjectDisposed_ResourceSet);
@@ -95,8 +95,8 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         {
             throw new ArgumentNullException(nameof(key));
         }
-        ResourceReader defaultReader = _defaultReader;
-        Dictionary<string, ResourceLocator> resCache = _resCache;
+        _ResourceReader? defaultReader = _defaultReader;
+        Dictionary<string, ResourceLocator> resCache = _resCache!;
         if (defaultReader == null || resCache == null)
         {
             throw new ObjectDisposedException(null, SR.ObjectDisposed_ResourceSet);
@@ -107,7 +107,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
             int dataPosition;
             if (resCache.TryGetValue(key, out value))
             {
-                object value2 = value.Value;
+                object? value2 = value.Value;
                 if (value2 != null)
                 {
                     return value2;
@@ -118,7 +118,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
             dataPosition = defaultReader.FindPosForResource(key);
             if (dataPosition >= 0)
             {
-                object value2 = ReadValue(defaultReader, dataPosition, isString, out value);
+                object? value2 = ReadValue(defaultReader, dataPosition, isString, out value);
                 resCache[key] = value;
                 return value2;
             }
@@ -138,11 +138,11 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         {
             if (flag)
             {
-                ResourceReader.ResourceEnumerator enumeratorInternal = defaultReader.GetEnumeratorInternal();
+                _ResourceReader.ResourceEnumerator enumeratorInternal = defaultReader.GetEnumeratorInternal();
                 while (enumeratorInternal.MoveNext())
                 {
                     string key2 = (string)enumeratorInternal.Key;
-                    ResourceLocator value3 = new ResourceLocator(enumeratorInternal.DataPosition, null);
+                    ResourceLocator value3 = new ResourceLocator(enumeratorInternal.DataPosition, null)!;
                     dictionary.Add(key2, value3);
                 }
                 _caseInsensitiveTable = dictionary;
@@ -155,7 +155,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
             {
                 return value.Value;
             }
-            object value2 = ReadValue(defaultReader, value.DataPosition, isString, out value);
+            object? value2 = ReadValue(defaultReader, value.DataPosition, isString, out value);
             if (value.Value != null)
             {
                 dictionary[key] = value;
@@ -165,7 +165,7 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         }
     }
 
-    private static object? ReadValue(ResourceReader reader, int dataPos, bool isString, out ResourceLocator locator)
+    private static object? ReadValue(_ResourceReader reader, int dataPos, bool isString, out ResourceLocator locator)
     {
         object? obj;
         ResourceTypeCode typeCode;

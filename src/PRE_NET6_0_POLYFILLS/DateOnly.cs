@@ -307,7 +307,7 @@ namespace System
         /// <param name="format">A standard or custom date format string.</param>
         /// <param name="provider">An object that supplies culture-specific formatting information.</param>
         /// <returns>A string representation of value of the current DateOnly object as specified by format.</returns>
-        public string ToString(string? format, IFormatProvider provider = null) => ToString(format, provider);
+        public string ToString(string? format, IFormatProvider? provider = null) => ToString(format, provider);
 
         /// <summary>
         /// Converts the value of the current DateOnly object to its equivalent string representation using the specified culture-specific format information.
@@ -330,14 +330,17 @@ namespace System
 
 public static class DateTimeExtensions
 {
-    public static DateTime AddMicroseconds(this DateTime dateTime, int microseconds) => dateTime.AddTicks(microseconds * 10);
+    public static DateTime AddMicroseconds(this DateTime dateTime, int microseconds)
+    {
+        return checked(dateTime.AddTicks(TimeSpan.FromTicks(microseconds * 10).Ticks));
+    }
 
     public static DateTime OfKind(this DateTime dateTime, DateTimeKind kind) => kind switch
     {
         DateTimeKind.Unspecified => DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified),
-        DateTimeKind.Utc => DateTime.SpecifyKind(dateTime, DateTimeKind.Utc),
-        DateTimeKind.Local => DateTime.SpecifyKind(dateTime, DateTimeKind.Local),
-        _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        DateTimeKind.Utc => DateTime.ToUniversalTime(),
+        DateTimeKind.Local => DateTime.ToLocalTime(),
+        _ => dateTime
     };
 }
 #endif

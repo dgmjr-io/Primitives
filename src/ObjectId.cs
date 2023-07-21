@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 /*
  * ObjectId.cs
  *
@@ -14,14 +13,11 @@ using System.ComponentModel.DataAnnotations;
 namespace System;
 
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.CodeAnalysis;
-#if NETSTANDARD2_0_OR_GREATER
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Vogen;
 
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
-#endif
 public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, IComparable<ObjectId>, IComparable, IEquatable<ObjectId>
 {
     public const string Description = $"A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
@@ -39,11 +35,9 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
     public static REx Regex() => _regex;
 #endif
 
-#if !NETSTANDARD2_0_OR_GREATER
-    public string Value { get; private set; }
-    public static ObjectId From(string s) => string.IsNullOrEmpty(Validate(s).ErrorMessage) ? new ObjectId { Value = s } : Empty;
-    public int CompareTo(ObjectId other) => string.CompareOrdinal(Value, other.Value);
-#endif
+    public const string UrnPrefix = "urn:publicid:objectid:{0}";
+
+    public Uri Uri => IsEmpty ? null : new(Format(UrnPrefix, ToString()));
 
     public static ObjectId NewId() => From(Guid.NewGuid().ToString("N").Substring(0, 24));
 

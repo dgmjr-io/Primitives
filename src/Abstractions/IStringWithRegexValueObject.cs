@@ -1,7 +1,7 @@
 namespace System;
-public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>
+public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>, IHaveAUri
 #if NET7_0_OR_GREATER
-    , IParsable<TSelf>
+    , IParsable<TSelf>, IUriConvertible<TSelf>
 #endif
     where TSelf : IStringWithRegexValueObject<TSelf>
 {

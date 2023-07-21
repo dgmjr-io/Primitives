@@ -33,8 +33,6 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
     public static new string Empty => From(EmptyStringValue);
     public override bool IsEmpty => base.ToString() == EmptyStringValue;
 
-    public Uri Uri => this;
-
     public override string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<urn>.Description => Description;
@@ -64,8 +62,8 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
     public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
 #endif
     public urn(string uriString) : base(uriString) { }
-    public urn(Uri uri) : base(uri.ToString()) { }
-    public urn() : base(EmptyStringValue) { }
+    public urn(Uri uri) : this(uri.ToString()) { }
+    public urn() : this(EmptyStringValue) { }
     public static new urn Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static new Validation Validate(string value)
@@ -98,6 +96,9 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
         urn = Empty;
         return false;
     }
+
+    public static urn FromUri(string s) => From(s);
+    public static urn FromUri(Uri u) => From(u);
 
     public static new urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) : Empty;
     public static new urn From(Uri urn) => new(urn);

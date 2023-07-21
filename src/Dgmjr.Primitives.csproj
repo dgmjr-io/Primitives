@@ -25,13 +25,16 @@
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
         <NoWarn>$(NoWarn);CA2252;CS8335;</NoWarn>
-        <AllowUnsafeBlocks Condition="!$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
+        <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))" />
+        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
-        <!-- <PackageReference Include="Dgmjr.Enumerations.CodeGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Compile;Runtime" PrivateAssets="All"/> -->
-        <NoWarn Include="CS8335" Condition="$(DeclaredConstants.Contains('NET6_0_OR_GREATER'))" />
+        <NoWarn Include="CS8335" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+    </ItemGroup>
+    <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
+        <Compile Remove="./RegexGuardedString.cs" />
+        <Compile Remove="./HexString.cs" />
     </ItemGroup>
 </Project>

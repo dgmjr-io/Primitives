@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 /*
  * EmailAddress copy.cs
  *
@@ -11,35 +10,34 @@ using System.Net.Sockets;
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 namespace System.Net.Mail;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
-
-#if NETSTANDARD1_3
-using Rxo = RegexOptions;
-#endif
-
-#if NETSTANDARD2_0_OR_GREATER
-using Vogen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Linq.Expressions;
+using Vogen;
 
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
-#endif
 [StructLayout(LayoutKind.Auto)]
+[EmailAddress.JConverter]
 public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAddress>, IComparable<EmailAddress>, IComparable, IEquatable<EmailAddress>, IFormattable
 {
     /// <summary>
     /// The example value string.
     /// </summary>
-    public const string ExampleStringValue = "somewhere@overtherainbow.gay";
+    public const string ExampleValueString = "somewhere@overtherainbow.com";
     /// <summary>
     /// The empty value string.
     /// </summary>
-    public const string EmptyStringValue = "example@example.example";
+    public const string EmptyValueString = "nobody@nowhere.com";
     /// <summary>
     /// The description.
     /// </summary>
     public const string Description = "an email address in the form of *user@domain.ext*";
+
+    public const string UriPrefix = "mailto:";
+    public const string UriPattern = $"{UriPrefix}{{0}}";
+
+    public Uri Uri => IsEmpty ? null! : new(Format(UriPrefix, ToString()));
 #if NET6_0_OR_GREATER
     /// <summary>
     /// Gets the description.
@@ -48,43 +46,26 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleStringValue);
+    static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
     /// <summary>
     /// Gets the regex string.
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
 #else
-    /// <summary>
-    /// This code implements an interface for a regular expression that validates email addresses.
-    /// </summary>
-    readonly REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
-
-    /// <summary> 
-    /// This line of code is implementing an interface method
-    /// `IStringWithRegexValueObject<EmailAddress>.RegexString` which returns the regular expression string
-    /// used to validate an `EmailAddress` object. It is using the `RegexString` constant defined in the
-    /// `EmailAddress` struct. The `readonly` keyword indicates that the value of this property cannot be
-    /// changed once it is set.
-    /// </summary>
-    readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
-
-    readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
-
-    /// <summary>
-    /// This property returns an example value for an email address object that implements a specific
-    /// interface.
-    /// </summary>
-    readonly EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleStringValue);
+    REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
+    string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
+    string IStringWithRegexValueObject<EmailAddress>.Description => Description;
+    EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
 #endif
 
     /// <summary>
     /// Gets a value indicating whether is empty.
     /// </summary>
-    public readonly bool IsEmpty => Value == Empty.Value;
+    public bool IsEmpty => Value == Empty.Value;
     /// <summary>
     /// Gets the empty.
     /// </summary>
-    public static EmailAddress Empty => From(EmptyStringValue);
+    public static EmailAddress Empty => From(EmptyValueString);
 
     /// <summary>
     /// The regex string.
@@ -99,8 +80,11 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     [GeneratedRegex(RegexString)]
     public static partial REx Regex();
 #else
-    public static REx Regex() => new(RegexString, Rxo.Compiled);
+    public static REx Regex() => new(RegexString, Compiled);
 #endif
+
+    public static EmailAddress FromUri(string s) => From(s.Remove(0, UriPrefix.Length));
+    public static EmailAddress FromUri(Uri u) => FromUri(u.ToString());
 
     /// <summary>
     /// Validates the <see langword="string"/> <paramref name="s"/> to see if
@@ -160,7 +144,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="s">The s.</param>
     /// <param name="formatProvider">The format provider.</param>
     /// <returns>An EmailAddress.</returns>
-    public static EmailAddress Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static EmailAddress Parse(string? s, IFormatProvider? formatProvider = null) => From(s);
     /// <summary>
     /// Try parse.
     /// </summary>
@@ -168,29 +152,19 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="formatProvider">The format provider.</param>
     /// <param name="email">The email.</param>
     /// <returns>A bool.</returns>
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out EmailAddress email) => (email = TryParse(s, out var email1) ? email1!.Value : Empty) != Empty;
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out EmailAddress email) => TryParse(s, out email);
     /// <summary>
     /// Try parse.
     /// </summary>
     /// <param name="s">The s.</param>
     /// <param name="email">The email.</param>
     /// <returns>A bool.</returns>
-    public static bool TryParse(string s, out EmailAddress? email)
+    public static bool TryParse(string? s, out EmailAddress email)
     {
-        try
-        {
-            email = From(s);
-            return true;
-        }
-        catch
-        {
-            email = null;
-            return false;
-        }
+        return (email = From(s)) != Empty;
     }
 
 
-#if NETSTANDARD2_0_OR_GREATER
     /// <summary>
     /// Validates the <see cref="Validation"/>.
     /// </summary>
@@ -210,20 +184,19 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     }
 
     public static implicit operator string?(EmailAddress? addr) => addr.HasValue ? addr.Value.Value : string.Empty;
-#else
-    public string Value { get; private set; }
 
     public int CompareTo(EmailAddress? other) => CompareTo(other?.Value ?? string.Empty);
-    public int CompareTo(EmailAddress other) => CompareTo(other.Value);
-    public static EmailAddress From(string s) => Validate(s) == Validation.Ok ? new() { Value = s } : Empty;
-    public static EmailAddress Parse(string value) => From(value);
-#endif
+    // public static EmailAddress From(string s) => Validate(s) == Validation.Ok ? new() { Value = s } : Empty;
+
+    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    {
+        public JConverterAttribute() : base(typeof(EmailAddressSystemTextJsonConverter)) { }
+    }
 }
 
 /// <summary>
 /// The email address ef core extensions.
 /// </summary>
-#if NETSTANDARD2_0_OR_GREATER
 public static class EmailAddressEfCoreExtensions
 {
     /// <summary>
@@ -245,7 +218,7 @@ public static class EmailAddressEfCoreExtensions
     public static void ConfigureEmailAddress<TEntity>(this EntityTypeBuilder<TEntity> entityBuilder, Expression<Func<TEntity, EmailAddress>> propertyExpression)
         where TEntity : class
         => entityBuilder.Property(propertyExpression).HasConversion<EmailAddress.EfCoreValueConverter>();
+
 }
-#endif
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

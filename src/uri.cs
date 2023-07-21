@@ -1,3 +1,4 @@
+using System;
 /*
  * uri.cs
  *
@@ -10,16 +11,16 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
+using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 
 namespace System;
-using static System.Text.RegularExpressions.RegexOptions;
-#if NETSTANDARD2_0_OR_GREATER
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogen;
-[global::System.Text.Json.Serialization.JsonConverter(typeof(uri.JsonConverter))]
-#endif
+using static System.Text.RegularExpressions.RegexOptions;
+[uri.JConverter]
 [DebuggerDisplay("{ToString()}")]
 public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegexValueObject<uri>
 #if NET7_0_OR_GREATER
@@ -27,7 +28,7 @@ public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegex
 #endif
 {
     public const string Description = "a uniform resource identifier (uri)";
-    public const string ExampleStringValue = "tel:+2026701835";
+    public const string ExampleStringValue = "example:example";
     public const string RegexString = @"^(?<Scheme>[^:]+):(?<Address>\w+)&";
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
@@ -46,21 +47,22 @@ public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegex
 #endif
     public static uri Parse(string uri) => From(uri);
 
-
+    public virtual Uri Uri => this;
 
 #if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<uri>.RegexString => RegexString;
     REx IStringWithRegexValueObject<uri>.Regex() => Regex();
 #endif
 
+    private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
 #if NET70_OR_GREATER
-    [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
+    [GeneratedRegex(RegexString, Compiled | RegexOptions)]
     public static partial REx Regex();
 
     // static uri IUriConvertible<uri>.FromUri(string s) => From(s);
     // static uri IUriConvertible<uri>.FromUri(Uri uri) => From(urn.ToString());
 #else
-    public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    public static REx Regex() => new(RegexString, RegexOptions);
 #endif
     public uri(string uriString) : base(uriString) { }
     public uri(Uri uri) : base(uri.ToString()) { }
@@ -142,6 +144,11 @@ public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegex
     public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+    }
+
+    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    {
+        public JConverterAttribute() : base(typeof(JsonConverter)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<uri>

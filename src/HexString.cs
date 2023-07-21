@@ -1,3 +1,4 @@
+#if NET7_0_OR_GREATER
 /* 
  * HexString.cs
  * 
@@ -12,14 +13,19 @@
 
 namespace System;
 
-public class HexString : RegexGuardedString<HexString>
+
+public partial class HexString : RegexGuardedString<HexString>
 {
     public const string HexChars = "^[0-9a-z]*$";
 
-    public HexString(string? value = null) : base(value, HexChars, Compiled | IgnoreCase | Multiline | IgnorePatternWhitespace)
+    [GeneratedRegex(HexChars, Compiled | IgnoreCase | Multiline | IgnorePatternWhitespace)]
+    public static  new partial REx Regex();
+
+    public HexString(string? value = null) : base(value)
     {
     }
 
     public static implicit operator HexString(string value) => new(value);
     public static implicit operator string(HexString value) => value.Value;
 }
+#endif

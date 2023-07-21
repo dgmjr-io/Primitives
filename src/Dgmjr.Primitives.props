@@ -10,7 +10,10 @@
         <!-- <PackageReference Include="System.AppDomain" /> -->
         <!-- <PackageReference Include="System.Runtime.NetCoreApp" /> -->
     </ItemGroup>
-    <ItemGroup Condition="$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER'))">
+    <ItemGroup>
+        <UsingsReference Include="System.Text.Json.Usings" />
+        <UsingsReference Include="System.Text.RegularExpressions.Usings"/>
+        <UsingsReference Include="System.Usings"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <!-- <PackageReference Include="System.Text.Json"/> -->
         <PackageReference Include="Vogen" IncludeAssets="Analyzers; Build; Lib; Runtime; Compile" PrivateAssets="All"/>
@@ -20,15 +23,10 @@
         <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
         <!-- <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/> -->
         <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
-    </ItemGroup>
-    <ItemGroup>
-        <!-- <PackageReference Include="System.Text.RegularExpressions.Usings"/> -->
         <PackageReference Include="libphonenumber-csharp"/>
         <PackageReference Include="System.Compat" IncludeAssets="Compile" ExcludeAssets="None" PrivateAssets="All"/>
         <PackageReference Include="System.ComponentModel.Usings"/>
         <!-- <PackageReference Include="System.ComponentModel.Annotations"/> -->
-        <PackageReference Include="System.Text.RegularExpressions.Usings"/>
-        <!-- <PackageReference Include="System.Usings"/> -->
         <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
     </ItemGroup>
     <ItemGroup>
@@ -44,6 +42,7 @@
         <Using Include="System.Int128" Alias="vlong" Condition="$(DeclaredConstants.Contains('NET7_0_OR_GREATER'))" />
         <Using Include="System.UInt128" Alias="uvlong" Condition="$(DeclaredConstants.Contains('NET7_0_OR_GREATER'))" />
         <Using Include="System.Single" Alias="@single" />
+        <Using Include="Dgmjr.Abstractions" />
         <!-- <Using Include="(int Day, int Month, int Year)" Alias="DayMonthYearTuple" /> -->
     </ItemGroup>
 </Project>

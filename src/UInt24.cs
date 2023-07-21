@@ -22,9 +22,9 @@ namespace System
     [StructLayout(LayoutKind.Explicit, Size = 3)]
     public readonly struct UInt24 : IEquatable<UInt24>, IComparable<UInt24>, IFormattable, IConvertible
 #if NE7_0_OR_GREATER
-    , IAdditionOperators<UInt24, UInt24, UInt24>, ISubtractionOperators<UInt24, UInt24, UInt24>, 
-    IMultiplicationOperators<UInt24, UInt24, UInt24>, IDivisionOperators<UInt24, UInt24, UInt24>, 
-    IUnaryNegationOperators<UInt24, UInt24>, IBinaryIntegerOperators<UInt24, UInt24, UInt24>, 
+    , IAdditionOperators<UInt24, UInt24, UInt24>, ISubtractionOperators<UInt24, UInt24, UInt24>,
+    IMultiplicationOperators<UInt24, UInt24, UInt24>, IDivisionOperators<UInt24, UInt24, UInt24>,
+    IUnaryNegationOperators<UInt24, UInt24>, IBinaryIntegerOperators<UInt24, UInt24, UInt24>,
     IComparisonOperators<UInt24, UInt24>, IMinMaxValue<UInt24>, IIncrementOperators<UInt24>,
     IDecrementOperators<UInt24>
 #endif

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 /* 
  * url.cs
  * 
@@ -13,14 +14,12 @@
 using System.Diagnostics;
 
 namespace System;
-using static System.Text.RegularExpressions.RegexOptions;
-#if NETSTANDARD2_0_OR_GREATER
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogen;
-[global::System.Text.Json.Serialization.JsonConverter(typeof(url.JsonConverter))]
-#endif
+using static System.Text.RegularExpressions.RegexOptions;
+[url.JConverter]
 [DebuggerDisplay("{ToString()}")]
 public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url>
 #if NET7_0_OR_GREATER
@@ -29,7 +28,7 @@ public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url
 {
     public new const string Description = "a uniform resource locator (url)";
     public new const string ExampleStringValue = "https://dgmjr.io/";
-    public new const string RegexString = @"^(?<Scheme>[^:]+):\/\/(?<Address>.+)&";
+    public new const string RegexString = @"^(?<Scheme>[^:]+):\/\/(?<Address>[a-zA-Z0-9\^!@#$%&\*\(\)\/:]+)(?<Query>\?[a-zA-Z0-9\^!@#$%\*\(\)\/:]+&?)(?<Fragment>#[a-zA-Z0-9\^!@#$%\*\(\)\/:]+)$";
     public new const string EmptyStringValue = "about:blank";
     public static new url Empty => From(EmptyStringValue);
     public override bool IsEmpty => base.ToString() == EmptyStringValue;
@@ -62,8 +61,8 @@ public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url
     public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
 #endif
     public url(string urlString) : base(urlString) { }
-    public url(url url) : base(url.ToString()) { }
-    public url() : base(EmptyStringValue) { }
+    public url(Uri url) : this(url.ToString()) { }
+    public url() : this(EmptyStringValue) { }
     public static new url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static new Validation Validate(string value)
@@ -97,7 +96,7 @@ public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url
     }
 
     public static new url From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static url From(url url) => new(url);
+    public static url From(url url) => new(url.ToString());
 
     public static implicit operator url(string s) => From(s);
     public static implicit operator string(url url) => url.ToString();
@@ -137,10 +136,14 @@ public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url
     public override bool Equals(string? other) => ToString() == other;
     public int CompareTo(url? other) => string.CompareOrdinal(ToString(), other?.ToString());
 
-#if NETSTANDARD2_0_OR_GREATER
     public new class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+    }
+
+    public new class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    {
+        public JConverterAttribute() : base(typeof(url.JsonConverter)) { }
     }
 
     public new class JsonConverter : System.Text.Json.Serialization.JsonConverter<url>
@@ -199,7 +202,6 @@ public partial class url : uri, IEquatable<url>, IStringWithRegexValueObject<url
             return base.ConvertTo(context, culture, value, destinationType);
         }
     }
-#endif
 }
 
 
