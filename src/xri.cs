@@ -95,14 +95,13 @@ public class xri : uri, IStringWithRegexValueObject<xri>
     public static implicit operator xri(string s) => From(s);
     public static implicit operator string(xri xri) => xri.ToString();
     public static bool operator ==(xri? left, xri? right) => string.Equals(left?.ToString(), right?.ToString());
-    public static bool operator ==(xri? left, xri? right) => string.Equals(left?.ToString(), right?.ToString());
     public static bool operator !=(xri? left, xri? right) => string.Equals(left?.ToString(), right?.ToString());
     public static bool operator <=(xri? left, xri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) <= 0;
     public static bool operator >=(xri? left, xri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) >= 0;
     public static bool operator <(xri? left, xri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) < 0;
     public static bool operator >(xri? left, xri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) > 0;
 
-    public override bool Equals(object? obj) => obj is xri xri && xri.ToString() == ToString();
+    public override bool Equals(object? obj) => obj is xri xri && string.Equals(xri.Value, Value);
     public override int GetHashCode() => ToString().GetHashCode();
 
     public override string ToString() => IsEmpty ? string.Empty : base.ToString();

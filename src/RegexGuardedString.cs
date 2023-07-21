@@ -23,7 +23,7 @@ public interface IRegexGuardedString
     public static abstract RegexOptions RegexOptions { get; }
     public static abstract REx Regex();
 
-    string Value { get; set; }
+    string Value { get; }
 }
 public interface IRegexGuardedString<TSelf> : IRegexGuardedString
     where TSelf : RegexGuardedString<TSelf>
@@ -61,7 +61,7 @@ public class RegexGuardedString : IRegexGuardedString
     public string Value
     {
         get => _value;
-        set
+        private set
         {
             if (IsNullOrEmpty(value))
             {

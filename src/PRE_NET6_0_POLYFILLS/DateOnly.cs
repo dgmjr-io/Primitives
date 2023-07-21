@@ -338,8 +338,8 @@ public static class DateTimeExtensions
     public static DateTime OfKind(this DateTime dateTime, DateTimeKind kind) => kind switch
     {
         DateTimeKind.Unspecified => DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified),
-        DateTimeKind.Utc => DateTime.ToUniversalTime(),
-        DateTimeKind.Local => DateTime.ToLocalTime(),
+        DateTimeKind.Utc => dateTime.ToUniversalTime(),
+        DateTimeKind.Local => dateTime.ToLocalTime(),
         _ => dateTime
     };
 }
