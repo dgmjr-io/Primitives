@@ -12,7 +12,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
         <!-- <TargetFramework>net7.0</TargetFramework> -->
         <LangVersion>preview</LangVersion>
         <AssemblyName>Dgmjr.Primitives</AssemblyName>
@@ -21,16 +21,20 @@
         <Description>A collection of useful data and behavioral value types.</Description>
         <SlnGenSolutionFolder>src</SlnGenSolutionFolder>
         <ProjectGuid>{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}</ProjectGuid>
-        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.3'">$(DefineConstants);NETSTANDARD1_3</DefineConstants>
-        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard1.5'">$(DefineConstants);NETSTANDARD1_5</DefineConstants>
         <ImplicitUsings>enable</ImplicitUsings>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
-        <NoWarn>$(NoWarn);CA2252;</NoWarn>
+        <NoWarn>$(NoWarn);CA2252;CS8335;</NoWarn>
+        <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <!-- <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Local|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE;LOCAL;NETSTANDARD;NETSTANDARD1_5;</DefineConstants>
-  </PropertyGroup> -->
+    <ItemGroup>
+        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+        <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
+        <NoWarn Include="CS8335" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+    </ItemGroup>
+    <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
+        <Compile Remove="./RegexGuardedString.cs" />
+        <Compile Remove="./HexString.cs" />
+    </ItemGroup>
 </Project>

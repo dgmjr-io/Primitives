@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "src/Dgmjr.Primitives.sln",
+    "omnisharp.enableRoslynAnalyzers": true
+}

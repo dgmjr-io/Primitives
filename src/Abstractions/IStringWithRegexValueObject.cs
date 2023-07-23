@@ -1,7 +1,7 @@
 namespace System;
-public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>
+public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>, IHaveAUri
 #if NET7_0_OR_GREATER
-    , IParsable<TSelf>
+    , IParsable<TSelf>, IUriConvertible<TSelf>
 #endif
     where TSelf : IStringWithRegexValueObject<TSelf>
 {
@@ -10,13 +10,13 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     bool IsEmpty { get; }
 
 #if NET6_0_OR_GREATER
-    abstract static REx Regex();
-    abstract static string RegexString { get; }
-    abstract static string Description { get; }
-    abstract static TSelf Parse(string value);
-    abstract static TSelf From(string value);
-    abstract static TSelf ExampleValue { get; }
-    abstract static TSelf Empty { get; }
+    public abstract static REx Regex();
+    public abstract static string RegexString { get; }
+    public abstract static string Description { get; }
+    public abstract static TSelf Parse(string value);
+    public abstract static TSelf From(string value);
+    public abstract static TSelf ExampleValue { get; }
+    public abstract static TSelf Empty { get; }
 #else
     string RegexString { get; }
     string Description { get; }
