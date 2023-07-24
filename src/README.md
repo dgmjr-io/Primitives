@@ -1,21 +1,22 @@
 ---
+
 authors:
-  - dgmjr
+- dgmjr
 date: 2023-07-02T20:00:10.681Z
 description: This package contains several "primitive" types that are used throughout the rest of the Types package.
 keywords:
-  - DGMJR-IO
-  - emailaddress
-  - int24
-  - primitives
-  - phonenumber
-  - objectid
-  - types
-  - uri
-  - urn
-  - url
-  - xri
-  - iri
+- DGMJR-IO
+- emailaddress
+- int24
+- primitives
+- phonenumber
+- objectid
+- types
+- uri
+- urn
+- url
+- xri
+- iri
 lastMod: 2023-03-19T03:27:38.342Z
 license: MIT
 slug: primitives
@@ -24,7 +25,7 @@ type: readme
 lastmod: 2023-07-02T22:36:04.550Z
 project: Dgmjr.Types
 version: 0.0.1
----
+--------------
 
 # Primitives
 
@@ -40,3 +41,4 @@ This package contains several "primitive" types that are used throughout the res
 - [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs)
 - [`YesNo`/`YesNoEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/Primitives/src/YesNo.cs)
 - [`YesNoIdc`/`YesNoIdcEnum`](https://github.com/dgmjr-io/Primitives/blob/main/src/YesNoIdc.cs)
+
