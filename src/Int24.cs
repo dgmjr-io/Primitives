@@ -307,35 +307,18 @@ namespace System
         ///<returns>true if left is less than or equal to right; otherwise, false.</returns> 
         public static bool operator <=(Int24 left, Int24? right)
         {
-            if (obj is Int24 i24)
-            {
-                return CompareTo(i24);
-            }
-            else if (obj is decimal d && d >= Int32MinValue && d <= Int32MaxValue)
-            {
-                return CompareTo(new Int24((int)d));
-            }
-            else if (obj is int i32 && i32 >= Int32MinValue && i32 <= Int32MaxValue)
-            {
-                return CompareTo(new Int24(i32));
-            }
-            else if (obj is uint ui32 && ui32 >= Int32MinValue && ui32 <= Int32MaxValue)
-            {
-                return CompareTo(new Int24(ui32));
-            }
-            else if (obj is long i64 && i64 >= Int32MinValue && i64 <= Int32MaxValue)
-            {
-                return CompareTo(new Int24((int)i64));
-            }
-            else if (obj is ulong ui64 && (uint)ui64 >= Int32MinValue && (uint)ui64 <= Int32MaxValue)
-            {
-                return CompareTo(new Int24((int)ui64));
-            }
-            else if (obj is short s)
-            {
-                return CompareTo(new Int24(s));
-            }
-            throw new InvalidCastException($"Cannot compare an object of type {obj.GetType()} to an object of type {typeof(Int24)}");
+            return !(left > right);
+        }
+
+        /// <summary>
+        /// Determines whether one specified Int24 is greater than or equal to another specified Int32.
+        ///</summary> 
+        ///<param name="left">The first object to compare. </param>  
+        ///<param name="right">The second object to compare. </param>  
+        ///<returns>true if left is greater than or equal to right; otherwise, false.</returns> 
+        public static bool operator >=(Int24 left, Int24? right)
+        {
+            return !(left < right);
         }
 
         /// <summary>
@@ -355,9 +338,6 @@ namespace System
         /// <returns>A constant equal to -8388608.</returns>
         /// <value>-8388608</value>
         public static readonly Int24 MinValue = new(Int32MaxValue);
-
-        public static readonly Int24 MaxValue = new(MaxValue);
-        public static readonly Int24 MinValue = new(MinValue);
         public static explicit operator Int24(sbyte value) => new Int24(value);
 
         public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();

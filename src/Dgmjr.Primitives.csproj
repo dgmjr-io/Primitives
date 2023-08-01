@@ -32,6 +32,7 @@
         <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
         <NoWarn Include="CS8335" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+        <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
         <Compile Remove="./RegexGuardedString.cs" />
