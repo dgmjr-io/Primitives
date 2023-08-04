@@ -1,3 +1,15 @@
+/* 
+ * PhoneNumber.cs
+ * 
+ *   Created: 2023-08-01-05:18:07
+ *   Modified: 2023-08-01-05:18:08
+ * 
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ * 
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
+ */ 
+
 namespace System.Domain;
 using System;
 using System.Linq.Expressions;
@@ -71,23 +83,19 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
-    public static implicit operator PhoneNumber?(string? s)
-    {
-        try { return From(s); }
-        catch { return default; }
-    }
+    public static implicit operator PhoneNumber?(string? s) => TryParse(s, out var number) ? number : default;
 
     public static implicit operator string?(PhoneNumber? n)
         => n.HasValue ? _util.Format(n.Value.ParsedNumber, PhoneNumberFormat.E164) : default;
 
     public static bool operator <(PhoneNumber? a, PhoneNumber? b)
-         => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) < 0;
+        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) < 0;
 
     public static bool operator ==(PhoneNumber? a, PhoneNumber? b)
-         => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) == 0;
+        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) == 0;
 
     public static bool operator !=(PhoneNumber? a, PhoneNumber? b)
-         => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) != 0;
+        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) != 0;
     public static bool operator >(PhoneNumber? a, PhoneNumber? b)
         => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) > 0;
     public static bool operator <=(PhoneNumber? a, PhoneNumber? b)
