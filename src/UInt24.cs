@@ -351,7 +351,7 @@ namespace System
 #endif
         public byte ToByte(IFormatProvider? formatProvider) => (byte)this.ToInt32();
         public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)this.ToInt32();
-        public Single ToSingle(IFormatProvider? formatProvider) => (single)this.ToInt32();
+        public float ToSingle(IFormatProvider? formatProvider) => (float)this.ToInt32();
         public double ToDouble(IFormatProvider? formatProvider) => (double)this.ToInt32();
         public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)this.ToInt32();
         public char ToChar(IFormatProvider? formatProvider) => (char)this.ToInt32();

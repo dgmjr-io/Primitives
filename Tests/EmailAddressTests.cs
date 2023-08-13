@@ -1,26 +1,20 @@
 namespace Dgmjr.Primitives.Tests;
 using System.Net.Mail;
 
-public class EmailAddressTests
+public class EmailAddressTests : PrimitivesTests<EmailAddress, EmailAddressTests>
 {
-    [Fact]
-    public static void EmptyEmailAddress_ShouldBeEmpty()
+    protected override string[][] InvalidValuesStrings => new[]
     {
-        var emptyEmailAddress = EmailAddress.Empty;
-        emptyEmailAddress.IsEmpty.Should().BeTrue();
-    }
+        new[] { "not an email" },
+        new[] { "missing@" },
+        new[] { "@missing-domain" }
+    };
 
-    [Fact]
-    public static void EmptyEmailAddressValue_ShouldBeNullOrEmpty()
+    protected override string[][] ValidValuesStrings => new[]
     {
-        var emptyEmailAddress = EmailAddress.Empty;
-        emptyEmailAddress.ToString().Should().BeNullOrEmpty();
-    }
-
-    [Fact]
-    public static void EmptyEmailAddressValue_ShouldBeNullOrEmpty()
-    {
-        var emptyEmailAddress = EmailAddress.Empty;
-        emptyEmailAddress.ToString().Should().BeNullOrEmpty();
-    }
+        new[] { "test@example.com" },
+        new[] { "test123@subdomain.example.com" },
+        new[] { "david@dgmjr.io" },
+        new[] { "david.moore@dgmoore.com" }
+    };
 }

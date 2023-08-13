@@ -16,25 +16,33 @@ using System.Text.RegularExpressions;
 
 namespace System;
 using System.Linq.Expressions;
+using global::Vogen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vogen;
 using static System.Text.RegularExpressions.RegexOptions;
+#if !NETSTANDARD2_0_OR_GREATER
+using Validation = global::Validation;
+#endif
+
+[RegexDto(uri._RegexString, regexOptions: uri._RegexOptions)]
 [uri.JConverter]
 [DebuggerDisplay("{ToString()}")]
-public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegexValueObject<uri>
+#if NET6_0_OR_GREATER
+#endif
+public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
 #if NET7_0_OR_GREATER
-// , IUriConvertible<uri>
+, IUriConvertible<uri>
 #endif
 {
     public const string Description = "a uniform resource identifier (uri)";
     public const string ExampleStringValue = "example:example";
-    public const string RegexString = @"^(?<Scheme>[^:]+):(?<Address>\w+)&";
+    public const RegexOptions _RegexOptions = Compiled | IgnoreCase | Singleline;
+    public const string _RegexString = @"^(?<Scheme>[^\:]+)\:(?<PathAndQuery>\w+)$";
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
-    public virtual bool IsEmpty => base.ToString() == EmptyStringValue;
+    public bool IsEmpty => BaseToString() == EmptyStringValue;
 
-    public virtual string Value => ToString();
+    public string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<uri>.RegexString => RegexString;
     static string IStringWithRegexValueObject<uri>.Description => Description;
@@ -45,28 +53,27 @@ public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegex
     string IStringWithRegexValueObject<uri>.Description => Description;
     uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
 #endif
-    public static uri Parse(string uri) => From(uri);
+    // public static uri Parse(string uri) => From(uri);
 
-    public virtual Uri Uri => this;
+    public Uri Uri => this;
 
 #if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<uri>.RegexString => RegexString;
     REx IStringWithRegexValueObject<uri>.Regex() => Regex();
 #endif
 
-    private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
-#if NET70_OR_GREATER
-    [GeneratedRegex(RegexString, Compiled | RegexOptions)]
-    public static partial REx Regex();
+    // #if NET70_OR_GREATER
+    //     [GeneratedRegex(RegexString, Compiled | RegexOptions)]
+    //     public static partial REx Regex();
 
-    // static uri IUriConvertible<uri>.FromUri(string s) => From(s);
-    // static uri IUriConvertible<uri>.FromUri(Uri uri) => From(urn.ToString());
-#else
-    public static REx Regex() => new(RegexString, RegexOptions);
-#endif
-    public uri(string uriString) : base(uriString) { }
-    public uri(Uri uri) : base(uri.ToString()) { }
-    public uri() : base(EmptyStringValue) { }
+    //     // static uri IUriConvertible<uri>.FromUri(string s) => From(s);
+    //     // static uri IUriConvertible<uri>.FromUri(Uri uri) => From(urn.ToString());
+    // #else
+    //     public static REx Regex() => new(RegexString, RegexOptions);
+    // #endif
+    // public uri(string uriString) : base(uriString) { }
+    public uri(Uri uri) : this(uri.ToString()) { }
+    // public uri() : base(EmptyStringValue) { }
     public static uri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static Validation Validate(string value)
@@ -102,43 +109,56 @@ public partial class uri : global::System.Uri, IEquatable<uri>, IStringWithRegex
     public static uri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
     public static uri From(Uri uri) => new(uri);
 
+    public static implicit operator System.Uri(uri u) => Uri.TryCreate(u.OriginalString, RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator uri(string s) => From(s);
     public static implicit operator string(uri uri) => uri.ToString();
+    // public static implicit operator uri(uri? uri) => uri.HasValue ? uri.Value : Empty;
 
-    public static bool operator ==(uri? left, uri? right) => left?.ToString() == right?.ToString();
-    public static bool operator !=(uri? left, uri? right) => left?.ToString() != right?.ToString();
-    public static bool operator <=(uri? left, uri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) <= 0;
-    public static bool operator >=(uri? left, uri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) >= 0;
-    public static bool operator <(uri? left, uri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) < 0;
-    public static bool operator >(uri? left, uri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) > 0;
+    public static bool operator ==(uri? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
+    public static bool operator !=(uri? left, IResourceIdentifier right) => left?.CompareTo(right) != 0;
+    public static bool operator <=(uri? left, IResourceIdentifier right) => left?.CompareTo(right) <= 0;
+    public static bool operator >=(uri? left, IResourceIdentifier right) => left?.CompareTo(right) >= 0;
+    public static bool operator <(uri? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
+    public static bool operator >(uri? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
 
-    public override bool Equals(object? obj) => obj is uri uri && uri.ToString() == ToString();
+    public int CompareTo(IResourceIdentifier other) => other is uri uri ? CompareTo(uri) : CompareTo(other.ToString());
+
+    // public override bool Equals(object? obj) => obj is uri uri && uri.ToString() == ToString();
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : base.ToString();
+
+    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    private string BaseToString() => base.ToString();
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) => TryParse(s, out uri);
-    public static bool TryParse(string? s, out uri? uri)
+    public static bool TryParse(string? s, out uri uri)
     {
-        if (string.IsNullOrEmpty(s))
+        try
         {
-            uri = Empty;
-            return false;
+            if (string.IsNullOrEmpty(s))
+            {
+                uri = Empty;
+                return false;
+            }
+            if (global::System.Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            {
+                uri = From(suri.ToString());
+                return true;
+            }
         }
-        if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+        catch
         {
-            uri = From(suri.ToString());
-            return true;
+            // ignore it
         }
         uri = Empty;
         return false;
     }
 
-    public bool Equals(uri? other) => ToString() == other.ToString();
-    public virtual int CompareTo(string? other) => string.CompareOrdinal(ToString(), other);
-    public virtual int CompareTo(object? obj) => obj is uri uri ? CompareTo(uri?.ToString()) : throw new ArgumentException("Object is not a uri.");
-    public virtual bool Equals(string? other) => ToString() == other;
-    public int CompareTo(uri? other) => string.CompareOrdinal(ToString(), other?.ToString());
+    public bool Equals(uri? other) => Equals(other.ToString());
+    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public int CompareTo(object? obj) => obj is uri uri ? CompareTo(uri) : obj is string str ? CompareTo(str) : throw new ArgumentException("Object is not a uri.");
+    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public int CompareTo(uri other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
     public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri, string>

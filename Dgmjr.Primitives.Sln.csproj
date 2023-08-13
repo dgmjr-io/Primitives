@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="MetapackageSdk" />
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="src/Dgmjr.Primitives.csproj" />
+        <ProjectReference Include="Tests/Dgmjr.Primitives.Tests.csproj" />
+    </ItemGroup>
+</Project>

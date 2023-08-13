@@ -1,4 +1,7 @@
 namespace System;
+#if !NETSTANDARD2_0_OR_GREATER
+using Validation = global::Validation;
+#endif
 public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>, IHaveAUri
 #if NET7_0_OR_GREATER
     , IParsable<TSelf>, IUriConvertible<TSelf>
@@ -17,6 +20,7 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     public abstract static TSelf From(string value);
     public abstract static TSelf ExampleValue { get; }
     public abstract static TSelf Empty { get; }
+    // public abstract static Validation Validate(string value);
 #else
     string RegexString { get; }
     string Description { get; }

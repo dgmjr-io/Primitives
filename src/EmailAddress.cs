@@ -15,6 +15,9 @@ using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogen;
+#if !NETSTANDARD2_0_OR_GREATER
+using Validation = global::Validation;
+#endif
 
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
 [StructLayout(LayoutKind.Auto)]
@@ -161,7 +164,15 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <returns>A bool.</returns>
     public static bool TryParse(string? s, out EmailAddress email)
     {
-        return (email = From(s)) != Empty;
+        try
+        {
+            return (email = From(s)) != Empty;
+        }
+        catch (Vogen.ValueObjectValidationException vovex)
+        {
+            email = Empty;
+            return false;
+        }
     }
 
 

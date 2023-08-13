@@ -8,7 +8,7 @@
  * 
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
- */ 
+ */
 
 namespace System.Domain;
 using System;
@@ -22,6 +22,9 @@ using Vogen;
 using static System.Text.RegularExpressions.RegexOptions;
 using Phone = PhoneNumbers.PhoneNumber;
 using Util = PhoneNumbers.PhoneNumberUtil;
+#if !NETSTANDARD2_0_OR_GREATER
+using Validation = global::Validation;
+#endif
 
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
 [StructLayout(LayoutKind.Auto)]
@@ -31,9 +34,10 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public const string UriPrefix = "tel:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
     public static string Description => "a phone number in e.164 format";
-    public static PhoneNumber ExampleValue => From("+19174097331");
-    public const string Blank = "+10000000000";
-    public static PhoneNumber Empty => From(Blank);
+    public const string ExampleString = "+19174097331";
+    public static PhoneNumber ExampleValue => From(ExampleString);
+    public const string EmptyString = "+10000000000";
+    public static PhoneNumber Empty => From(EmptyString);
     public const string RegexString = @"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
