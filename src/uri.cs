@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 /*
  * uri.cs
  *
@@ -16,6 +17,7 @@ using System.Text.RegularExpressions;
 
 namespace System;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using global::Vogen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,6 +29,7 @@ using Validation = global::Validation;
 [RegexDto(uri._RegexString, regexOptions: uri._RegexOptions)]
 [uri.JConverter]
 [DebuggerDisplay("{ToString()}")]
+[StructLayout(LayoutKind.Auto)]
 #if NET6_0_OR_GREATER
 #endif
 public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
@@ -36,11 +39,13 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
 {
     public const string Description = "a uniform resource identifier (uri)";
     public const string ExampleStringValue = "example:example";
-    public const RegexOptions _RegexOptions = Compiled | IgnoreCase | Singleline;
-    public const string _RegexString = @"^(?<Scheme>[^\:]+)\:(?<PathAndQuery>\w+)$";
+    public const RegexOptions _RegexOptions = Compiled | IgnoreCase | Singleline | IgnorePatternWhitespace;
+    public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
     public bool IsEmpty => BaseToString() == EmptyStringValue;
+    public string PathAndQuery => $"{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+
 
     public string Value => ToString();
 #if NET6_0_OR_GREATER
@@ -109,7 +114,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public static uri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
     public static uri From(Uri uri) => new(uri);
 
-    public static implicit operator System.Uri(uri u) => Uri.TryCreate(u.OriginalString, RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(uri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator uri(string s) => From(s);
     public static implicit operator string(uri uri) => uri.ToString();
     // public static implicit operator uri(uri? uri) => uri.HasValue ? uri.Value : Empty;
@@ -128,7 +133,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
 
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => base.ToString();
+    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{Authority.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) => TryParse(s, out uri);
     public static bool TryParse(string? s, out uri uri)
