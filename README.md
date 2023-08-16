@@ -25,7 +25,7 @@ type: readme
 lastmod: 2023-07-02T22:36:04.550Z
 project: Dgmjr.Types
 version: 0.0.1
----
+--------------
 
 # Primitives
 
