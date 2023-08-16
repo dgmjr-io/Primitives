@@ -19,14 +19,14 @@ keywords:
 lastMod: 2023-03-19T03:27:38.342Z
 license: MIT
 slug: primitives
-title: Primitives
+title: DGMJR-IO Primitives
 type: readme
 lastmod: 2023-07-02T22:36:04.550Z
 project: Dgmjr.Types
 version: 0.0.1
 ---
 
-# Primitives
+# DGMJR-IO Primitives
 
 This package contains several "primitive" types that are used throughout the rest of the Types package.
 
