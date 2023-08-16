@@ -10,6 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace System;
 using static System.Text.RegularExpressions.RegexOptions;
@@ -23,22 +24,65 @@ using Validation = global::Validation;
 
 [RegexDto(iri._RegexString, regexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(iri.JsonConverter))]
+[StructLayout(LayoutKind.Auto)]
 #endif
 [DebuggerDisplay("{ToString()}")]
-public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceIdentifierWithQueryAndFragment
+public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceIdentifierWithAuthorityHostPortQueryAndFragment
 #if NET7_0_OR_GREATER
 , IUriConvertible<iri>
 #endif
 {
-    public new const string Description = "a internationalized resource identifier (iri)";
-    public new const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
+    public const string Description = "a internationalized resource identifier (iri)";
+    public const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-    public new const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?:\/\/)?(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*)@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
-    public new const string EmptyStringValue = "empty://google.com:400/foo.htm";
-    public new static iri Empty => From(EmptyStringValue);
+    public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*)@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?:\:(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    // @"^(?<Scheme:string?>
+    // [a-z][a-z0-9+\-.]*
+    // )
+    // :
+    // (?<DoubleSlashes:string?>\/\/)?
+    // (?<Authority:string?>
+    //     (?:
+    //         (?<UserInfo:string?>
+    //             (?:
+    //                 %[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9]
+    //             )*
+    //         )@
+    //     )?
+    //     (?<Host:string?>
+    //         (?:
+    //             \[(?:
+    //                 (?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7}
+    //             )
+    //             (?![0-9a-f])
+    //         )
+    //         |[a-z0-9]+
+    //         (?:[-.][a-z0-9]+)*
+    //     )
+    //     (?:
+    //         \:
+    //         (?<Port:int?>[0-9]+)
+    //     )?
+    // )?
+    // (?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?
+    // (?:
+    //     \?
+    //     (?<Query:string?>
+    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
+    //     )?
+    // )?
+    // (?:
+    //     #
+    //     (?<Fragment:string?>
+    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
+    //     )?
+    // )?$";
+    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public const string EmptyStringValue = "empty:about:🚫";
+    public static iri Empty => From(EmptyStringValue);
     public bool IsEmpty => BaseToString() == EmptyStringValue;
     public string PathAndQuery => $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
@@ -53,7 +97,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     string IStringWithRegexValueObject<iri>.Description => Description;
     iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
 #endif
-    // public static new iri Parse(string iri) => From(iri);
+    // public static iri Parse(string iri) => From(iri);
 
 #if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<iri>.RegexString => RegexString;
@@ -67,14 +111,14 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     //     // static iri IUriConvertible<iri>.FromUri(string s) => From(s);
     //     // static iri IUriConvertible<iri>.FromUri(Uri iri) => From(urn.ToString());
     // #else
-    //     public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public iri(string uriString) : base(uriString) { }
     public iri(Uri iri) : this(iri.ToString()) { }
     // public iri() : base(EmptyStringValue) { }
-    public static new iri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static iri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
-    public static new Validation Validate(string value)
+    public static Validation Validate(string value)
     {
         if (value is null)
         {
@@ -115,10 +159,10 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     public static iri FromUri(string s) => From(s);
     public static iri FromUri(Uri iri) => From(iri);
 
-    public static new iri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static new iri From(Uri iri) => new(iri);
+    public static iri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
+    public static iri From(Uri iri) => new(iri);
 
-    public static implicit operator System.Uri(iri i) => Uri.TryCreate(i.OriginalString, RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(iri i) => Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator iri(string s) => From(s);
     public static implicit operator string(iri iri) => iri.ToString();
 
@@ -136,7 +180,8 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
 
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => base.ToString();
+
+    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{Authority.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) => TryParse(s, out iri);
     public static bool TryParse(string? s, out iri iri)
@@ -168,18 +213,18 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
     public int CompareTo(iri other) => CompareTo(other.ToString());
 
-    public new class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
+    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public new class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
+    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
     {
         public override iri Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
         public override void Write(System.Text.Json.Utf8JsonWriter writer, iri value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 
-    public new class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<iri>
+    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<iri>
     {
         public override iri Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
         {
@@ -193,7 +238,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     }
 
 
-    public new class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
         public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {

@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-/* 
+/*
  * url.cs
- * 
+ *
  *   Created: 2023-06-17-01:41:48
  *   Modified: 2023-06-17-01:42:14
- * 
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- *   
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
@@ -15,6 +15,7 @@ using System.Diagnostics;
 
 namespace System;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vogen;
@@ -24,17 +25,18 @@ using Validation = global::Validation;
 #endif
 [RegexDto(url._RegexString, regexOptions: uri._RegexOptions)]
 [url.JConverter]
+[StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
 public partial record struct url : IStringWithRegexValueObject<url>, IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
 , IUriConvertible<url>
 #endif
 {
-    public new const string Description = "a uniform resource locator (url)";
-    public new const string ExampleStringValue = "https://dgmjr.io/";
-    public new const string _RegexString = @"^(?<Scheme>[^:]+):\/\/(?<Path>[a-zA-Z0-9\^!@#$%&\*\(\)\/:]+)(?<Query>\?[a-zA-Z0-9\^!@#$%\*\(\)\/:]+&?)(?<Fragment>#[a-zA-Z0-9\^!@#$%\*\(\)\/:]+)$";
-    public new const string EmptyStringValue = "about:blank";
-    public static new url Empty => From(EmptyStringValue);
+    public const string Description = "a uniform resource locator (url)";
+    public const string ExampleStringValue = "https://dgmjr.io/";
+    public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public const string EmptyStringValue = "about:blank";
+    public static url Empty => From(EmptyStringValue);
     public bool IsEmpty => base.ToString() == EmptyStringValue;
 
     public string PathAndQuery => $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
@@ -48,7 +50,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     string IStringWithRegexValueObject<url>.Description => Description;
     url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
 #endif
-    // public static new url Parse(string url) => From(url);
+    // public static url Parse(string url) => From(url);
 
 
 
@@ -65,14 +67,14 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
     //     public static partial REx Regex();
     // #else
-    //     public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public url(string urlString) : this(urlString) { }
     public url(Uri url) : this(url.ToString()) { }
     // public url() : this(EmptyStringValue) { }
-    public static new url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
-    public static new Validation Validate(string value)
+    public static Validation Validate(string value)
     {
         if (value is null)
         {
@@ -89,10 +91,10 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     public static bool TryCreate(string? urlString, UriKind? uriKind, out url url)
         => TryParse(urlString, out url);
 
-    public static new url From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
+    public static url From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
     public static url From(url url) => new(url.ToString());
 
-    public static implicit operator System.Uri(url u) => Uri.TryCreate(u.OriginalString, RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(url u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator url(string s) => From(s);
     public static implicit operator string(url url) => url.ToString();
 
@@ -142,23 +144,23 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
     public int CompareTo(url other) => CompareTo(other.ToString());
 
-    public new class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url, string>
+    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public new class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
         public JConverterAttribute() : base(typeof(url.JsonConverter)) { }
     }
 
-    public new class JsonConverter : System.Text.Json.Serialization.JsonConverter<url>
+    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<url>
     {
         public override url Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
         public override void Write(System.Text.Json.Utf8JsonWriter writer, url value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 
-    public new class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<url>
+    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<url>
     {
         public override url Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
         {
@@ -172,7 +174,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     }
 
 
-    public new class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
         public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {

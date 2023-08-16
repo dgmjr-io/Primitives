@@ -16,7 +16,8 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="FluentAssertions" />
-    <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
+    <PackageReference Include="Dgmjr.System.Extensions" />
+    <PackageReference Include="Dgmjr.Primitives" />
   </ItemGroup>
 
 </Project>
