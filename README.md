@@ -127,7 +127,7 @@ if (id.IsEmpty) {
 
 ## The <ins>`blank`</ins> Resource <ins>`blank`</ins>s
 
-These are a collection of `**blank** resource **blank**`s.
+These are a collection of <ins>`blank`</ins> Resource <ins>`blank`</ins>s.
 
 - [`iri`](https://github.com/dgmjr-io/Primitives/blob/main/src/iri.cs) - An internationalized resource identifier
 - [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs) - A uniform resource identifier
