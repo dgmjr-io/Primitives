@@ -1,21 +1,22 @@
 ---
+
 authors:
-  - dgmjr
+- dgmjr
 date: 2023-07-02T20:00:10.681Z
 description: This package contains several "primitive" types that are used throughout the rest of the Types package.
 keywords:
-  - DGMJR-IO
-  - emailaddress
-  - int24
-  - primitives
-  - phonenumber
-  - objectid
-  - types
-  - uri
-  - urn
-  - url
-  - xri
-  - iri
+- DGMJR-IO
+- emailaddress
+- int24
+- primitives
+- phonenumber
+- objectid
+- types
+- uri
+- urn
+- url
+- xri
+- iri
 lastMod: 2023-03-19T03:27:38.342Z
 license: MIT
 slug: primitives
@@ -24,7 +25,7 @@ type: readme
 lastmod: 2023-07-02T22:36:04.550Z
 project: Dgmjr.Types
 version: 0.0.1
----
+--------------
 
 # Primitives
 
@@ -35,6 +36,7 @@ This package contains several "primitive" types that are used throughout the res
 ### Email Address Value Object
 
 - [`EmailAddress`](https://github.com/dgmjr-io/Primitives/blob/main/src/EmailAddress.cs) - An email address value type
+
 #### Overview
 
 The `EmailAddress` struct represents an email address value. It aims to encapsulate email address parsing, validation, and formatting logic in a reusable way.
@@ -58,6 +60,7 @@ if (email.IsEmpty) {
   // use email
 }
 ```
+
 ### Phone Number Value Object
 
 - [`PhoneNumber`](https://github.com/dgmjr-io/Primitives/blob/main/src/PhoneNumber.cs) - A phone number value type
@@ -134,3 +137,4 @@ These are a collection of `**blank** resource **blank**`s.
 - [`url`](https://github.com/dgmjr-io/Primitives/blob/main/src/url.cs) - A uniform resource locator
 - [`urn`](https://github.com/dgmjr-io/Primitives/blob/main/src/urn.cs) - A uniform resource name
 - [`xri`](https://github.com/dgmjr-io/Primitives/blob/main/src/xri.cs) - An eXtensble resource identifier
+
