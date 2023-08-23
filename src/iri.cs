@@ -181,7 +181,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{Authority.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{UserInfo.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) => TryParse(s, out iri);
     public static bool TryParse(string? s, out iri iri)
