@@ -1,11 +1,11 @@
-/* 
+/*
  * PhoneNumber.cs
- * 
+ *
  *   Created: 2023-08-01-05:18:07
  *   Modified: 2023-08-01-05:18:08
- * 
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- * 
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
@@ -14,12 +14,17 @@ namespace System.Domain;
 using System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 using PhoneNumbers;
+
 using Vogen;
+
 using static System.Text.RegularExpressions.RegexOptions;
+
 using Phone = PhoneNumbers.PhoneNumber;
 using Util = PhoneNumbers.PhoneNumberUtil;
 #if !NETSTANDARD2_0_OR_GREATER
@@ -38,7 +43,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static PhoneNumber ExampleValue => From(ExampleString);
     public const string EmptyString = "+10000000000";
     public static PhoneNumber Empty => From(EmptyString);
-    public const string RegexString = @"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
+    public const string RegexString = @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
     public string? Number { get; private set; }
@@ -47,11 +52,12 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public string? Extension => ParsedNumber?.Extension;
     public Phone ParsedNumber => _util.Parse(Value, DefaultRegion);
     public bool IsEmpty => this == Empty;
+    public string OriginalString { get; set; }
 
     public Uri Uri => new(Format(UriPattern, ToString()));
 
-    public static PhoneNumber FromUri(string s) => From(s.Remove(0, UriPrefix.Length));
-    public static PhoneNumber FromUri(Uri u) => FromUri(u.ToString());
+    public static PhoneNumber FromUri(string s) => From(s.Remove(0, UriPrefix.Length)) with { OriginalString = s.Remove(0, UriPrefix.Length) };
+    public static PhoneNumber FromUri(Uri u) => FromUri(u.ToString()) with { OriginalString = u.ToString() };
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
@@ -66,11 +72,11 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
     public override string ToString() => IsEmpty ? string.Empty : _util.Format(this.ParsedNumber, PhoneNumberFormat.E164);
 
-    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out PhoneNumber number) => (number = TryParse(s, out var number1) ? number1!.Value : Empty) != Empty;
     public static bool TryParse(string s, out PhoneNumber? number)
     {
-        try { number = From(s); return true; }
+        try { number = From(s) with { OriginalString = s }; return true; }
         catch { number = null; return false; }
     }
 
@@ -120,7 +126,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             Validation.Ok :
             Validation.Invalid("Phone number is not valid.");
 #endif
-    public static PhoneNumber Parse(string value) => From(value);
+    public static PhoneNumber Parse(string value) => From(value) with { OriginalString = value };
     public int CompareTo(object? obj) => obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
 
 #if !NET7_0_OR_GREATER
@@ -130,7 +136,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
 #if !NETSTANDARD2_0_OR_GREATER
     public string Value { get; private set; }
-    public static PhoneNumber From(string s) => Validate(s) == Validation.Ok ? new PhoneNumber() { Value = _util.Parse(s, DefaultRegion).ToString() } : throw new ArgumentException("Phone number is not valid.", nameof(s));
+    public static PhoneNumber From(string s) => Validate(s) == Validation.Ok ? new PhoneNumber() { Value = _util.Parse(s, DefaultRegion).ToString(), OriginalString = s } : throw new ArgumentException("Phone number is not valid.", nameof(s));
     public int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
 #endif
 

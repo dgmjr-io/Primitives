@@ -12,9 +12,12 @@
 namespace System.Net.Mail;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Vogen;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
@@ -41,6 +44,8 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     public const string UriPattern = $"{UriPrefix}{{0}}";
 
     public Uri Uri => IsEmpty ? null! : new(Format(UriPrefix, ToString()));
+
+    public string OriginalString { get; set; }
 #if NET6_0_OR_GREATER
     /// <summary>
     /// Gets the description.
@@ -68,7 +73,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <summary>
     /// Gets the empty.
     /// </summary>
-    public static EmailAddress Empty => From(EmptyValueString);
+    public static EmailAddress Empty => From(EmptyValueString) with { OriginalString = EmptyValueString };
 
     /// <summary>
     /// The regex string.
@@ -86,7 +91,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     public static REx Regex() => new(RegexString, Compiled);
 #endif
 
-    public static EmailAddress FromUri(string s) => From(s.Remove(0, UriPrefix.Length));
+    public static EmailAddress FromUri(string s) => From(s.Remove(0, UriPrefix.Length)) with { OriginalString = s.Remove(0, UriPrefix.Length) };
     public static EmailAddress FromUri(Uri u) => FromUri(u.ToString());
 
     /// <summary>
@@ -147,7 +152,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="s">The s.</param>
     /// <param name="formatProvider">The format provider.</param>
     /// <returns>An EmailAddress.</returns>
-    public static EmailAddress Parse(string? s, IFormatProvider? formatProvider = null) => From(s);
+    public static EmailAddress Parse(string? s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
     /// <summary>
     /// Try parse.
     /// </summary>
@@ -166,7 +171,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     {
         try
         {
-            return (email = From(s)) != Empty;
+            return (email = From(s) with { OriginalString = s }) != Empty;
         }
         catch (Vogen.ValueObjectValidationException vovex)
         {

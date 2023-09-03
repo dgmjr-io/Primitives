@@ -1,8 +1,0 @@
-{
-    "dotnet-test-explorer.testProjectPath": "**/Dgmjr.Primitives.Tests.csproj",
-    "workbench.colorCustomizations": {
-        "activityBar.background": "#22128B",
-        "titleBar.activeBackground": "#3019C3",
-        "titleBar.activeForeground": "#FDFDFF"
-    }
-}

@@ -16,10 +16,14 @@ using System.Diagnostics;
 namespace System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Vogen;
+
 using static System.Text.RegularExpressions.RegexOptions;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
@@ -34,10 +38,11 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
 {
     public const string Description = "a uniform resource locator (url)";
     public const string ExampleStringValue = "https://dgmjr.io/";
-    public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public const string _RegexString = @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public const string EmptyStringValue = "about:blank";
     public static url Empty => From(EmptyStringValue);
-    public bool IsEmpty => base.ToString() == EmptyStringValue;
+    public bool IsEmpty => OriginalString == EmptyStringValue;
 
     public string PathAndQuery => $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
@@ -49,19 +54,15 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
 #else
     string IStringWithRegexValueObject<url>.Description => Description;
     url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
+    string IStringWithRegexValueObject<url>.RegexString => RegexString;
+    REx IStringWithRegexValueObject<url>.Regex() => Regex();
 #endif
     // public static url Parse(string url) => From(url);
 
 
-
-#if !NET6_0_OR_GREATER
-    string IStringWithRegexValueObject<url>.RegexString => RegexString;
-    REx IStringWithRegexValueObject<url>.Regex() => Regex();
-#endif
-
     public Uri Uri => this;
-    public static url FromUri(url url) => From(url.ToString());
-    public static url FromUri(string s) => From(s);
+    public static url FromUri(url url) => From(url.ToString()) with { OriginalString = url.ToString() };
+    public static url FromUri(string s) => From(s) with { OriginalString = s };
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
@@ -91,11 +92,11 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     public static bool TryCreate(string? urlString, UriKind? uriKind, out url url)
         => TryParse(urlString, out url);
 
-    public static url From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static url From(url url) => new(url.ToString());
+    public static url From(string s) => Validate(s) == Validation.Ok ? new url(s) with { OriginalString = s } : Empty;
+    public static url From(url url) => new url(url.ToString()) with { OriginalString = url.ToString() };
 
     public static implicit operator System.Uri(url u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
-    public static implicit operator url(string s) => From(s);
+    public static implicit operator url(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(url url) => url.ToString();
 
     // public static implicit operator url(url? url) => url.HasValue ? url.Value : Empty;
@@ -112,7 +113,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     public override int GetHashCode() => ToString().GetHashCode();
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => base.ToString();
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out url url) => TryParse(s, out url);
     public static bool TryParse(string? s, out url url)

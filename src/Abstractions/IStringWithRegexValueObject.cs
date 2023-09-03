@@ -77,4 +77,6 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     /// <returns>a <see cref="REx" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
     REx Regex();
 #endif
+
+    string OriginalString { get; }
 }

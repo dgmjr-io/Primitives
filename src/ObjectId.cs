@@ -15,12 +15,15 @@ namespace System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using Vogen;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
 
 [ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
+// [RegexDto(ObjectId.RegexString)]
 public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, IComparable<ObjectId>, IComparable, IEquatable<ObjectId>
 {
     public const string Description = $"A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
@@ -44,16 +47,18 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
 
     public static ObjectId NewId() => From(Guid.NewGuid().ToString("N").Substring(0, 24));
 
-    public static ObjectId Empty => From(EmptyValue);
+    public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
 
     public bool IsNull => Value == EmptyValue;
     public bool IsEmpty => Value == EmptyValue;
+    public string OriginalString { get; set; }
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
 #endif
 
-    public static ObjectId ExampleValue => From("abcdef0123456789abcdef01");
+    public const string ExampleValueString = "abcdef0123456789abcdef01";
+    public static ObjectId ExampleValue => From(ExampleValueString) with { OriginalString = ExampleValueString };
 
 #if !NET6_0_OR_GREATER
     REx IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
@@ -64,7 +69,7 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
 
     ObjectId IStringWithRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
-    public static ObjectId Parse(string s) => TryParse(s, out var result) ? result : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
+    public static ObjectId Parse(string s) => TryParse(s, out var result) ? result with { OriginalString = s } : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
     public static bool TryParse(string s, out ObjectId result)
     {
         if (s is null || s.Length != Length || !Regex().IsMatch(s))
@@ -73,7 +78,7 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
             return false;
         }
 
-        result = ObjectId.From(s);
+        result = ObjectId.From(s) with { OriginalString = s };
         return true;
     }
 
@@ -96,9 +101,9 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
             return Validation.Ok;
     }
 
-    public static ObjectId Parse(string s, IFormatProvider? provider) => From(s);
+    public static ObjectId Parse(string s, IFormatProvider? provider) => From(s) with { OriginalString = s };
     public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result)
-        => (result = Validate(s).ErrorMessage is null ? From(s) : default) != default;
+        => (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default) != default;
 }
 
 

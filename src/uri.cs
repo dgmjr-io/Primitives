@@ -18,10 +18,14 @@ using System.Text.RegularExpressions;
 namespace System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using global::Vogen;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using static System.Text.RegularExpressions.RegexOptions;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
@@ -40,7 +44,8 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public const string Description = "a uniform resource identifier (uri)";
     public const string ExampleStringValue = "example:example";
     public const RegexOptions _RegexOptions = Compiled | IgnoreCase | Singleline | IgnorePatternWhitespace;
-    public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public const string _RegexString = @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
     public bool IsEmpty => BaseToString() == EmptyStringValue;
@@ -53,19 +58,16 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     static string IStringWithRegexValueObject<uri>.Description => Description;
     static uri IStringWithRegexValueObject<uri>.Empty => EmptyStringValue;
     static uri IStringWithRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
-    static uri IStringWithRegexValueObject<uri>.Parse(string s) => From(s);
+    static uri IStringWithRegexValueObject<uri>.Parse(string s) => From(s)with { OriginalString = s };
 #else
     string IStringWithRegexValueObject<uri>.Description => Description;
     uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
+    string IStringWithRegexValueObject<uri>.RegexString => RegexString;
+    REx IStringWithRegexValueObject<uri>.Regex() => Regex();
 #endif
     // public static uri Parse(string uri) => From(uri);
 
     public Uri Uri => this;
-
-#if !NET6_0_OR_GREATER
-    string IStringWithRegexValueObject<uri>.RegexString => RegexString;
-    REx IStringWithRegexValueObject<uri>.Regex() => Regex();
-#endif
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | RegexOptions)]
@@ -79,7 +81,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     // public uri(string uriString) : base(uriString) { }
     public uri(Uri uri) : this(uri.ToString()) { }
     // public uri() : base(EmptyStringValue) { }
-    public static uri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static uri Parse(string s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
 
     public static Validation Validate(string value)
     {
@@ -111,11 +113,11 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
         return false;
     }
 
-    public static uri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static uri From(Uri uri) => new(uri);
+    public static uri From(string s) => Validate(s) == Validation.Ok ? new uri(s) with { OriginalString = s } : Empty;
+    public static uri From(Uri uri) => new uri(uri) with { OriginalString = uri.ToString() };
 
     public static implicit operator System.Uri(uri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
-    public static implicit operator uri(string s) => From(s);
+    public static implicit operator uri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(uri uri) => uri.ToString();
     // public static implicit operator uri(uri? uri) => uri.HasValue ? uri.Value : Empty;
 
@@ -133,7 +135,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
 
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{Authority.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) => TryParse(s, out uri);
     public static bool TryParse(string? s, out uri uri)

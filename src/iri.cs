@@ -38,7 +38,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-    public const string _RegexString = @"^(?<Scheme:string?>[a-zA-Z][a-zA-Z0-9+.-]*):(?<Authority:string?>//(?<UserInfo:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)@)?(?<Host:string?>(?:\[(?:(?:[0-9a-fA-F]{1,4}:){6}|(?=(?:[0-9a-fA-F]{0,4}:){0,6}(?:[0-9a-fA-F]{1,4}:)?(?:[0-9a-fA-F]{1,4}|\*))\[(([0-9a-fA-F]{1,4}:){0,5}|:)((:[0-9a-fA-F]{1,4}){1,5}|:)|::(?:[0-9a-fA-F]{1,4}:){0,4})[0-9a-fA-F]{1,4}\])|(?<IPV4:string?>(?:[0-9]{1,3}\.){3}[0-9]{1,3})|(?<RegName:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@])|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)(?::(?<Port:int?>[0-9]*))?)?(?<Path:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)?(?:\?(?<Query:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@/?]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@/?]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)?)?$";
+    public const string _RegexString = @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
     // @"^(?<Scheme:string?>
     // [a-z][a-z0-9+\-.]*
     // )
@@ -81,6 +81,8 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     //     )?
     // )?$";
     // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public string? DoubleSlashes => "//";
+
     public const string EmptyStringValue = "empty:about:🚫";
     public static iri Empty => From(EmptyStringValue);
     public bool IsEmpty => BaseToString() == EmptyStringValue;
@@ -92,17 +94,13 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     static string IStringWithRegexValueObject<iri>.Description => Description;
     static iri IStringWithRegexValueObject<iri>.Empty => EmptyStringValue;
     static iri IStringWithRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
-    static iri IStringWithRegexValueObject<iri>.Parse(string s) => From(s);
 #else
     string IStringWithRegexValueObject<iri>.Description => Description;
     iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
-#endif
-    // public static iri Parse(string iri) => From(iri);
-
-#if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<iri>.RegexString => RegexString;
     REx IStringWithRegexValueObject<iri>.Regex() => Regex();
 #endif
+    // public static iri Parse(string iri) => From(iri);
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
@@ -116,7 +114,8 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     // public iri(string uriString) : base(uriString) { }
     public iri(Uri iri) : this(iri.ToString()) { }
     // public iri() : base(EmptyStringValue) { }
-    public static iri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    // public static iri Parse(string s) => From(s) with { OriginalString = s };
+    public static iri Parse(string s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
 
     public static Validation Validate(string value)
     {
@@ -156,14 +155,14 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
     }
 
     public Uri Uri => this;
-    public static iri FromUri(string s) => From(s);
-    public static iri FromUri(Uri iri) => From(iri);
+    public static iri FromUri(string s) => From(s) with { OriginalString = s };
+    public static iri FromUri(Uri iri) => From(iri) with { OriginalString = iri.ToString() };
 
-    public static iri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
+    public static iri From(string s) => Validate(s) == Validation.Ok ? new iri(s) with { OriginalString = s } : Empty;
     public static iri From(Uri iri) => new(iri);
 
     public static implicit operator System.Uri(iri i) => Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
-    public static implicit operator iri(string s) => From(s);
+    public static implicit operator iri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(iri iri) => iri.ToString();
 
     public static bool operator ==(iri? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
@@ -181,7 +180,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => $"{Scheme}:{DoubleSlashes}{UserInfo.FormatIfNotNullOrEmpty("{0}@")}{Host}{Port.ToString().FormatIfNotNullOrEmpty(":{0}")}{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) => TryParse(s, out iri);
     public static bool TryParse(string? s, out iri iri)

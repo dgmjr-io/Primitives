@@ -8,6 +8,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <BuildDependsOn>$(BuildDependsOn);PreBuild</BuildDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,14 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Dgmjr.System.Extensions" />
     <PackageReference Include="Dgmjr.Primitives" />
+    <PackageReference Include="Dgmjr.Testing.Logging" />
+    <!-- <ProjectReference Include="../src/Dgmjr.Primitives.csproj" /> -->
   </ItemGroup>
+
+
+  <Target Name="PreBuild">
+    <MSBuild Project="../src/Dgmjr.Primitives.csproj"
+      SetConfiguration="Configuration='$(Configuration)'" />
+  </Target>
 
 </Project>

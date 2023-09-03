@@ -3,6 +3,8 @@ using System.Net.Mail;
 
 public class EmailAddressTests : PrimitivesTests<EmailAddress, EmailAddressTests>
 {
+    public EmailAddressTests(ITestOutputHelper output) : base(output) { }
+
     protected override string[][] InvalidValuesStrings => new[]
     {
         new[] { "not an email" },

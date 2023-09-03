@@ -13,10 +13,14 @@
 namespace System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Vogen;
+
 using static System.Text.RegularExpressions.RegexOptions;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
@@ -30,7 +34,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
 {
     public const string Description = "an eXtensible resource locator (xri)";
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
-    public const string _RegexString = @"^(?<Scheme>xri)://(?<Path>[^/?#]+(?:/[^/?#]+)*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
+    public const string _RegexString = @"^(?<Scheme>xri):(?<DoubleSlashes>\/\/)?(?<Path>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);
     public bool IsEmpty => base.ToString() == EmptyStringValue;
@@ -46,17 +50,14 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
 #else
     string IStringWithRegexValueObject<xri>.Description => Description;
     xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    string IStringWithRegexValueObject<xri>.RegexString => RegexString;
+    REx IStringWithRegexValueObject<xri>.Regex() => Regex();
 #endif
     // public static xri Parse(string xri) => From(xri);
 
     public Uri Uri => this;
-    public static xri FromUri(string s) => From(s);
-    public static xri FromUri(Uri u) => From(u);
-
-#if !NET6_0_OR_GREATER
-    string IStringWithRegexValueObject<xri>.RegexString => RegexString;
-    REx IStringWithRegexValueObject<xri>.Regex() => Regex();
-#endif
+    public static xri FromUri(string s) => From(s) with { OriginalString = s };
+    public static xri FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
     //     private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
     // #if NET70_OR_GREATER
@@ -101,11 +102,11 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
         return false;
     }
 
-    public static xri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static xri From(Uri xri) => new(xri);
+    public static xri From(string s) => Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+    public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
     public static implicit operator System.Uri(xri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
-    public static implicit operator xri(string s) => From(s);
+    public static implicit operator xri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(xri xri) => xri.ToString();
 
     // public static implicit operator xri(xri? xri) => xri.HasValue ? xri.Value : Empty;
@@ -124,7 +125,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
 
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => $"xri://{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) => TryParse(s, out xri);
     public static bool TryParse(string? s, out xri xri)
@@ -138,7 +139,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
             }
             if (xri.TryCreate(s, default, out var surl))
             {
-                xri = From(surl.ToString());
+                xri = From(surl.ToString()) with { OriginalString = surl.ToString() };
                 return true;
             }
         }

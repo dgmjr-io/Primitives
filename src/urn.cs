@@ -1,3 +1,4 @@
+using System;
 /*
  * urn.cs
  *
@@ -10,13 +11,17 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Vogen;
+
 using static System.Text.RegularExpressions.RegexOptions;
 
 [RegexDto(urn._RegexString, regexOptions: uri._RegexOptions)]
@@ -30,12 +35,13 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
 {
     public const string Description = "a uniform resource name (urn)";
     public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
-    public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)$";
+    // public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)$";
+    public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
     public const string EmptyStringValue = "urn:about:blank";
-    public static string Empty => From(EmptyStringValue);
-    public bool IsEmpty => base.ToString() == EmptyStringValue;
+    public static urn Empty => From(EmptyStringValue);
+    public bool IsEmpty => BaseToString() == EmptyStringValue;
     public string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
-
+    public string? DoubleSlashes = null;
     public string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<urn>.Description => Description;
@@ -46,13 +52,10 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     string IStringWithRegexValueObject<urn>.Description => Description;
     urn IStringWithRegexValueObject<urn>.ExampleValue => ExampleStringValue;
     // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
-#endif
-    // public static urn Parse(string urn) => From(urn);
-
-#if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<urn>.RegexString => RegexString;
     REx IStringWithRegexValueObject<urn>.Regex() => Regex();
 #endif
+    // public static urn Parse(string urn) => From(urn);
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
@@ -65,7 +68,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     // public urn(string uriString) : base(uriString) { }
     public urn(Uri urn) : this(urn.ToString()) { }
     // public urn() : this(EmptyStringValue) { }
-    public static urn Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    public static urn Parse(string s, IFormatProvider? formatProvider = null) => TryParse(s, out var urn) ? urn : throw new FormatException($"The input string {s} was not in the correct format for a {nameof(urn)}.");
 
     public static Validation Validate(string value)
     {
@@ -73,7 +76,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        else if (!Regex().IsMatch(value))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }
@@ -89,9 +92,9 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
             urn = Empty;
             return false;
         }
-        if (Uri.TryCreate(uriString, default, out var suri))
+        if (TryParse(uriString, out var suri))
         {
-            urn = From(suri.ToString());
+            urn = From(uriString) with { OriginalString = uriString };
             return true;
         }
         urn = Empty;
@@ -99,14 +102,14 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     }
 
     public Uri Uri => this;
-    public static urn FromUri(string s) => From(s);
-    public static urn FromUri(Uri u) => From(u);
+    public static urn FromUri(string s) => From(s) with { OriginalString = s };
+    public static urn FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
-    public static urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) : Empty;
-    public static urn From(Uri urn) => new(urn);
+    public static urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) with { OriginalString = s } : Empty;
+    public static urn From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
 
     public static implicit operator System.Uri(urn u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
-    public static implicit operator urn(string s) => From(s);
+    public static implicit operator urn(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(urn urn) => urn.ToString();
 
     // public static implicit operator urn(urn? urn) => urn.HasValue ? urn.Value : Empty;
@@ -125,7 +128,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
 
 
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => base.ToString();
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out urn urn) => TryParse(s, out urn);
     public static bool TryParse(string? s, out urn urn)
@@ -137,9 +140,9 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
                 urn = Empty;
                 return false;
             }
-            if (Uri.TryCreate(s, global::System.UriKind.Absolute, out var suri))
+            if (Regex().IsMatch(s))
             {
-                urn = From(suri.ToString());
+                urn = From(s) with { OriginalString = s };
                 return true;
             }
         }
