@@ -1,4 +1,5 @@
 #if !NET6_0_OR_GREATER
+using System;
 using System.Security;
 
 namespace System;
@@ -10,13 +11,13 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
     // ...
 
     /// <summary>
-    /// Compares this <see cref="TimeOnly"/> to another object. 
+    /// Compares this <see cref="TimeOnly"/> to another object.
     /// </summary>
     /// <param name="obj">The object to compare to.</param>
     /// <returns>
     /// A 32-bit signed integer that indicates whether this <see cref="TimeOnly"/> is earlier than, the same as, or later than the other object:
-    /// Less than zero: This <see cref="TimeOnly"/> is earlier. 
-    /// Zero: This <see cref="TimeOnly"/> is the same. 
+    /// Less than zero: This <see cref="TimeOnly"/> is earlier.
+    /// Zero: This <see cref="TimeOnly"/> is the same.
     /// Greater than zero: This <see cref="TimeOnly"/> is later.
     /// </returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="obj"/> is not of type <see cref="TimeOnly"/>.</exception>
@@ -39,13 +40,13 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
 
 
     /// <summary>
-    /// Compares this <see cref="TimeOnly"/> to another object. 
+    /// Compares this <see cref="TimeOnly"/> to another object.
     /// </summary>
     /// <param name="other">The object to compare to.</param>
     /// <returns>
     /// A 32-bit signed integer that indicates whether this <see cref="TimeOnly"/> is earlier than, the same as, or later than the other object:
-    /// Less than zero: This <see cref="TimeOnly"/> is earlier. 
-    /// Zero: This <see cref="TimeOnly"/> is the same. 
+    /// Less than zero: This <see cref="TimeOnly"/> is earlier.
+    /// Zero: This <see cref="TimeOnly"/> is the same.
     /// Greater than zero: This <see cref="TimeOnly"/> is later.
     /// </returns>
     public int CompareTo(TimeOnly other)
@@ -172,6 +173,8 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
         bytesWritten = length;
         return true;
     }
+
+    public string ToLongTimeString() => Format("HH:MM:ss.ffff");
 
     public static implicit operator TimeOnly(TimeSpan time) => new TimeOnly(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
 

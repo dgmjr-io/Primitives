@@ -1,12 +1,14 @@
 #if NET7_0_OR_GREATER
-/* 
+using System;
+using System.ComponentModel;
+/*
  * RegexGuardedString.cs
- * 
+ *
  *   Created: 2023-06-28-07:41:53
  *   Modified: 2023-06-28-07:41:53
- * 
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- *   
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
@@ -18,68 +20,39 @@ using Microsoft.OpenApi.Expressions;
 using static System.Activator;
 namespace System;
 
-public interface IRegexGuardedString
+public delegate REx RegexProvider();
+
+public interface IRegexProvider
 {
-    public static abstract RegexOptions RegexOptions { get; }
+    public static abstract RegexProvider Regex { get; }
+    public const RegexOptions DefaultRegexOptions = Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace;
+}
+
+public interface IRegexGuardedString<TSelf>
+{
     public static abstract REx Regex();
 
     string Value { get; }
 }
-public interface IRegexGuardedString<TSelf> : IRegexGuardedString
+
+public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedString<TRegexProvider>
     where TSelf : RegexGuardedString<TSelf>
+    where TRegexProvider : IRegexProvider
 {
+    public static REx Regex() => TRegexProvider.Regex();
 }
 
 // [RegexGuardedString.JConverter]
-public class RegexGuardedString : IRegexGuardedString
+public class RegexGuardedString<TSelf, TRegexProvider> : RegexGuardedString<TSelf>, IRegexGuardedString<TSelf, TRegexProvider>
+    where TSelf : RegexGuardedString<TSelf, TRegexProvider>
+    where TRegexProvider : IRegexProvider
 {
     private string _value;
-    private const RegexOptions _defaultDRegexOptions = Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace;
 
-    public static RegexOptions RegexOptions { get; set; }
-    private static REx _regex = null!;
-    public static REx Regex() => _regex;
+    public static REx Regex() => TRegexProvider.Regex();
 
-    public RegexGuardedString(string value, string pattern, RegexOptions options = _defaultDRegexOptions)
+    public RegexGuardedString(string value) : base(value, TRegexProvider.Regex())
     {
-        if (IsNullOrEmpty(value))
-        {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(value));
-        }
-
-        if (IsNullOrEmpty(pattern))
-        {
-            throw new ArgumentException("Pattern cannot be null or empty.", nameof(pattern));
-        }
-
-        RegexOptions = options;
-        _regex = new(pattern, RegexOptions);
-
-        Value = value;
-    }
-
-    public string Value
-    {
-        get => _value;
-        private set
-        {
-            if (IsNullOrEmpty(value))
-            {
-                throw new ArgumentException("Value cannot be null or empty.");
-            }
-
-            if (!Regex().IsMatch(value))
-            {
-                throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {Regex()}");
-            }
-
-            _value = value;
-        }
-    }
-
-    public override string ToString()
-    {
-        return _value;
     }
 
     //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
@@ -149,10 +122,21 @@ public class RegexGuardedString : IRegexGuardedString
     //     }
 }
 
-public class RegexGuardedString<TSelf> : RegexGuardedString, IRegexGuardedString<TSelf>
+public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
     where TSelf : RegexGuardedString<TSelf>
 {
-    protected RegexGuardedString(string value) : base(value, Regex().ToString(), Regex().Options) { }
+    protected RegexGuardedString(string value, REx regex)
+    {
+        _regex = regex;
+        Value = value;
+    }
+
+    protected RegexGuardedString(string value, string regex, RegexOptions options = IRegexProvider.DefaultRegexOptions) : this(value, new(regex, options))
+    {
+    }
+
+    private static REx _regex;
+    public static REx Regex() => _regex;
 
     public static implicit operator string(RegexGuardedString<TSelf> value)
     {
@@ -164,6 +148,30 @@ public class RegexGuardedString<TSelf> : RegexGuardedString, IRegexGuardedString
         return (TSelf?)Activator.CreateInstance(typeof(TSelf), value);
     }
 
+    public override string ToString()
+    {
+        return _value;
+    }
+
+    private string _value;
+    public virtual string Value
+    {
+        get => _value;
+        private set
+        {
+            if (IsNullOrEmpty(value))
+            {
+                throw new ArgumentException("Value cannot be null or empty.");
+            }
+
+            if (!Regex().IsMatch(value))
+            {
+                throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {Regex()}");
+            }
+
+            _value = value;
+        }
+    }
 
     //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     //     {

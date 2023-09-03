@@ -1,6 +1,6 @@
 namespace System;
 
-public interface IUriConvertible<T> where T : IUriConvertible<T>
+public interface IUriConvertible<T> where T : IUriConvertible<T>, IHaveAUri
 {
 #if NET70_OR_GREATER
     public static virtual T FromUri(Uri uri) => typeof(T).IsAssignableFrom(typeof(Uri)) ? (T)uri : new FromUri(uri?.ToString() ?? string.Empty);

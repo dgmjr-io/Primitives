@@ -1,3 +1,4 @@
+using System;
 /*
  * urn.cs
  *
@@ -10,30 +11,38 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace System;
-using static System.Text.RegularExpressions.RegexOptions;
-#if NETSTANDARD2_0_OR_GREATER
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using Vogen;
+
+using static System.Text.RegularExpressions.RegexOptions;
+
+[RegexDto(urn._RegexString, regexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(urn.JsonConverter))]
-#endif
+[StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
-public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn>, IHaveAUri
+public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, IResourceIdentifier
 #if NET7_0_OR_GREATER
-// , IUriConvertible<urn>
+, IUriConvertible<urn>
 #endif
 {
-    public new const string Description = "a uniform resource name (urn)";
-    public new const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
-    public new const string RegexString = @"^(?<Scheme>urn):(?<Name>[^\s].+)$";
-    public new const string EmptyStringValue = "about:blank";
-    public static new string Empty => From(EmptyStringValue);
-    public override bool IsEmpty => base.ToString() == EmptyStringValue;
-
-    public override string Value => ToString();
+    public const string Description = "a uniform resource name (urn)";
+    public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
+    // public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)$";
+    public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
+    public const string EmptyStringValue = "urn:about:blank";
+    public static urn Empty => From(EmptyStringValue);
+    public bool IsEmpty => BaseToString() == EmptyStringValue;
+    public string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
+    public string? DoubleSlashes = null;
+    public string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<urn>.Description => Description;
     static string IStringWithRegexValueObject<urn>.RegexString => RegexString;
@@ -43,34 +52,31 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
     string IStringWithRegexValueObject<urn>.Description => Description;
     urn IStringWithRegexValueObject<urn>.ExampleValue => ExampleStringValue;
     // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
-#endif
-    public static new urn Parse(string urn) => From(urn);
-
-#if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<urn>.RegexString => RegexString;
     REx IStringWithRegexValueObject<urn>.Regex() => Regex();
 #endif
+    // public static urn Parse(string urn) => From(urn);
 
-#if NET70_OR_GREATER
-    [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
-    public static partial REx Regex();
-    // static urn IUriConvertible<urn>.FromUri(string s) => From(s);
-    // static urn IUriConvertible<urn>.FromUri(Uri uri) => From(urn.ToString());
-#else
-    public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
-#endif
-    public urn(string uriString) : base(uriString) { }
-    public urn(Uri uri) : this(uri.ToString()) { }
-    public urn() : this(EmptyStringValue) { }
-    public static new urn Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    // #if NET70_OR_GREATER
+    //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
+    //     public static partial REx Regex();
+    //     // static urn IUriConvertible<urn>.FromUri(string s) => From(s);
+    //     // static urn IUriConvertible<urn>.FromUri(Uri urn) => From(urn.ToString());
+    // #else
+    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    // #endif
+    // public urn(string uriString) : base(uriString) { }
+    public urn(Uri urn) : this(urn.ToString()) { }
+    // public urn() : this(EmptyStringValue) { }
+    public static urn Parse(string s, IFormatProvider? formatProvider = null) => TryParse(s, out var urn) ? urn : throw new FormatException($"The input string {s} was not in the correct format for a {nameof(urn)}.");
 
-    public static new Validation Validate(string value)
+    public static Validation Validate(string value)
     {
         if (value is null)
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        else if (!Regex().IsMatch(value))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }
@@ -86,72 +92,87 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
             urn = Empty;
             return false;
         }
-        if (Uri.TryCreate(uriString, default, out var suri))
+        if (TryParse(uriString, out var suri))
         {
-            urn = From(suri.ToString());
+            urn = From(uriString) with { OriginalString = uriString };
             return true;
         }
         urn = Empty;
         return false;
     }
 
-    public static urn FromUri(string s) => From(s);
-    public static urn FromUri(Uri u) => From(u);
+    public Uri? Uri => this;
+    public static urn FromUri(string s) => From(s) with { OriginalString = s };
+    public static urn FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
-    public static new urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) : Empty;
-    public static new urn From(Uri urn) => new(urn);
+    public static urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) with { OriginalString = s } : Empty;
+    public static urn From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
 
-    public static implicit operator urn(string s) => From(s);
+    public static implicit operator System.Uri?(urn u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator urn(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(urn urn) => urn.ToString();
 
-    public static bool operator ==(urn? left, urn? right) => left?.ToString() == right?.ToString();
-    public static bool operator !=(urn? left, urn? right) => left?.ToString() != right?.ToString();
-    public static bool operator <=(urn? left, urn? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) <= 0;
-    public static bool operator >=(urn? left, urn? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) >= 0;
-    public static bool operator <(urn? left, urn? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) < 0;
-    public static bool operator >(urn? left, urn? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) > 0;
+    // public static implicit operator urn(urn? urn) => urn.HasValue ? urn.Value : Empty;
 
-    public override bool Equals(object? obj) => obj is urn urn && urn.ToString() == ToString();
+    public static bool operator ==(urn? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
+    public static bool operator !=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) != 0;
+    public static bool operator <=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) <= 0;
+    public static bool operator >=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) >= 0;
+    public static bool operator <(urn? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
+    public static bool operator >(urn? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
+
+    public int CompareTo(IResourceIdentifier other) => other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
+
+    // public override bool Equals(object? obj) => obj is urn urn && urn.ToString() == ToString();
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : base.ToString();
+
+    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out urn urn) => TryParse(s, out urn);
     public static bool TryParse(string? s, out urn urn)
     {
-        if (string.IsNullOrEmpty(s))
+        try
         {
-            urn = Empty;
-            return false;
+            if (string.IsNullOrEmpty(s))
+            {
+                urn = Empty;
+                return false;
+            }
+            if (Regex().IsMatch(s))
+            {
+                urn = From(s) with { OriginalString = s };
+                return true;
+            }
         }
-        if (Uri.TryCreate(s, global::System.UriKind.Absolute, out var suri))
+        catch
         {
-            urn = From(suri.ToString());
-            return true;
+            // ignore
         }
         urn = Empty;
         return false;
     }
 
-    public bool Equals(urn? other) => ToString() == other?.ToString();
-    public override int CompareTo(string? other) => string.CompareOrdinal(ToString(), other);
-    public override int CompareTo(object? obj) => obj is urn urn ? CompareTo(urn?.ToString()) : throw new ArgumentException("Object is not a urn.");
-    public override bool Equals(string? other) => ToString() == other;
-    public int CompareTo(urn? other) => string.CompareOrdinal(ToString(), other?.ToString());
+    public bool Equals(urn? other) => Equals(other.ToString());
+    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public int CompareTo(object? obj) => obj is urn urn ? CompareTo(urn) : obj is string str ? CompareTo(str) : throw new ArgumentException("Object is not a urn.");
+    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public int CompareTo(urn other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
-    public new class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn, string>
+    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public new class JsonConverter : System.Text.Json.Serialization.JsonConverter<urn>
+    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<urn>
     {
         public override urn Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
         public override void Write(System.Text.Json.Utf8JsonWriter writer, urn value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 
-    public new class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<urn>
+    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<urn>
     {
         public override urn Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
         {
@@ -165,7 +186,7 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
     }
 
 
-    public new class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
         public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {
@@ -185,7 +206,7 @@ public partial class urn : uri, IEquatable<urn>, IStringWithRegexValueObject<urn
 
         public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {
-            return sourceType == typeof(global::System.String) || base.CanConvertTo(context, sourceType) ||
+            return sourceType == typeof(global::System.String) || base.CanConvertTo(context, sourceType) ||
                 base.CanConvertTo(context, sourceType);
         }
 

@@ -1,13 +1,13 @@
 <!--
- Domain.csproj
-
-   Created: 2022-10-16-06:30:42
-   Modified: 2022-10-30-06:38:19
-
-   Author: David G. Mooore, Jr. <david@dgmjr.io>
-
-   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
-      License: MIT (https://opensource.org/licenses/MIT)
+ * Dgmjr.Primitives.csproj
+ *
+ *   Created: 2023-07-22-11:50:25
+ *   Modified: 2023-08-13-06:00:00
+ *
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
+ *
+ *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
+ *      License: MIT (https://opensource.org/licenses/MIT)
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">

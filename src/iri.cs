@@ -1,15 +1,3 @@
-/* 
- * iri copy.cs
- * 
- *   Created: 2023-07-16-02:36:18
- *   Modified: 2023-07-16-02:36:19
- * 
- *   Author: David G. Moore, Jr. <david@dgmjr.io>
- * 
- *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
- *      License: MIT (https://opensource.org/licenses/MIT)
- */
-
 /*
  * iri.cs
  *
@@ -22,6 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace System;
 using static System.Text.RegularExpressions.RegexOptions;
@@ -29,62 +18,112 @@ using static System.Text.RegularExpressions.RegexOptions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vogen;
+#if !NETSTANDARD2_0_OR_GREATER
+using Validation = global::Validation;
+#endif
+
+[RegexDto(iri._RegexString, regexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(iri.JsonConverter))]
+[StructLayout(LayoutKind.Auto)]
 #endif
 [DebuggerDisplay("{ToString()}")]
-public partial class iri : uri, IEquatable<iri>, IStringWithRegexValueObject<iri>
+public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceIdentifierWithAuthorityHostPortQueryAndFragment
 #if NET7_0_OR_GREATER
-// , IUriConvertible<iri>
+, IUriConvertible<iri>
 #endif
 {
-    public new const string Description = "a internationalized resource identifier (iri)";
-    public new const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
-    public new const string RegexString = @"^(?:[^:/?#]+:)?(?://(?:[^/?#]*@)?(?:[^/?#]*\.)+[^/?#]*(?::\d+)?)?(?:[^?#]*)(?:\?[^#]*)?(?:#.*)?$";
-    public new const string EmptyStringValue = "❌:🚫";
-    public new static iri Empty => From(EmptyStringValue);
-    public override bool IsEmpty => base.ToString() == EmptyStringValue;
+    public const string Description = "a internationalized resource identifier (iri)";
+    public const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
 
-    public override string Value => ToString();
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
+    public const string _RegexString = @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+    // @"^(?<Scheme:string?>
+    // [a-z][a-z0-9+\-.]*
+    // )
+    // :
+    // (?<DoubleSlashes:string?>\/\/)?
+    // (?<Authority:string?>
+    //     (?:
+    //         (?<UserInfo:string?>
+    //             (?:
+    //                 %[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9]
+    //             )*
+    //         )@
+    //     )?
+    //     (?<Host:string?>
+    //         (?:
+    //             \[(?:
+    //                 (?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7}
+    //             )
+    //             (?![0-9a-f])
+    //         )
+    //         |[a-z0-9]+
+    //         (?:[-.][a-z0-9]+)*
+    //     )
+    //     (?:
+    //         \:
+    //         (?<Port:int?>[0-9]+)
+    //     )?
+    // )?
+    // (?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?
+    // (?:
+    //     \?
+    //     (?<Query:string?>
+    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
+    //     )?
+    // )?
+    // (?:
+    //     #
+    //     (?<Fragment:string?>
+    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
+    //     )?
+    // )?$";
+    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
+    public string? DoubleSlashes => "//";
+
+    public const string EmptyStringValue = "empty:about:🚫";
+    public static iri Empty => From(EmptyStringValue);
+    public bool IsEmpty => BaseToString() == EmptyStringValue;
+    public string PathAndQuery => $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+
+    public string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<iri>.RegexString => RegexString;
     static string IStringWithRegexValueObject<iri>.Description => Description;
     static iri IStringWithRegexValueObject<iri>.Empty => EmptyStringValue;
     static iri IStringWithRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
-    static iri IStringWithRegexValueObject<iri>.Parse(string s) => From(s);
 #else
     string IStringWithRegexValueObject<iri>.Description => Description;
     iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
-#endif
-    public static new iri Parse(string iri) => From(iri);
-
-
-#if !NET6_0_OR_GREATER
     string IStringWithRegexValueObject<iri>.RegexString => RegexString;
     REx IStringWithRegexValueObject<iri>.Regex() => Regex();
 #endif
+    // public static iri Parse(string iri) => From(iri);
 
-#if NET70_OR_GREATER
-    [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
-    public static partial REx Regex();
+    // #if NET70_OR_GREATER
+    //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
+    //     public static partial REx Regex();
 
-    // static iri IUriConvertible<iri>.FromUri(string s) => From(s);
-    // static iri IUriConvertible<iri>.FromUri(Uri iri) => From(urn.ToString());
-#else
-    public static new REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
-#endif
-    public iri(string uriString) : base(uriString) { }
-    public iri(Uri iri) : base(iri.ToString()) { }
-    public iri() : base(EmptyStringValue) { }
-    public static new iri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
+    //     // static iri IUriConvertible<iri>.FromUri(string s) => From(s);
+    //     // static iri IUriConvertible<iri>.FromUri(Uri iri) => From(urn.ToString());
+    // #else
+    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    // #endif
+    // public iri(string uriString) : base(uriString) { }
+    public iri(Uri iri) : this(iri.ToString()) { }
+    // public iri() : base(EmptyStringValue) { }
+    // public static iri Parse(string s) => From(s) with { OriginalString = s };
+    public static iri Parse(string s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
 
-    public static new Validation Validate(string value)
+    public static Validation Validate(string value)
     {
         if (value is null)
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        else if (!Uri.TryCreate(value, RelativeOrAbsolute, out _))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }
@@ -94,75 +133,97 @@ public partial class iri : uri, IEquatable<iri>, IStringWithRegexValueObject<iri
 
     public static bool TryCreate(string? uriString, UriKind uriKind, out iri iri)
     {
-        if (string.IsNullOrEmpty(uriString))
+        try
         {
-            iri = Empty;
-            return false;
+            if (string.IsNullOrEmpty(uriString))
+            {
+                iri = Empty;
+                return false;
+            }
+            if (Uri.TryCreate(uriString, uriKind, out var suri))
+            {
+                iri = From(suri.ToString());
+                return true;
+            }
         }
-        if (Uri.TryCreate(uriString, uriKind, out var suri))
+        catch
         {
-            iri = From(suri.ToString());
-            return true;
+            // ignore
         }
         iri = Empty;
         return false;
     }
-    public static iri FromUri(string s) => From(s);
-    public static iri FromUri(Uri iri) => From(iri);
 
-    public static new iri From(string s) => Validate(s) == Validation.Ok ? new(s) : Empty;
-    public static new iri From(Uri iri) => new(iri);
+    public Uri? Uri => this;
+    public static iri FromUri(string s) => From(s) with { OriginalString = s };
+    public static iri FromUri(Uri iri) => From(iri) with { OriginalString = iri.ToString() };
 
-    public static implicit operator iri(string s) => From(s);
+    public static iri From(string s) => Validate(s) == Validation.Ok ? new iri(s) with { OriginalString = s } : Empty;
+    public static iri From(Uri iri) => new(iri);
+
+    public static implicit operator System.Uri?(iri i) => Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator iri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(iri iri) => iri.ToString();
 
-    public static bool operator ==(iri? left, iri? right) => left?.ToString() == right?.ToString();
-    public static bool operator !=(iri? left, iri? right) => left?.ToString() != right?.ToString();
-    public static bool operator <=(iri? left, iri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) <= 0;
-    public static bool operator >=(iri? left, iri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) >= 0;
-    public static bool operator <(iri? left, iri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) < 0;
-    public static bool operator >(iri? left, iri? right) => string.CompareOrdinal(left?.ToString(), right?.ToString()) > 0;
+    public static bool operator ==(iri? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
+    public static bool operator !=(iri? left, IResourceIdentifier right) => left?.CompareTo(right) != 0;
+    public static bool operator <=(iri? left, IResourceIdentifier right) => left?.CompareTo(right) <= 0;
+    public static bool operator >=(iri? left, IResourceIdentifier right) => left?.CompareTo(right) >= 0;
+    public static bool operator <(iri? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
+    public static bool operator >(iri? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
 
-    public override bool Equals(object? obj) => obj is iri iri && iri.ToString() == ToString();
+    public int CompareTo(IResourceIdentifier other) => other is iri iri ? CompareTo(iri) : CompareTo(other.ToString());
+
+    // public override bool Equals(object? obj) => obj is iri iri && iri.ToString() == ToString();
     public override int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : base.ToString();
+
+    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+
+    private string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) => TryParse(s, out iri);
-    public static bool TryParse(string? s, out iri? iri)
+    public static bool TryParse(string? s, out iri iri)
     {
-        if (string.IsNullOrEmpty(s))
+        try
         {
-            iri = Empty;
-            return false;
+            if (string.IsNullOrEmpty(s))
+            {
+                iri = Empty;
+                return false;
+            }
+            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            {
+                iri = From(suri.ToString());
+                return true;
+            }
         }
-        if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+        catch
         {
-            iri = From(suri.ToString());
-            return true;
+            // ignore
         }
         iri = Empty;
         return false;
     }
 
-    public bool Equals(iri? other) => ToString() == other.ToString();
-    public override int CompareTo(string? other) => string.CompareOrdinal(ToString(), other);
-    public override int CompareTo(object? obj) => obj is iri iri ? CompareTo(iri?.ToString()) : throw new ArgumentException("Object is not a iri.");
-    public override bool Equals(string? other) => ToString() == other;
-    public int CompareTo(iri? other) => string.CompareOrdinal(ToString(), other?.ToString());
+    public bool Equals(iri? other) => Equals(other.ToString());
+    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public int CompareTo(object? obj) => obj is iri iri ? CompareTo(iri) : obj is string str ? CompareTo(str) : throw new ArgumentException("Object is not a iri.");
+    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public int CompareTo(iri other) => CompareTo(other.ToString());
 
-    public new class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
+    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public new class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
+    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
     {
         public override iri Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
         public override void Write(System.Text.Json.Utf8JsonWriter writer, iri value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 
-    public new class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<iri>
+    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<iri>
     {
         public override iri Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
         {
@@ -176,7 +237,7 @@ public partial class iri : uri, IEquatable<iri>, IStringWithRegexValueObject<iri
     }
 
 
-    public new class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
         public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
         {
@@ -188,7 +249,7 @@ public partial class iri : uri, IEquatable<iri>, IStringWithRegexValueObject<iri
             var stringValue = value as global::System.String;
             if (stringValue is not null)
             {
-                return iri.From(stringValue);
+                return From(stringValue);
             }
 
             return base.ConvertFrom(context, culture, value);

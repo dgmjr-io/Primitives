@@ -51,7 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\Packages\Versions\PowerShell.props = ..\..\..\..\Packages\Versions\PowerShell.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Primitives", "Dgmjr.Primitives.csproj", "{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dgmjr.Primitives.Tests", "Dgmjr.Primitives.Tests.csproj", "{C83B5825-203F-43F6-BCD1-811BD10562F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,23 +63,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Local|Any CPU.ActiveCfg = Local|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Local|Any CPU.Build.0 = Local|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Testing|Any CPU.Build.0 = Testing|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Production|Any CPU.ActiveCfg = Local|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Production|Any CPU.Build.0 = Local|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Local|Any CPU.Build.0 = Local|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Production|Any CPU.ActiveCfg = Local|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Production|Any CPU.Build.0 = Local|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83B5825-203F-43F6-BCD1-811BD10562F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {330C50A7-8745-4BDB-AD16-25400A31DFDA}
+		SolutionGuid = {C945C3C1-A579-431C-8C06-C55294379995}
 	EndGlobalSection
 EndGlobal
