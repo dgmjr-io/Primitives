@@ -104,7 +104,7 @@ Key features:
 - Implements value object interfaces like `IEquatable`, `IComparable`, etc.
 - Leverages regex for validation.
 - Provides static factory methods like `Parse` and `TryParse`.
-- Generates a `URN`identifier `URI`.
+- Generates a `URN` identifier `URI`.
 - Includes constants for common scenarios.
 
 #### Usage
