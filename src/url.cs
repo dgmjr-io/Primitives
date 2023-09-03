@@ -60,7 +60,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     // public static url Parse(string url) => From(url);
 
 
-    public Uri Uri => this;
+    public Uri? Uri => this;
     public static url FromUri(url url) => From(url.ToString()) with { OriginalString = url.ToString() };
     public static url FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -95,7 +95,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
     public static url From(string s) => Validate(s) == Validation.Ok ? new url(s) with { OriginalString = s } : Empty;
     public static url From(url url) => new url(url.ToString()) with { OriginalString = url.ToString() };
 
-    public static implicit operator System.Uri(url u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(url u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator url(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(url url) => url.ToString();
 

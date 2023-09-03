@@ -101,14 +101,14 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         return false;
     }
 
-    public Uri Uri => this;
+    public Uri? Uri => this;
     public static urn FromUri(string s) => From(s) with { OriginalString = s };
     public static urn FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
     public static urn From(string s) => Validate(s) == Validation.Ok ? new urn(s) with { OriginalString = s } : Empty;
     public static urn From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
 
-    public static implicit operator System.Uri(urn u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(urn u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator urn(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(urn urn) => urn.ToString();
 

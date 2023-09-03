@@ -154,14 +154,14 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
         return false;
     }
 
-    public Uri Uri => this;
+    public Uri? Uri => this;
     public static iri FromUri(string s) => From(s) with { OriginalString = s };
     public static iri FromUri(Uri iri) => From(iri) with { OriginalString = iri.ToString() };
 
     public static iri From(string s) => Validate(s) == Validation.Ok ? new iri(s) with { OriginalString = s } : Empty;
     public static iri From(Uri iri) => new(iri);
 
-    public static implicit operator System.Uri(iri i) => Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(iri i) => Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator iri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(iri iri) => iri.ToString();
 

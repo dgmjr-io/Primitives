@@ -2,6 +2,8 @@
     <ItemGroup>
         <Using Include="System.Int24" Alias="i24"/>
         <Using Include="System.UInt24" Alias="ui24"/>
+        <Using Include="System.DateOnly" Alias="date"/>
+        <Using Include="System.TimeOnly" Alias="time"/>
     </ItemGroup>
 
     <ItemGroup Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))">

@@ -67,7 +67,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
 #endif
     // public static uri Parse(string uri) => From(uri);
 
-    public Uri Uri => this;
+    public Uri? Uri => this;
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | RegexOptions)]
@@ -116,7 +116,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public static uri From(string s) => Validate(s) == Validation.Ok ? new uri(s) with { OriginalString = s } : Empty;
     public static uri From(Uri uri) => new uri(uri) with { OriginalString = uri.ToString() };
 
-    public static implicit operator System.Uri(uri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(uri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator uri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(uri uri) => uri.ToString();
     // public static implicit operator uri(uri? uri) => uri.HasValue ? uri.Value : Empty;

@@ -55,7 +55,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
 #endif
     // public static xri Parse(string xri) => From(xri);
 
-    public Uri Uri => this;
+    public Uri? Uri => this;
     public static xri FromUri(string s) => From(s) with { OriginalString = s };
     public static xri FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
@@ -105,7 +105,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
     public static xri From(string s) => Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
     public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
-    public static implicit operator System.Uri(xri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(xri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
     public static implicit operator xri(string s) => From(s) with { OriginalString = s };
     public static implicit operator string(xri xri) => xri.ToString();
 

@@ -43,7 +43,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static PhoneNumber ExampleValue => From(ExampleString);
     public const string EmptyString = "+10000000000";
     public static PhoneNumber Empty => From(EmptyString);
-    public const string RegexString = @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
+    public const string RegexString = @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
     public string? Number { get; private set; }
