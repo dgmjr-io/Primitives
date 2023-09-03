@@ -91,7 +91,9 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     public static REx Regex() => new(RegexString, Compiled);
 #endif
 
-    public static EmailAddress FromUri(string s) => From(s.Remove(0, UriPrefix.Length)) with { OriginalString = s.Remove(0, UriPrefix.Length) };
+    public static EmailAddress FromUri(string s) =>
+        s.IsNullOrEmpty() ? throw new ArgumentNullException(nameof(s), "Cannot convert a null or empty string to an email address") :
+        From(s.Remove(0, UriPrefix.Length)) with { OriginalString = s.Remove(0, UriPrefix.Length) };
     public static EmailAddress FromUri(Uri u) => FromUri(u.ToString());
 
     /// <summary>
@@ -160,14 +162,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="formatProvider">The format provider.</param>
     /// <param name="email">The email.</param>
     /// <returns>A bool.</returns>
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out EmailAddress email) => TryParse(s, out email);
-    /// <summary>
-    /// Try parse.
-    /// </summary>
-    /// <param name="s">The s.</param>
-    /// <param name="email">The email.</param>
-    /// <returns>A bool.</returns>
-    public static bool TryParse(string? s, out EmailAddress email)
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out EmailAddress email)
     {
         try
         {
@@ -179,6 +174,14 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
             return false;
         }
     }
+    /// <summary>
+    /// Try parse.
+    /// </summary>
+    /// <param name="s">The s.</param>
+    /// <param name="email">The email.</param>
+    /// <returns>A bool.</returns>
+    public static bool TryParse(string? s, out EmailAddress email)
+         => TryParse(s, null, out email);
 
 
     /// <summary>
