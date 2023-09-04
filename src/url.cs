@@ -81,7 +81,7 @@ public partial record struct url : IStringWithRegexValueObject<url>, IResourceId
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
         {
             return Validation.Invalid("The value is not a valid URL.");
         }

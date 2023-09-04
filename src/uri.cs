@@ -21,6 +21,8 @@ using System.Runtime.InteropServices;
 
 using global::Vogen;
 
+using Validation = global::Vogen.Validation;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -89,7 +91,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
+        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }

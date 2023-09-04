@@ -76,7 +76,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Regex().IsMatch(value))
+        if (!Regex().IsMatch(value))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }

@@ -26,7 +26,7 @@ using Validation = global::Validation;
 // [RegexDto(ObjectId.RegexString)]
 public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, IComparable<ObjectId>, IComparable, IEquatable<ObjectId>
 {
-    public const string Description = $"A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
+    public const string Description = "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.Description => Description;
 #endif
@@ -97,8 +97,8 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
             return Validation.Invalid($"The length of the {nameof(ObjectId)} must be {Length} characters.");
         else if (!Regex().IsMatch(value))
             return Validation.Invalid($"The {nameof(ObjectId)} must match the regular expression {RegexString}.");
-        else
-            return Validation.Ok;
+
+        return Validation.Ok;
     }
 
     public static ObjectId Parse(string s, IFormatProvider? provider) => From(s) with { OriginalString = s };

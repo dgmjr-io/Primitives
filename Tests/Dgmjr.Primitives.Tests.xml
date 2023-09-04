@@ -225,22 +225,22 @@
             <summary>Repository URL: </summary>
         </member>
         <member name="F:ThisAssembly.Git.Branch">
-            <summary>Branch: main</summary>
+            <summary>Branch: Cleaning-up-Primitives</summary>
         </member>
         <member name="F:ThisAssembly.Git.Commit">
-            <summary>Commit: 9d2042a</summary>
+            <summary>Commit: 8907f8e</summary>
         </member>
         <member name="F:ThisAssembly.Git.Sha">
-            <summary>Sha: 9d2042ac7765b22d4729a0c97993a029df71494c</summary>
+            <summary>Sha: 8907f8ed6d96bcfa59fd45edc59354b035664ab9</summary>
         </member>
         <member name="F:ThisAssembly.Git.CommitDate">
             <summary>Commit date: </summary>
         </member>
         <member name="F:ThisAssembly.Git.Commits">
-            <summary>Commits on top of base version: 0</summary>
+            <summary>Commits on top of base version: 9</summary>
         </member>
         <member name="F:ThisAssembly.Git.Tag">
-            <summary>Tag: v0.0.1</summary>
+            <summary>Tag: v0.0.1-9-g8907f8e</summary>
         </member>
         <member name="F:ThisAssembly.Git.BaseTag">
             <summary>Base tag: v0.0.1</summary>
@@ -267,7 +267,7 @@
             <summary>Minor: 0</summary>
         </member>
         <member name="F:ThisAssembly.Git.SemVer.Patch">
-            <summary>Patch: 1</summary>
+            <summary>Patch: 10</summary>
         </member>
         <member name="F:ThisAssembly.Git.SemVer.Label">
             <summary>Label: </summary>

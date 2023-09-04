@@ -1,3 +1,4 @@
+using System.Data;
 /*
  * iri.cs
  *
@@ -18,9 +19,7 @@ using static System.Text.RegularExpressions.RegexOptions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-#if !NETSTANDARD2_0_OR_GREATER
-using Validation = global::Validation;
-#endif
+using Validation = Vogen.Validation;
 
 [RegexDto(iri._RegexString, regexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(iri.JsonConverter))]
@@ -123,7 +122,7 @@ public partial record struct iri : IStringWithRegexValueObject<iri>, IResourceId
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!Uri.TryCreate(value, RelativeOrAbsolute, out _))
+        if (!Uri.TryCreate(value, RelativeOrAbsolute, out _))
         {
             return Validation.Invalid("The value is not a valid URI.");
         }

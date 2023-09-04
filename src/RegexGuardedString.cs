@@ -47,8 +47,6 @@ public class RegexGuardedString<TSelf, TRegexProvider> : RegexGuardedString<TSel
     where TSelf : RegexGuardedString<TSelf, TRegexProvider>
     where TRegexProvider : IRegexProvider
 {
-    private string _value;
-
     public static REx Regex() => TRegexProvider.Regex();
 
     public RegexGuardedString(string value) : base(value, TRegexProvider.Regex())

@@ -10,9 +10,9 @@ namespace System
     [StructLayout(LayoutKind.Explicit, Size = 3)]
     public readonly struct Int24 : IEquatable<Int24>, IComparable<Int24>, IFormattable, IConvertible
 #if NE7_0_OR_GREATER
-    , IAdditionOperators<Int24, Int24, Int24>, ISubtractionOperators<Int24, Int24, Int24>, 
-    IMultiplicationOperators<Int24, Int24, Int24>, IDivisionOperators<Int24, Int24, Int24>, 
-    IUnaryNegationOperators<Int24, Int24>, IBinaryIntegerOperators<Int24, Int24, Int24>, 
+    , IAdditionOperators<Int24, Int24, Int24>, ISubtractionOperators<Int24, Int24, Int24>,
+    IMultiplicationOperators<Int24, Int24, Int24>, IDivisionOperators<Int24, Int24, Int24>,
+    IUnaryNegationOperators<Int24, Int24>, IBinaryIntegerOperators<Int24, Int24, Int24>,
     IComparisonOperators<Int24, Int24>, IMinMaxValue<Int24>, IIncrementOperators<Int24>,
     IDecrementOperators<Int24>
 #endif
@@ -31,11 +31,11 @@ namespace System
         private const uint Zero = 0x00800000;
         /// <summary>
         /// The mask for negative sign.
-        /// </summary> 
+        /// </summary>
         private const uint NegativeSignMask = 0xFF000000;
         /// <summary>
         /// The mask for positive sign.
-        ///</summary> 
+        ///</summary>
         private const uint PositiveSignMask = 0x00FFFFFF;
 
         [FieldOffset(0)]
@@ -85,7 +85,7 @@ namespace System
         /// <summary>
         /// Initializes a new instance of the Int24 struct with a short integer value.
         /// </summary>
-        ///<param name="value">The short integer value.</param> 
+        ///<param name="value">The short integer value.</param>
         public Int24(short value)
         {
             _b0 = (byte)value;
@@ -95,8 +95,8 @@ namespace System
 
         /// <summary>
         /// Initializes a new instance of the Int24 struct with an integer value.
-        /// </summary> 
-        ///<param name="value">The integer value.</param> 
+        /// </summary>
+        ///<param name="value">The integer value.</param>
         public Int24(int value)
         {
             _b0 = (byte)value;
@@ -156,8 +156,8 @@ namespace System
 
         /// <summary>
         /// Compares this instance to another Int24 instance and returns an indication of their relative values.
-        /// </summary> 
-        /// <param name="other">An object to compare with this instance.</param> 
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(Int24 other)
         {
             int thisValue = this.SignExtend();
@@ -187,8 +187,8 @@ namespace System
 
         /// <summary>
         /// Sign extends the current Int24 struct.
-        /// </summary> 
-        /// <returns>A new Int24 struct with sign extension applied.</returns> 
+        /// </summary>
+        /// <returns>A new Int24 struct with sign extension applied.</returns>
         public Int24 SignExtend()
         {
             if ((Value & Zero) != 0)
@@ -196,17 +196,14 @@ namespace System
                 // Negative number: fill upper 8 bits with 1's
                 return new Int24((int)(Value | NegativeSignMask));
             }
-            else
-            {
-                // Positive number: fill upper 8 bits with 0's
-                return new Int24((int)(Value & PositiveSignMask));
-            }
+            // Positive number: fill upper 8 bits with 0's
+            return new Int24((int)(Value & PositiveSignMask));
         }
 
         /// <summary>
         /// Returns a hash code for this instance.
-        /// </summary> 
-        ///<returns>A hash code for the current object.</returns> 
+        /// </summary>
+        ///<returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
             return this.SignExtend().GetHashCode();
@@ -214,8 +211,8 @@ namespace System
 
         /// <summary>
         /// Converts the numeric value of this instance to its equivalent string representation.
-        /// </summary> 
-        ///<returns>The string representation of the value of this instance.</returns> 
+        /// </summary>
+        ///<returns>The string representation of the value of this instance.</returns>
         public override string ToString()
         {
             return this.SignExtend().ToString();
@@ -223,10 +220,10 @@ namespace System
 
         /// <summary>
         /// Converts the numeric value of this instance to its equivalent string representation using specified format and culture-specific format information.
-        ///</summary> 
-        ///<param name="format">A standard or custom numeric format string.</param> 
-        ///<param name="formatProvider">An object that supplies culture-specific formatting information.</param>  
-        ///<returns>The string representation of the value of this instance as specified by format and provider parameters. </returns>  
+        ///</summary>
+        ///<param name="format">A standard or custom numeric format string.</param>
+        ///<param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+        ///<returns>The string representation of the value of this instance as specified by format and provider parameters. </returns>
         public string ToString(string? format, IFormatProvider? formatProvider)
         {
             return this.SignExtend().ToString(format, formatProvider);
@@ -242,7 +239,7 @@ namespace System
         /// <summary>
         /// Converts the value of this instance to a 32-bit signed integer.
         /// </summary>
-        ///<returns>A 32-bit signed integer equal to the value of this instance.</returns> 
+        ///<returns>A 32-bit signed integer equal to the value of this instance.</returns>
         public int ToInt32()
         {
             int result = _b0;
@@ -264,7 +261,7 @@ namespace System
         /// <summary>
         /// Implicitly converts an Int24 struct to an integer.
         /// </summary>
-        ///<param name="value">The Int24 struct to convert.</param> 
+        ///<param name="value">The Int24 struct to convert.</param>
         public static implicit operator Int24(int value) => new Int24(value);
 
         /// <summary>
@@ -285,26 +282,26 @@ namespace System
 
         /// <summary>
         /// Determines whether one specified Int24 is less than another specified Int24.
-        /// </summary> 
-        ///<param name="left">The first object to compare. </param>  
-        ///<param name="right">The second object to compare. </param>  
-        ///<returns>true if left is less than right; otherwise, false.</returns> 
+        /// </summary>
+        ///<param name="left">The first object to compare. </param>
+        ///<param name="right">The second object to compare. </param>
+        ///<returns>true if left is less than right; otherwise, false.</returns>
         public static bool operator <(Int24 left, Int24 right) => left.CompareTo(right) < 0;
 
         /// <summary>
         /// Determines whether one specified Int24 is greater than another specified Int24.
-        /// </summary> 
-        ///<param name="left">The first object to compare. </param>  
-        ///<param name="right">The second object to compare. </param>  
-        ///<returns>true if left is greater than right; otherwise, false.</returns> 
+        /// </summary>
+        ///<param name="left">The first object to compare. </param>
+        ///<param name="right">The second object to compare. </param>
+        ///<returns>true if left is greater than right; otherwise, false.</returns>
         public static bool operator >(Int24 left, Int24 right) => left.CompareTo(right) > 0;
 
         /// <summary>
         /// Determines whether one specified Int24 is less than or equal to another specified Int32.
-        ///</summary> 
-        ///<param name="left">The first object to compare. </param>  
-        ///<param name="right">The second object to compare. </param>  
-        ///<returns>true if left is less than or equal to right; otherwise, false.</returns> 
+        ///</summary>
+        ///<param name="left">The first object to compare. </param>
+        ///<param name="right">The second object to compare. </param>
+        ///<returns>true if left is less than or equal to right; otherwise, false.</returns>
         public static bool operator <=(Int24 left, Int24? right)
         {
             return !(left > right);
@@ -312,10 +309,10 @@ namespace System
 
         /// <summary>
         /// Determines whether one specified Int24 is greater than or equal to another specified Int32.
-        ///</summary> 
-        ///<param name="left">The first object to compare. </param>  
-        ///<param name="right">The second object to compare. </param>  
-        ///<returns>true if left is greater than or equal to right; otherwise, false.</returns> 
+        ///</summary>
+        ///<param name="left">The first object to compare. </param>
+        ///<param name="right">The second object to compare. </param>
+        ///<returns>true if left is greater than or equal to right; otherwise, false.</returns>
         public static bool operator >=(Int24 left, Int24? right)
         {
             return !(left < right);
@@ -323,8 +320,8 @@ namespace System
 
         /// <summary>
         /// Returns the TypeCode for this instance.
-        /// </summary> 
-        ///<returns>The enumerated constant that is the TypeCode of the class or value type that implements this interface.</returns> 
+        /// </summary>
+        ///<returns>The enumerated constant that is the TypeCode of the class or value type that implements this interface.</returns>
         public TypeCode GetTypeCode() => TypeCode.Int32;
 
         /// <summary>The maximum value that can be assigned to an instance of this type.</summary>

@@ -1,22 +1,22 @@
-#if !NET6_0_OR_GREATER
-using System.Runtime.CompilerServices;
-using System;
-using System.Security.Cryptography;
-/* 
+/*
  * DateOnly2.cs
- * 
- *   Created: 2023-07-04-03:18:28
- *   Modified: 2023-07-04-03:18:28
- * 
+ *
+ *   Created: 2023-07-22-11:50:25
+ *   Modified: 2023-09-03-01:38:05
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- *   
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
-namespace System;
+#if !NET6_0_OR_GREATER
 
+namespace System;
+using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 
 /// <summary>
@@ -80,15 +80,15 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
             var result = dt.TryFormat(destination, out charsWritten, formatProvider);
             return result;
         }
-        else if (format.SequenceEqual("D".AsSpan()))
+        if (format.SequenceEqual("D".AsSpan()))
         {
             return dt.ToString("D", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
         }
-        else if (format.SequenceEqual("O".AsSpan()))
+        if (format.SequenceEqual("O".AsSpan()))
         {
             return dt.ToString("yyyy-MM-dd", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
         }
-        else if (format.SequenceEqual("R".AsSpan()))
+        if (format.SequenceEqual("R".AsSpan()))
         {
             return dt.ToString("ddd, dd MMM yyyy", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
         }

@@ -78,7 +78,7 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
         {
             return Validation.Invalid("Cannot create a value object with null.");
         }
-        else if (!xri.TryCreate(value, default, out _))
+        if (!xri.TryCreate(value, default, out _))
         {
             return Validation.Invalid("The value is not a valid xri.");
         }
