@@ -1,11 +1,11 @@
-/* 
+﻿/*
  * UInt24.cs
- * 
+ *
  *   Created: 2023-07-16-03:40:58
  *   Modified: 2023-07-16-03:41:41
- * 
+ *
  *   Author: David G. Moore, Jr. <david@dgmjr.io>
- * 
+ *
  *   Copyright © 2022 - 2023 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
@@ -20,23 +20,35 @@ namespace System
     /// Represents a 24-bit integer.
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 3)]
-    public readonly struct UInt24 : IEquatable<UInt24>, IComparable<UInt24>, IFormattable, IConvertible
+    public readonly struct UInt24
+        : IEquatable<UInt24>,
+            IComparable<UInt24>,
+            IFormattable,
+            IConvertible
 #if NE7_0_OR_GREATER
-    , IAdditionOperators<UInt24, UInt24, UInt24>, ISubtractionOperators<UInt24, UInt24, UInt24>,
-    IMultiplicationOperators<UInt24, UInt24, UInt24>, IDivisionOperators<UInt24, UInt24, UInt24>,
-    IUnaryNegationOperators<UInt24, UInt24>, IBinaryIntegerOperators<UInt24, UInt24, UInt24>,
-    IComparisonOperators<UInt24, UInt24>, IMinMaxValue<UInt24>, IIncrementOperators<UInt24>,
-    IDecrementOperators<UInt24>
+            ,
+            IAdditionOperators<UInt24, UInt24, UInt24>,
+            ISubtractionOperators<UInt24, UInt24, UInt24>,
+            IMultiplicationOperators<UInt24, UInt24, UInt24>,
+            IDivisionOperators<UInt24, UInt24, UInt24>,
+            IUnaryNegationOperators<UInt24, UInt24>,
+            IBinaryIntegerOperators<UInt24, UInt24, UInt24>,
+            IComparisonOperators<UInt24, UInt24>,
+            IMinMaxValue<UInt24>,
+            IIncrementOperators<UInt24>,
+            IDecrementOperators<UInt24>
 #endif
     {
         /// <summary>
         /// The bit offset of the integer.
         /// </summary>
         private const int BitOffset = 8;
+
         /// <summary>
         /// The size of the bits in the integer.
         /// </summary>
         private const int BitsSize = 24;
+
         /// <summary>
         /// The zero mask for the integer.
         /// </summary>
@@ -89,7 +101,7 @@ namespace System
         /// <summary>
         /// Initializes a new instance of the UInt24 struct with a short integer value.
         /// </summary>
-        ///<param name="value">The short integer value.</param> 
+        ///<param name="value">The short integer value.</param>
         public UInt24(short value)
         {
             _b0 = (byte)value;
@@ -99,8 +111,8 @@ namespace System
 
         /// <summary>
         /// Initializes a new instance of the UInt24 struct with an integer value.
-        /// </summary> 
-        ///<param name="value">The integer value.</param> 
+        /// </summary>
+        ///<param name="value">The integer value.</param>
         public UInt24(uint value)
         {
             _b0 = (byte)value;
@@ -132,7 +144,10 @@ namespace System
         {
             if (bytes.Length != 3)
             {
-                throw new ArgumentException("Bytes span must be exactly 3 bytes long", nameof(bytes));
+                throw new ArgumentException(
+                    "Bytes span must be exactly 3 bytes long",
+                    nameof(bytes)
+                );
             }
 
             _b0 = bytes[0];
@@ -230,14 +245,13 @@ namespace System
         private const uint Int32MinValue = 0;
         private const uint Int32MaxValue = 0x00FFFFFFFF;
 
-
         // Implementations of IComparable, IComparable<UInt24>, IEquatable<UInt24>, and IConvertible
         // ...
 
         /// <summary>
         /// Converts the value of this instance to a 32-bit signed integer.
         /// </summary>
-        ///<returns>A 32-bit signed integer equal to the value of this instance.</returns> 
+        ///<returns>A 32-bit signed integer equal to the value of this instance.</returns>
         public int ToInt32()
         {
             int result = _b0;
@@ -317,7 +331,7 @@ namespace System
         /// <summary>
         /// Returns the TypeCode for this instance.
         /// </summary>
-        ///<returns>The enumerated constant that is the TypeCode of the class or value type that implements this interface.</returns> 
+        ///<returns>The enumerated constant that is the TypeCode of the class or value type that implements this interface.</returns>
         public TypeCode GetTypeCode() => TypeCode.UInt32;
 
         /// <summary>The maximum value that can be assigned to an instance of this type.</summary>
@@ -340,24 +354,44 @@ namespace System
         public static explicit operator UInt24(sbyte value) => new UInt24(value);
 
         public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();
+
         public uint ToUInt32(IFormatProvider? formatProvider) => (uint)this.ToInt32();
+
         public long ToInt64(IFormatProvider? formatProvider) => (long)this.ToInt32();
+
         public ulong ToUInt64(IFormatProvider? formatProvider) => (ulong)this.ToInt32();
+
         public short ToInt16(IFormatProvider? formatProvider) => (short)this.ToInt32();
+
         public ushort ToUInt16(IFormatProvider? formatProvider) => (ushort)this.ToInt32();
+
 #if NET7_0_OR_GREATER
         public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)this.ToInt32();
+
         public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)this.ToInt32();
 #endif
+
         public byte ToByte(IFormatProvider? formatProvider) => (byte)this.ToInt32();
+
         public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)this.ToInt32();
+
         public float ToSingle(IFormatProvider? formatProvider) => (float)this.ToInt32();
+
         public double ToDouble(IFormatProvider? formatProvider) => (double)this.ToInt32();
+
         public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)this.ToInt32();
+
         public char ToChar(IFormatProvider? formatProvider) => (char)this.ToInt32();
-        public DateTime ToDateTime(IFormatProvider? formatProvider) => DateTime.FromBinary((long)this.ToInt32());
+
+        public DateTime ToDateTime(IFormatProvider? formatProvider) =>
+            DateTime.FromBinary((long)this.ToInt32());
+
         public bool ToBoolean(IFormatProvider? formatProvider) => this.ToInt32() > 0;
-        public object ToType(Type conversionType, IFormatProvider? formatProvider) => Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
-        public string ToString(IFormatProvider? formatProvider) => ((Int32)this.ToInt32()).ToString(formatProvider);
+
+        public object ToType(Type conversionType, IFormatProvider? formatProvider) =>
+            Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
+
+        public string ToString(IFormatProvider? formatProvider) =>
+            ((Int32)this.ToInt32()).ToString(formatProvider);
     }
 }

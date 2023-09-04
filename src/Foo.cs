@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Foo.cs
  *
  *   Created: 2022-12-22-09:00:00
@@ -10,6 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 namespace Dgmjr.Types.Domain;
+
 internal sealed class Foo
 {
     public static string Bar() => "Hello, World!";

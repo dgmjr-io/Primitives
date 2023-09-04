@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ObjectId.cs
  *
  *   Created: 2022-12-03-12:15:18
@@ -22,22 +22,37 @@ using Vogen;
 using Validation = global::Validation;
 #endif
 
-[ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
+[ValueObject(
+    typeof(string),
+    conversions: Conversions.EfCoreValueConverter
+        | Conversions.SystemTextJson
+        | Conversions.TypeConverter
+)]
 // [RegexDto(ObjectId.RegexString)]
-public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, IComparable<ObjectId>, IComparable, IEquatable<ObjectId>
+public partial record struct ObjectId
+    : IStringWithRegexValueObject<ObjectId>,
+        IComparable<ObjectId>,
+        IComparable,
+        IEquatable<ObjectId>
 {
-    public const string Description = "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
+    public const string Description =
+        "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.Description => Description;
 #endif
     public const string EmptyValue = "000000000000000000000000";
     public const int Length = 24;
     public const string RegexString = "^[0-9a-z]{24}$";
+
 #if NET7_0_OR_GREATER
     [GeneratedRegex(RegexString, RegexOptions.Compiled | RegexOptions.IgnoreCase)]
     public static partial REx Regex();
 #else
-    private static readonly REx _regex = new REx(RegexString, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly REx _regex = new REx(
+        RegexString,
+        RegexOptions.Compiled | RegexOptions.IgnoreCase
+    );
+
     public static REx Regex() => _regex;
 #endif
 
@@ -58,7 +73,11 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
 #endif
 
     public const string ExampleValueString = "abcdef0123456789abcdef01";
-    public static ObjectId ExampleValue => From(ExampleValueString) with { OriginalString = ExampleValueString };
+    public static ObjectId ExampleValue =>
+        From(ExampleValueString) with
+        {
+            OriginalString = ExampleValueString
+        };
 
 #if !NET6_0_OR_GREATER
     REx IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
@@ -69,7 +88,15 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
 
     ObjectId IStringWithRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
-    public static ObjectId Parse(string s) => TryParse(s, out var result) ? result with { OriginalString = s } : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
+
+    public static ObjectId Parse(string s) =>
+        TryParse(s, out var result)
+            ? result with
+            {
+                OriginalString = s
+            }
+            : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
+
     public static bool TryParse(string s, out ObjectId result)
     {
         if (s is null || s.Length != Length || !Regex().IsMatch(s))
@@ -86,7 +113,11 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
     // public bool Equals(ObjectId other) => _value == other._value;
     // public override int GetHashCode() => _value.GetHashCode();
     // public int CompareTo(ObjectId other) => _value.CompareTo(other._value);
-    public int CompareTo(object? obj) => obj is ObjectId other ? CompareTo(other) : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
+    public int CompareTo(object? obj) =>
+        obj is ObjectId other
+            ? CompareTo(other)
+            : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
+
     // public override string ToString() => _value.ToString();
 
     public static Validation Validate(string value)
@@ -94,37 +125,39 @@ public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, I
         if (value is null)
             return Validation.Invalid($"The {nameof(ObjectId)} cannot be null.");
         else if (value?.Length != Length)
-            return Validation.Invalid($"The length of the {nameof(ObjectId)} must be {Length} characters.");
+            return Validation.Invalid(
+                $"The length of the {nameof(ObjectId)} must be {Length} characters."
+            );
         else if (!Regex().IsMatch(value))
-            return Validation.Invalid($"The {nameof(ObjectId)} must match the regular expression {RegexString}.");
+            return Validation.Invalid(
+                $"The {nameof(ObjectId)} must match the regular expression {RegexString}."
+            );
 
         return Validation.Ok;
     }
 
-    public static ObjectId Parse(string s, IFormatProvider? provider) => From(s) with { OriginalString = s };
-    public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result)
-        => (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default) != default;
-}
+    public static ObjectId Parse(string s, IFormatProvider? provider) =>
+        From(s) with
+        {
+            OriginalString = s
+        };
 
+    public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result) =>
+        (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default)
+        != default;
+}
 
 #if NETSTANDARD2_0_OR_GREATER
-public class ObjectIdConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<ObjectId, string>
+public class ObjectIdConverter
+    : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<ObjectId, string>
 {
-    public ObjectIdConverter() : base(
-        v => v.Value,
-        v => ObjectId.Parse(v))
-    {
-    }
+    public ObjectIdConverter() : base(v => v.Value, v => ObjectId.Parse(v)) { }
 }
 #endif
-
 
 [System.Diagnostics.DebuggerDisplay("ObjectIdAttribute")]
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class ObjectIdAttribute : RegularExpressionAttribute
 {
-    public ObjectIdAttribute()
-        : base(ObjectId.RegexString)
-    {
-    }
+    public ObjectIdAttribute() : base(ObjectId.RegexString) { }
 }

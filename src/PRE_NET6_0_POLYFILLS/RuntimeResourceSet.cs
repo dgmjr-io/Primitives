@@ -21,12 +21,9 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
     private Dictionary<string, ResourceLocator> _caseInsensitiveTable;
 
     internal RuntimeResourceSet(string fileName)
-        : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-    {
-    }
+        : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
 
-    internal RuntimeResourceSet(Stream stream, bool permitDeserialization = false)
-        : base()
+    internal RuntimeResourceSet(Stream stream, bool permitDeserialization = false) : base()
     {
         _resCache = new Dictionary<string, ResourceLocator>(FastResourceComparer.Default);
         _defaultReader = new _ResourceReader(stream, _resCache, permitDeserialization);
@@ -113,7 +110,9 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
                     return value2;
                 }
                 dataPosition = value.DataPosition;
-                return isString ? defaultReader.LoadString(dataPosition) : defaultReader.LoadObject(dataPosition);
+                return isString
+                    ? defaultReader.LoadString(dataPosition)
+                    : defaultReader.LoadObject(dataPosition);
             }
             dataPosition = defaultReader.FindPosForResource(key);
             if (dataPosition >= 0)
@@ -138,11 +137,15 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         {
             if (flag)
             {
-                _ResourceReader.ResourceEnumerator enumeratorInternal = defaultReader.GetEnumeratorInternal();
+                _ResourceReader.ResourceEnumerator enumeratorInternal =
+                    defaultReader.GetEnumeratorInternal();
                 while (enumeratorInternal.MoveNext())
                 {
                     string key2 = (string)enumeratorInternal.Key;
-                    ResourceLocator value3 = new ResourceLocator(enumeratorInternal.DataPosition, null)!;
+                    ResourceLocator value3 = new ResourceLocator(
+                        enumeratorInternal.DataPosition,
+                        null
+                    )!;
                     dictionary.Add(key2, value3);
                 }
                 _caseInsensitiveTable = dictionary;
@@ -165,7 +168,12 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
         }
     }
 
-    private static object? ReadValue(_ResourceReader reader, int dataPos, bool isString, out ResourceLocator locator)
+    private static object? ReadValue(
+        _ResourceReader reader,
+        int dataPos,
+        bool isString,
+        out ResourceLocator locator
+    )
     {
         object? obj;
         ResourceTypeCode typeCode;

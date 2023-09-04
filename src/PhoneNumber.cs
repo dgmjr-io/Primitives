@@ -1,4 +1,4 @@
-/*
+﻿/*
  * PhoneNumber.cs
  *
  *   Created: 2023-08-01-05:18:07
@@ -31,7 +31,12 @@ using Util = PhoneNumbers.PhoneNumberUtil;
 using Validation = global::Validation;
 #endif
 
-[ValueObject(typeof(string), conversions: Conversions.EfCoreValueConverter | Conversions.SystemTextJson | Conversions.TypeConverter)]
+[ValueObject(
+    typeof(string),
+    conversions: Conversions.EfCoreValueConverter
+        | Conversions.SystemTextJson
+        | Conversions.TypeConverter
+)]
 [StructLayout(LayoutKind.Auto)]
 [PhoneNumber.JConverter]
 public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumber>
@@ -43,7 +48,8 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static PhoneNumber ExampleValue => From(ExampleString);
     public const string EmptyString = "+10000000000";
     public static PhoneNumber Empty => From(EmptyString);
-    public const string RegexString = @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
+    public const string RegexString =
+        @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
     public string? Number { get; private set; }
@@ -56,8 +62,17 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
     public Uri Uri => new(Format(UriPattern, ToString()));
 
-    public static PhoneNumber FromUri(string s) => From(s.Remove(0, UriPrefix.Length)) with { OriginalString = s.Remove(0, UriPrefix.Length) };
-    public static PhoneNumber FromUri(Uri u) => FromUri(u.ToString()) with { OriginalString = u.ToString() };
+    public static PhoneNumber FromUri(string s) =>
+        From(s.Remove(0, UriPrefix.Length)) with
+        {
+            OriginalString = s.Remove(0, UriPrefix.Length)
+        };
+
+    public static PhoneNumber FromUri(Uri u) =>
+        FromUri(u.ToString()) with
+        {
+            OriginalString = u.ToString()
+        };
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
@@ -70,17 +85,37 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     PhoneNumber IStringWithRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
 #endif
 
-    public override string ToString() => IsEmpty ? string.Empty : _util.Format(this.ParsedNumber, PhoneNumberFormat.E164);
+    public override string ToString() =>
+        IsEmpty ? string.Empty : _util.Format(this.ParsedNumber, PhoneNumberFormat.E164);
 
-    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider = null) => From(s) with { OriginalString = s };
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out PhoneNumber number) => (number = TryParse(s, out var number1) ? number1!.Value : Empty) != Empty;
+    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider = null) =>
+        From(s) with
+        {
+            OriginalString = s
+        };
+
+    public static bool TryParse(
+        string? s,
+        IFormatProvider? formatProvider,
+        out PhoneNumber number
+    ) => (number = TryParse(s, out var number1) ? number1!.Value : Empty) != Empty;
+
     public static bool TryParse(string s, out PhoneNumber? number)
     {
-        try { number = From(s) with { OriginalString = s }; return true; }
-        catch { number = null; return false; }
+        try
+        {
+            number = From(s) with { OriginalString = s };
+            return true;
+        }
+        catch
+        {
+            number = null;
+            return false;
+        }
     }
 
-    private const RegexOptions RegexOptions = Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
+    private const RegexOptions RegexOptions =
+        Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
 #if NET7_0_OR_GREATER
     [GeneratedRegex(RegexString, RegexOptions)]
@@ -90,44 +125,53 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     // REx IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
 #else
     private static REx _regex = new(RegexString, RegexOptions);
+
     REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
-    public static implicit operator PhoneNumber?(string? s) => TryParse(s, out var number) ? number : default;
+    public static implicit operator PhoneNumber?(string? s) =>
+        TryParse(s, out var number) ? number : default;
 
-    public static implicit operator string?(PhoneNumber? n)
-        => n.HasValue ? _util.Format(n.Value.ParsedNumber, PhoneNumberFormat.E164) : default;
+    public static implicit operator string?(PhoneNumber? n) =>
+        n.HasValue ? _util.Format(n.Value.ParsedNumber, PhoneNumberFormat.E164) : default;
 
-    public static bool operator <(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) < 0;
+    public static bool operator <(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) < 0;
 
-    public static bool operator ==(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) == 0;
+    public static bool operator ==(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) == 0;
 
-    public static bool operator !=(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) != 0;
-    public static bool operator >(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) > 0;
-    public static bool operator <=(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) <= 0;
-    public static bool operator >=(PhoneNumber? a, PhoneNumber? b)
-        => a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) >= 0;
+    public static bool operator !=(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) != 0;
+
+    public static bool operator >(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) > 0;
+
+    public static bool operator <=(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) <= 0;
+
+    public static bool operator >=(PhoneNumber? a, PhoneNumber? b) =>
+        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) >= 0;
 
     public uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
 
 #if NET6_0_OR_GREATER
-    public static Validation Validate(string s)
-        => Util.IsViablePhoneNumber(s) && Regex().IsMatch(s) ?
-            Validation.Ok :
-            Validation.Invalid("Phone number is not valid.");
+    public static Validation Validate(string s) =>
+        Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
+            ? Validation.Ok
+            : Validation.Invalid("Phone number is not valid.");
 #else
-    public static Validation Validate(string s)
-        => Util.IsViablePhoneNumber(s) && ((IStringWithRegexValueObject<PhoneNumber>)ExampleValue).Regex().IsMatch(s) ?
-            Validation.Ok :
-            Validation.Invalid("Phone number is not valid.");
+    public static Validation Validate(string s) =>
+        Util.IsViablePhoneNumber(s)
+        && ((IStringWithRegexValueObject<PhoneNumber>)ExampleValue).Regex().IsMatch(s)
+            ? Validation.Ok
+            : Validation.Invalid("Phone number is not valid.");
 #endif
+
     public static PhoneNumber Parse(string value) => From(value) with { OriginalString = value };
-    public int CompareTo(object? obj) => obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
+
+    public int CompareTo(object? obj) =>
+        obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
 
 #if !NET7_0_OR_GREATER
     // REx IStringWithRegexValueObject<PhoneNumber>.Regex() => Regex();
@@ -136,7 +180,16 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
 #if !NETSTANDARD2_0_OR_GREATER
     public string Value { get; private set; }
-    public static PhoneNumber From(string s) => Validate(s) == Validation.Ok ? new PhoneNumber() { Value = _util.Parse(s, DefaultRegion).ToString(), OriginalString = s } : throw new ArgumentException("Phone number is not valid.", nameof(s));
+
+    public static PhoneNumber From(string s) =>
+        Validate(s) == Validation.Ok
+            ? new PhoneNumber()
+            {
+                Value = _util.Parse(s, DefaultRegion).ToString(),
+                OriginalString = s
+            }
+            : throw new ArgumentException("Phone number is not valid.", nameof(s));
+
     public int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
 #endif
 
@@ -148,13 +201,19 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
 public static class PhoneNumberEfCoreExtensions
 {
-    public static void ConfigurePhoneNumber<TEntity>(this ModelBuilder modelBuilder, Expression<Func<TEntity, PhoneNumber>> propertyExpression)
-        where TEntity : class
-        => modelBuilder.Entity<TEntity>().ConfigurePhoneNumber(propertyExpression);
+    public static void ConfigurePhoneNumber<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, PhoneNumber>> propertyExpression
+    ) where TEntity : class =>
+        modelBuilder.Entity<TEntity>().ConfigurePhoneNumber(propertyExpression);
 
-    public static void ConfigurePhoneNumber<TEntity>(this EntityTypeBuilder<TEntity> entityBuilder, Expression<Func<TEntity, PhoneNumber>> propertyExpression)
-        where TEntity : class
-        => entityBuilder.Property(propertyExpression).HasConversion<PhoneNumber.EfCoreValueConverter>();
+    public static void ConfigurePhoneNumber<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, PhoneNumber>> propertyExpression
+    ) where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion<PhoneNumber.EfCoreValueConverter>();
 }
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

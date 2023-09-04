@@ -1,4 +1,4 @@
-/*
+﻿/*
  * xri.cs
  *
  *   Created: 2023-07-20-11:53:36
@@ -27,19 +27,24 @@ using Validation = global::Validation;
 
 [RegexDto(xri._RegexString, regexOptions: uri._RegexOptions)]
 [StructLayout(LayoutKind.Auto)]
-public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceIdentifierWithQueryAndFragment
+public partial record struct xri
+    : IStringWithRegexValueObject<xri>,
+        IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
-, IUriConvertible<xri>
+        ,
+        IUriConvertible<xri>
 #endif
 {
     public const string Description = "an eXtensible resource locator (xri)";
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
-    public const string _RegexString = @"^(?<Scheme>xri):(?<DoubleSlashes>\/\/)?(?<Path>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
+    public const string _RegexString =
+        @"^(?<Scheme>xri):(?<DoubleSlashes>\/\/)?(?<Path>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);
     public bool IsEmpty => base.ToString() == EmptyStringValue;
 
-    public string PathAndQuery => $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+    public string PathAndQuery =>
+        $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
     private string _value = null!;
     public string Value => _value;
@@ -51,12 +56,16 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
     string IStringWithRegexValueObject<xri>.Description => Description;
     xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
     string IStringWithRegexValueObject<xri>.RegexString => RegexString;
+
     REx IStringWithRegexValueObject<xri>.Regex() => Regex();
 #endif
+
     // public static xri Parse(string xri) => From(xri);
 
     public Uri? Uri => this;
+
     public static xri FromUri(string s) => From(s) with { OriginalString = s };
+
     public static xri FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
     //     private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
@@ -68,7 +77,9 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
     // #endif
     // public xri(string urlString) : base(urlString) { }
     public xri(Uri xri) : this(xri.ToString()) { }
+
     public xri(xri xri) : this(xri.ToString()) { }
+
     // public xri() : this(EmptyStringValue) { }
     public static xri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
@@ -93,7 +104,10 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
             xri = Empty;
             return false;
         }
-        if (Validate(urlString) == Validation.Ok && Uri.TryCreate(urlString, uriKind ?? UriKind.Absolute, out var surl))
+        if (
+            Validate(urlString) == Validation.Ok
+            && Uri.TryCreate(urlString, uriKind ?? UriKind.Absolute, out var surl)
+        )
         {
             xri = From(surl.ToString());
             return true;
@@ -102,32 +116,51 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
         return false;
     }
 
-    public static xri From(string s) => Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+    public static xri From(string s) =>
+        Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+
     public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
-    public static implicit operator System.Uri?(xri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri?(xri u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+
     public static implicit operator xri(string s) => From(s) with { OriginalString = s };
+
     public static implicit operator string(xri xri) => xri.ToString();
 
     // public static implicit operator xri(xri? xri) => xri.HasValue ? xri.Value : Empty;
 
-    public static bool operator ==(xri? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
-    public static bool operator !=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) != 0;
-    public static bool operator <=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) <= 0;
-    public static bool operator >=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) >= 0;
-    public static bool operator <(xri? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
-    public static bool operator >(xri? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
+    public static bool operator ==(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) == 0;
 
-    public int CompareTo(IResourceIdentifier other) => other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
+    public static bool operator !=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) != 0;
+
+    public static bool operator <=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) <= 0;
+
+    public static bool operator >=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) >= 0;
+
+    public static bool operator <(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) < 0;
+
+    public static bool operator >(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) > 0;
+
+    public int CompareTo(IResourceIdentifier other) =>
+        other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
 
     // public override bool Equals(object? obj) => obj is xri xri && string.Equals(xri.Value, Value);
     public override int GetHashCode() => ToString().GetHashCode();
 
-
     public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+
     private string BaseToString() => OriginalString;
 
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) => TryParse(s, out xri);
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) =>
+        TryParse(s, out xri);
+
     public static bool TryParse(string? s, out xri xri)
     {
         try
@@ -152,44 +185,78 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
     }
 
     public bool Equals(xri? other) => Equals(other.ToString());
+
     public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
-    public int CompareTo(object? obj) => obj is xri xri ? CompareTo(xri) : obj is string str ? CompareTo(str) : throw new ArgumentException("Object is not a xri.");
+
+    public int CompareTo(object? obj) =>
+        obj is xri xri
+            ? CompareTo(xri)
+            : obj is string str
+                ? CompareTo(str)
+                : throw new ArgumentException("Object is not a xri.");
+
     public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+
     public int CompareTo(xri other) => CompareTo(other.ToString());
 
-    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
+    public class EfCoreValueConverter
+        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
     {
         public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<xri>
     {
-        public override xri Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
-        public override void Write(System.Text.Json.Utf8JsonWriter writer, xri value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
+        public override xri Read(
+            ref System.Text.Json.Utf8JsonReader reader,
+            Type typeToConvert,
+            System.Text.Json.JsonSerializerOptions options
+        ) => From(reader.GetString());
+
+        public override void Write(
+            System.Text.Json.Utf8JsonWriter writer,
+            xri value,
+            System.Text.Json.JsonSerializerOptions options
+        ) => writer.WriteStringValue(value.ToString());
     }
 
     public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<xri>
     {
-        public override xri Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+        public override xri Read(
+            ref global::System.Text.Json.Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            global::System.Text.Json.JsonSerializerOptions options
+        )
         {
             return xri.From(reader.GetString());
         }
 
-        public override void Write(System.Text.Json.Utf8JsonWriter writer, xri value, global::System.Text.Json.JsonSerializerOptions options)
+        public override void Write(
+            System.Text.Json.Utf8JsonWriter writer,
+            xri value,
+            global::System.Text.Json.JsonSerializerOptions options
+        )
         {
             writer.WriteStringValue(value.ToString());
         }
     }
 
-
     public class TypeConverter : global::System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
+        public override global::System.Boolean CanConvertFrom(
+            global::System.ComponentModel.ITypeDescriptorContext? context,
+            global::System.Type? sourceType
+        )
         {
-            return sourceType == typeof(global::System.String) || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(global::System.String)
+                || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value)
+        public override global::System.Object? ConvertFrom(
+            global::System.ComponentModel.ITypeDescriptorContext? context,
+            global::System.Globalization.CultureInfo? culture,
+            global::System.Object? value
+        )
         {
             var stringValue = value as global::System.String;
             if (stringValue is not null)
@@ -200,12 +267,21 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
+        public override bool CanConvertTo(
+            global::System.ComponentModel.ITypeDescriptorContext? context,
+            global::System.Type? sourceType
+        )
         {
-            return sourceType == typeof(global::System.String) || base.CanConvertTo(context, sourceType);
+            return sourceType == typeof(global::System.String)
+                || base.CanConvertTo(context, sourceType);
         }
 
-        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value, global::System.Type? destinationType)
+        public override object? ConvertTo(
+            global::System.ComponentModel.ITypeDescriptorContext? context,
+            global::System.Globalization.CultureInfo? culture,
+            global::System.Object? value,
+            global::System.Type? destinationType
+        )
         {
             if (value is xri idValue)
             {
@@ -220,14 +296,16 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
     }
 }
 
-
 public static class xriEfCoreExtensions
 {
-    public static void ConfigureXri<TEntity>(this ModelBuilder modelBuilder, Expression<Func<TEntity, xri>> propertyExpression)
-        where TEntity : class
-        => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
+    public static void ConfigureXri<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, xri>> propertyExpression
+    ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
 
-    public static void ConfigureXri<TEntity>(this EntityTypeBuilder<TEntity> entityBuilder, Expression<Func<TEntity, xri>> propertyExpression)
-        where TEntity : class
-        => entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
+    public static void ConfigureXri<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, xri>> propertyExpression
+    ) where TEntity : class =>
+        entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
 }

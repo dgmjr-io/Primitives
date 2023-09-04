@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DI.cs
  *
  *   Created: 2022-12-14-02:03:20
@@ -23,26 +23,25 @@ using Microsoft.AspNetCore.Builder;
 
 public static class ObjectIdDIExtensions
 {
-
     //public static readonly Action<SwaggerGenOptions> ConfigureSwaggerGen = options
     //    => options
-        //{
-        //    try
-        //    {
-        //        options.MapType<ObjectId>(() => new OpenApiSchema
-        //            {
-        //                Type = "string",
-        //                Pattern = ObjectId.RegexString,
-        //                Format = nameof(ObjectId),
-        //                Description = "A ObjectId is a 24-character hexadecimal string that uniquely identifies a SendPulse entity.",
-        //                Example = new OpenApiString("abcdef0123456789abcdef01")
-        //            });
-        //    }
-        //    catch (System.ArgumentException)
-        //    {
-        //        // ignore
-        //    }
-        //};
+    //{
+    //    try
+    //    {
+    //        options.MapType<ObjectId>(() => new OpenApiSchema
+    //            {
+    //                Type = "string",
+    //                Pattern = ObjectId.RegexString,
+    //                Format = nameof(ObjectId),
+    //                Description = "A ObjectId is a 24-character hexadecimal string that uniquely identifies a SendPulse entity.",
+    //                Example = new OpenApiString("abcdef0123456789abcdef01")
+    //            });
+    //    }
+    //    catch (System.ArgumentException)
+    //    {
+    //        // ignore
+    //    }
+    //};
 
 #if NET6_0_OR_GREATER
     public static WebApplicationBuilder DescribeObjectId(this WebApplicationBuilder builder)
@@ -57,6 +56,5 @@ public static class ObjectIdDIExtensions
         services.Describe<ObjectId>(); //.ConfigureSwaggerGen(ConfigureSwaggerGen);
         return services;
     }
-
 }
 #endif

@@ -1,10 +1,17 @@
 namespace System;
+
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, IComparable, IEquatable<TSelf>, IHaveAUri
+public interface IStringWithRegexValueObject<TSelf>
+    : IComparable<TSelf>,
+        IComparable,
+        IEquatable<TSelf>,
+        IHaveAUri
 #if NET7_0_OR_GREATER
-    , IParsable<TSelf>, IUriConvertible<TSelf>
+        ,
+        IParsable<TSelf>,
+        IUriConvertible<TSelf>
 #endif
     where TSelf : IStringWithRegexValueObject<TSelf>
 {
@@ -24,16 +31,19 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     /// </summary>
     /// <returns>a <see cref="REx" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
     public abstract static REx Regex();
+
     /// <summary>
     /// Returns <inheritdoc cref="RegexString" path="/returns" />
     /// </summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
     public abstract static string RegexString { get; }
+
     /// <summary>
     /// Returns <inheritdoc cref="Description" path="/returns" />
     /// </summary>
     /// <returns>a description of the value object type</returns>
     public abstract static string Description { get; }
+
     /// <summary>
     /// Returns <inheritdoc cref="Parse" path="/returns" />
     /// </summary>
@@ -41,6 +51,7 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     /// <exception cref="global::Vogen.ValueObjectValidationException">thrown if the value object fails validation</exception>
     /// <exception cref="global::System.Exception">thrown if parsing the <see langword="string" /> <paramref name="value" /> failed for some other reason</exception>
     public abstract static TSelf Parse(string value);
+
     /// <summary>
     /// Generates <inheritdoc cref="Parse" path="/returns" />
     /// </summary>
@@ -48,6 +59,7 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     /// <exception cref="global::Vogen.ValueObjectValidationException">thrown if the value object fails validation</exception>
     /// <exception cref="global::System.Exception">thrown if parsing the <see langword="string" /> <paramref name="value" /> failed for some other reason</exception>
     public abstract static TSelf From(string value);
+
     /// <summary>
     /// Returns <inheritdoc cref="ExampleValue" path="/returns" />
     /// </summary>
@@ -61,16 +73,19 @@ public interface IStringWithRegexValueObject<TSelf> : IComparable<TSelf>, ICompa
     /// </summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
     string RegexString { get; }
+
     /// <summary>
     /// Returns <inheritdoc cref="Description" path="/returns" />
     /// </summary>
     /// <returns>a description of the value object type</returns>
     string Description { get; }
+
     /// <summary>
     /// Returns <inheritdoc cref="ExampleValue" path="/returns" />
     /// </summary>
     /// <returns>an example (archetypal) value for the value object</returns>
     TSelf ExampleValue { get; }
+
     /// <summary>
     /// Returns <inheritdoc cref="Regex" path="/returns" />
     /// </summary>

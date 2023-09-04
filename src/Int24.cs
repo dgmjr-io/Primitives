@@ -8,31 +8,45 @@ namespace System
     /// Represents a 24-bit integer.
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 3)]
-    public readonly struct Int24 : IEquatable<Int24>, IComparable<Int24>, IFormattable, IConvertible
+    public readonly struct Int24
+        : IEquatable<Int24>,
+            IComparable<Int24>,
+            IFormattable,
+            IConvertible
 #if NE7_0_OR_GREATER
-    , IAdditionOperators<Int24, Int24, Int24>, ISubtractionOperators<Int24, Int24, Int24>,
-    IMultiplicationOperators<Int24, Int24, Int24>, IDivisionOperators<Int24, Int24, Int24>,
-    IUnaryNegationOperators<Int24, Int24>, IBinaryIntegerOperators<Int24, Int24, Int24>,
-    IComparisonOperators<Int24, Int24>, IMinMaxValue<Int24>, IIncrementOperators<Int24>,
-    IDecrementOperators<Int24>
+            ,
+            IAdditionOperators<Int24, Int24, Int24>,
+            ISubtractionOperators<Int24, Int24, Int24>,
+            IMultiplicationOperators<Int24, Int24, Int24>,
+            IDivisionOperators<Int24, Int24, Int24>,
+            IUnaryNegationOperators<Int24, Int24>,
+            IBinaryIntegerOperators<Int24, Int24, Int24>,
+            IComparisonOperators<Int24, Int24>,
+            IMinMaxValue<Int24>,
+            IIncrementOperators<Int24>,
+            IDecrementOperators<Int24>
 #endif
     {
         /// <summary>
         /// The bit offset of the integer.
         /// </summary>
         private const int BitOffset = 8;
+
         /// <summary>
         /// The size of the bits in the integer.
         /// </summary>
         private const int BitsSize = 24;
+
         /// <summary>
         /// The zero mask for the integer.
         /// </summary>
         private const uint Zero = 0x00800000;
+
         /// <summary>
         /// The mask for negative sign.
         /// </summary>
         private const uint NegativeSignMask = 0xFF000000;
+
         /// <summary>
         /// The mask for positive sign.
         ///</summary>
@@ -128,7 +142,10 @@ namespace System
         {
             if (bytes.Length != 3)
             {
-                throw new ArgumentException("Bytes span must be exactly 3 bytes long", nameof(bytes));
+                throw new ArgumentException(
+                    "Bytes span must be exactly 3 bytes long",
+                    nameof(bytes)
+                );
             }
 
             _b0 = bytes[0];
@@ -232,7 +249,6 @@ namespace System
         private const int Int32MinValue = -8388608;
         private const int Int32MaxValue = 8388607;
 
-
         // Implementations of IComparable, IComparable<Int24>, IEquatable<Int24>, and IConvertible
         // ...
 
@@ -335,27 +351,48 @@ namespace System
         /// <returns>A constant equal to -8388608.</returns>
         /// <value>-8388608</value>
         public static readonly Int24 MinValue = new(Int32MaxValue);
+
         public static explicit operator Int24(sbyte value) => new Int24(value);
 
         public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();
+
         public uint ToUInt32(IFormatProvider? formatProvider) => (uint)this.ToInt32();
+
         public long ToInt64(IFormatProvider? formatProvider) => (long)this.ToInt32();
+
         public ulong ToUInt64(IFormatProvider? formatProvider) => (ulong)this.ToInt32();
+
         public short ToInt16(IFormatProvider? formatProvider) => (short)this.ToInt32();
+
         public ushort ToUInt16(IFormatProvider? formatProvider) => (ushort)this.ToInt32();
+
 #if NET7_0_OR_GREATER
         public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)this.ToInt32();
+
         public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)this.ToInt32();
 #endif
+
         public byte ToByte(IFormatProvider? formatProvider) => (byte)this.ToInt32();
+
         public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)this.ToInt32();
+
         public Single ToSingle(IFormatProvider? formatProvider) => (Single)this.ToInt32();
+
         public double ToDouble(IFormatProvider? formatProvider) => (double)this.ToInt32();
+
         public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)this.ToInt32();
+
         public char ToChar(IFormatProvider? formatProvider) => (char)this.ToInt32();
-        public DateTime ToDateTime(IFormatProvider? formatProvider) => DateTime.FromBinary((long)this.ToInt32());
+
+        public DateTime ToDateTime(IFormatProvider? formatProvider) =>
+            DateTime.FromBinary((long)this.ToInt32());
+
         public bool ToBoolean(IFormatProvider? formatProvider) => this.ToInt32() > 0;
-        public object ToType(Type conversionType, IFormatProvider? formatProvider) => Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
-        public string ToString(IFormatProvider? formatProvider) => ((Int32)this.ToInt32()).ToString(formatProvider);
+
+        public object ToType(Type conversionType, IFormatProvider? formatProvider) =>
+            Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
+
+        public string ToString(IFormatProvider? formatProvider) =>
+            ((Int32)this.ToInt32()).ToString(formatProvider);
     }
 }

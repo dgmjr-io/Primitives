@@ -1,4 +1,4 @@
-#if NET7_0_OR_GREATER
+﻿#if NET7_0_OR_GREATER
 using System;
 using System.ComponentModel;
 /*
@@ -18,6 +18,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Expressions;
 using static System.Activator;
+
 namespace System;
 
 public delegate REx RegexProvider();
@@ -25,7 +26,8 @@ public delegate REx RegexProvider();
 public interface IRegexProvider
 {
     public static abstract RegexProvider Regex { get; }
-    public const RegexOptions DefaultRegexOptions = Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace;
+    public const RegexOptions DefaultRegexOptions =
+        Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace;
 }
 
 public interface IRegexGuardedString<TSelf>
@@ -43,15 +45,15 @@ public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedStrin
 }
 
 // [RegexGuardedString.JConverter]
-public class RegexGuardedString<TSelf, TRegexProvider> : RegexGuardedString<TSelf>, IRegexGuardedString<TSelf, TRegexProvider>
+public class RegexGuardedString<TSelf, TRegexProvider>
+    : RegexGuardedString<TSelf>,
+        IRegexGuardedString<TSelf, TRegexProvider>
     where TSelf : RegexGuardedString<TSelf, TRegexProvider>
     where TRegexProvider : IRegexProvider
 {
     public static REx Regex() => TRegexProvider.Regex();
 
-    public RegexGuardedString(string value) : base(value, TRegexProvider.Regex())
-    {
-    }
+    public RegexGuardedString(string value) : base(value, TRegexProvider.Regex()) { }
 
     //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     //     {
@@ -129,11 +131,14 @@ public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
         Value = value;
     }
 
-    protected RegexGuardedString(string value, string regex, RegexOptions options = IRegexProvider.DefaultRegexOptions) : this(value, new(regex, options))
-    {
-    }
+    protected RegexGuardedString(
+        string value,
+        string regex,
+        RegexOptions options = IRegexProvider.DefaultRegexOptions
+    ) : this(value, new(regex, options)) { }
 
     private static REx _regex;
+
     public static REx Regex() => _regex;
 
     public static implicit operator string(RegexGuardedString<TSelf> value)
@@ -164,7 +169,9 @@ public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
 
             if (!Regex().IsMatch(value))
             {
-                throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {Regex()}");
+                throw new ArgumentException(
+                    $"Value \"{value}\" does not match the specified pattern: {Regex()}"
+                );
             }
 
             _value = value;

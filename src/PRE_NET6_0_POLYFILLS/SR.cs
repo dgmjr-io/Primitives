@@ -19,7 +19,8 @@ public static class SR
 
     private static ResourceManager s_resourceManager;
 
-    public static ResourceManager ResourceManager => s_resourceManager ?? (s_resourceManager = new ResourceManager(typeof(SR)));
+    public static ResourceManager ResourceManager =>
+        s_resourceManager ?? (s_resourceManager = new ResourceManager(typeof(SR)));
 
     private static bool UsingResourceKeys() => true;
 
@@ -39,11 +40,14 @@ public static class SR
 
     public const string Access_Void = "Access_Void";
 
-    public const string AggregateException_ctor_DefaultMessage = "AggregateException_ctor_DefaultMessage";
+    public const string AggregateException_ctor_DefaultMessage =
+        "AggregateException_ctor_DefaultMessage";
 
-    public const string AggregateException_ctor_InnerExceptionNull = "AggregateException_ctor_InnerExceptionNull";
+    public const string AggregateException_ctor_InnerExceptionNull =
+        "AggregateException_ctor_InnerExceptionNull";
 
-    public const string AggregateException_DeserializationFailure = "AggregateException_DeserializationFailure";
+    public const string AggregateException_DeserializationFailure =
+        "AggregateException_DeserializationFailure";
 
     public const string AggregateException_InnerException = "AggregateException_InnerException";
 
@@ -53,7 +57,8 @@ public static class SR
 
     public const string AppDomain_Policy_PrincipalTwice = "AppDomain_Policy_PrincipalTwice";
 
-    public const string AmbiguousImplementationException_NullMessage = "AmbiguousImplementationException_NullMessage";
+    public const string AmbiguousImplementationException_NullMessage =
+        "AmbiguousImplementationException_NullMessage";
 
     public const string Arg_AccessException = "Arg_AccessException";
 
@@ -93,7 +98,8 @@ public static class SR
 
     public const string Arg_CannotHaveNegativeValue = "Arg_CannotHaveNegativeValue";
 
-    public const string Arg_CannotMixComparisonInfrastructure = "Arg_CannotMixComparisonInfrastructure";
+    public const string Arg_CannotMixComparisonInfrastructure =
+        "Arg_CannotMixComparisonInfrastructure";
 
     public const string Arg_CannotUnloadAppDomainException = "Arg_CannotUnloadAppDomainException";
 
@@ -137,13 +143,15 @@ public static class SR
 
     public const string Arg_EnumAndObjectMustBeSameType = "Arg_EnumAndObjectMustBeSameType";
 
-    public const string Arg_EnumFormatUnderlyingTypeAndObjectMustBeSameType = "Arg_EnumFormatUnderlyingTypeAndObjectMustBeSameType";
+    public const string Arg_EnumFormatUnderlyingTypeAndObjectMustBeSameType =
+        "Arg_EnumFormatUnderlyingTypeAndObjectMustBeSameType";
 
     public const string Arg_EnumIllegalVal = "Arg_EnumIllegalVal";
 
     public const string Arg_EnumLitValueNotFound = "Arg_EnumLitValueNotFound";
 
-    public const string Arg_EnumUnderlyingTypeAndObjectMustBeSameType = "Arg_EnumUnderlyingTypeAndObjectMustBeSameType";
+    public const string Arg_EnumUnderlyingTypeAndObjectMustBeSameType =
+        "Arg_EnumUnderlyingTypeAndObjectMustBeSameType";
 
     public const string Arg_EnumValueNotFound = "Arg_EnumValueNotFound";
 
@@ -187,7 +195,8 @@ public static class SR
 
     public const string Arg_IndexOutOfRangeException = "Arg_IndexOutOfRangeException";
 
-    public const string Arg_InsufficientExecutionStackException = "Arg_InsufficientExecutionStackException";
+    public const string Arg_InsufficientExecutionStackException =
+        "Arg_InsufficientExecutionStackException";
 
     public const string Arg_InvalidBase = "Arg_InvalidBase";
 
@@ -201,11 +210,14 @@ public static class SR
 
     public const string Arg_InvalidHexBinaryStyle = "Arg_InvalidHexBinaryStyle";
 
-    public const string Arg_InvalidNeutralResourcesLanguage_Asm_Culture = "Arg_InvalidNeutralResourcesLanguage_Asm_Culture";
+    public const string Arg_InvalidNeutralResourcesLanguage_Asm_Culture =
+        "Arg_InvalidNeutralResourcesLanguage_Asm_Culture";
 
-    public const string Arg_InvalidNeutralResourcesLanguage_FallbackLoc = "Arg_InvalidNeutralResourcesLanguage_FallbackLoc";
+    public const string Arg_InvalidNeutralResourcesLanguage_FallbackLoc =
+        "Arg_InvalidNeutralResourcesLanguage_FallbackLoc";
 
-    public const string Arg_InvalidSatelliteContract_Asm_Ver = "Arg_InvalidSatelliteContract_Asm_Ver";
+    public const string Arg_InvalidSatelliteContract_Asm_Ver =
+        "Arg_InvalidSatelliteContract_Asm_Ver";
 
     public const string Arg_InvalidOleVariantTypeException = "Arg_InvalidOleVariantTypeException";
 
@@ -237,7 +249,8 @@ public static class SR
 
     public const string Arg_MissingFieldException = "Arg_MissingFieldException";
 
-    public const string Arg_MissingManifestResourceException = "Arg_MissingManifestResourceException";
+    public const string Arg_MissingManifestResourceException =
+        "Arg_MissingManifestResourceException";
 
     public const string Arg_MissingMemberException = "Arg_MissingMemberException";
 
@@ -401,7 +414,8 @@ public static class SR
 
     public const string Arg_StackOverflowException = "Arg_StackOverflowException";
 
-    public const string Arg_SurrogatesNotAllowedAsSingleChar = "Arg_SurrogatesNotAllowedAsSingleChar";
+    public const string Arg_SurrogatesNotAllowedAsSingleChar =
+        "Arg_SurrogatesNotAllowedAsSingleChar";
 
     public const string Arg_SynchronizationLockException = "Arg_SynchronizationLockException";
 
@@ -471,7 +485,8 @@ public static class SR
 
     public const string Argument_BadExceptionCodeGen = "Argument_BadExceptionCodeGen";
 
-    public const string Argument_BadFieldForConstructorBuilder = "Argument_BadFieldForConstructorBuilder";
+    public const string Argument_BadFieldForConstructorBuilder =
+        "Argument_BadFieldForConstructorBuilder";
 
     public const string Argument_BadFieldSig = "Argument_BadFieldSig";
 
@@ -479,7 +494,8 @@ public static class SR
 
     public const string Argument_BadFormatSpecifier = "Argument_BadFormatSpecifier";
 
-    public const string Argument_BadImageFormatExceptionResolve = "Argument_BadImageFormatExceptionResolve";
+    public const string Argument_BadImageFormatExceptionResolve =
+        "Argument_BadImageFormatExceptionResolve";
 
     public const string Argument_BadLabel = "Argument_BadLabel";
 
@@ -487,11 +503,13 @@ public static class SR
 
     public const string Argument_BadNestedTypeFlags = "Argument_BadNestedTypeFlags";
 
-    public const string Argument_BadParameterCountsForConstructor = "Argument_BadParameterCountsForConstructor";
+    public const string Argument_BadParameterCountsForConstructor =
+        "Argument_BadParameterCountsForConstructor";
 
     public const string Argument_BadParameterTypeForCAB = "Argument_BadParameterTypeForCAB";
 
-    public const string Argument_BadPropertyForConstructorBuilder = "Argument_BadPropertyForConstructorBuilder";
+    public const string Argument_BadPropertyForConstructorBuilder =
+        "Argument_BadPropertyForConstructorBuilder";
 
     public const string Argument_BadSigFormat = "Argument_BadSigFormat";
 
@@ -499,9 +517,11 @@ public static class SR
 
     public const string Argument_BadTypeAttrInvalidLayout = "Argument_BadTypeAttrInvalidLayout";
 
-    public const string Argument_BadTypeAttrNestedVisibilityOnNonNestedType = "Argument_BadTypeAttrNestedVisibilityOnNonNestedType";
+    public const string Argument_BadTypeAttrNestedVisibilityOnNonNestedType =
+        "Argument_BadTypeAttrNestedVisibilityOnNonNestedType";
 
-    public const string Argument_BadTypeAttrNonNestedVisibilityNestedType = "Argument_BadTypeAttrNonNestedVisibilityNestedType";
+    public const string Argument_BadTypeAttrNonNestedVisibilityNestedType =
+        "Argument_BadTypeAttrNonNestedVisibilityNestedType";
 
     public const string Argument_BadTypeAttrReservedBitsSet = "Argument_BadTypeAttrReservedBitsSet";
 
@@ -513,7 +533,8 @@ public static class SR
 
     public const string Argument_CompareOptionOrdinal = "Argument_CompareOptionOrdinal";
 
-    public const string Argument_ConflictingDateTimeRoundtripStyles = "Argument_ConflictingDateTimeRoundtripStyles";
+    public const string Argument_ConflictingDateTimeRoundtripStyles =
+        "Argument_ConflictingDateTimeRoundtripStyles";
 
     public const string Argument_ConflictingDateTimeStyles = "Argument_ConflictingDateTimeStyles";
 
@@ -523,7 +544,8 @@ public static class SR
 
     public const string Argument_ConstantNull = "Argument_ConstantNull";
 
-    public const string Argument_ConstructorNeedGenericDeclaringType = "Argument_ConstructorNeedGenericDeclaringType";
+    public const string Argument_ConstructorNeedGenericDeclaringType =
+        "Argument_ConstructorNeedGenericDeclaringType";
 
     public const string Argument_ConversionOverflow = "Argument_ConversionOverflow";
 
@@ -537,11 +559,14 @@ public static class SR
 
     public const string Argument_CultureNotSupported = "Argument_CultureNotSupported";
 
-    public const string Argument_CultureNotSupportedInInvariantMode = "Argument_CultureNotSupportedInInvariantMode";
+    public const string Argument_CultureNotSupportedInInvariantMode =
+        "Argument_CultureNotSupportedInInvariantMode";
 
-    public const string Argument_CustomAssemblyLoadContextRequestedNameMismatch = "Argument_CustomAssemblyLoadContextRequestedNameMismatch";
+    public const string Argument_CustomAssemblyLoadContextRequestedNameMismatch =
+        "Argument_CustomAssemblyLoadContextRequestedNameMismatch";
 
-    public const string Argument_CustomCultureCannotBePassedByNumber = "Argument_CustomCultureCannotBePassedByNumber";
+    public const string Argument_CustomCultureCannotBePassedByNumber =
+        "Argument_CustomCultureCannotBePassedByNumber";
 
     public const string Argument_DateTimeBadBinaryData = "Argument_DateTimeBadBinaryData";
 
@@ -553,13 +578,17 @@ public static class SR
 
     public const string Argument_DateTimeIsNotAmbiguous = "Argument_DateTimeIsNotAmbiguous";
 
-    public const string Argument_DateTimeKindMustBeUnspecified = "Argument_DateTimeKindMustBeUnspecified";
+    public const string Argument_DateTimeKindMustBeUnspecified =
+        "Argument_DateTimeKindMustBeUnspecified";
 
-    public const string Argument_DateTimeKindMustBeUnspecifiedOrUtc = "Argument_DateTimeKindMustBeUnspecifiedOrUtc";
+    public const string Argument_DateTimeKindMustBeUnspecifiedOrUtc =
+        "Argument_DateTimeKindMustBeUnspecifiedOrUtc";
 
-    public const string Argument_DateTimeOffsetInvalidDateTimeStyles = "Argument_DateTimeOffsetInvalidDateTimeStyles";
+    public const string Argument_DateTimeOffsetInvalidDateTimeStyles =
+        "Argument_DateTimeOffsetInvalidDateTimeStyles";
 
-    public const string Argument_DateTimeOffsetIsNotAmbiguous = "Argument_DateTimeOffsetIsNotAmbiguous";
+    public const string Argument_DateTimeOffsetIsNotAmbiguous =
+        "Argument_DateTimeOffsetIsNotAmbiguous";
 
     public const string Argument_DestinationTooShort = "Argument_DestinationTooShort";
 
@@ -571,9 +600,11 @@ public static class SR
 
     public const string Argument_EncoderFallbackNotEmpty = "Argument_EncoderFallbackNotEmpty";
 
-    public const string Argument_EncodingConversionOverflowBytes = "Argument_EncodingConversionOverflowBytes";
+    public const string Argument_EncodingConversionOverflowBytes =
+        "Argument_EncodingConversionOverflowBytes";
 
-    public const string Argument_EncodingConversionOverflowChars = "Argument_EncodingConversionOverflowChars";
+    public const string Argument_EncodingConversionOverflowChars =
+        "Argument_EncodingConversionOverflowChars";
 
     public const string Argument_EncodingNotSupported = "Argument_EncodingNotSupported";
 
@@ -583,7 +614,8 @@ public static class SR
 
     public const string Argument_FieldDeclaringTypeGeneric = "Argument_FieldDeclaringTypeGeneric";
 
-    public const string Argument_FieldNeedGenericDeclaringType = "Argument_FieldNeedGenericDeclaringType";
+    public const string Argument_FieldNeedGenericDeclaringType =
+        "Argument_FieldNeedGenericDeclaringType";
 
     public const string Argument_GenConstraintViolation = "Argument_GenConstraintViolation";
 
@@ -621,7 +653,8 @@ public static class SR
 
     public const string Argument_InvalidUnixCreateMode = "Argument_InvalidUnixCreateMode";
 
-    public const string Argument_InvalidArgumentForComparison = "Argument_InvalidArgumentForComparison";
+    public const string Argument_InvalidArgumentForComparison =
+        "Argument_InvalidArgumentForComparison";
 
     public const string Argument_InvalidArrayLength = "Argument_InvalidArrayLength";
 
@@ -637,15 +670,18 @@ public static class SR
 
     public const string Argument_InvalidCodePageBytesIndex = "Argument_InvalidCodePageBytesIndex";
 
-    public const string Argument_InvalidCodePageConversionIndex = "Argument_InvalidCodePageConversionIndex";
+    public const string Argument_InvalidCodePageConversionIndex =
+        "Argument_InvalidCodePageConversionIndex";
 
-    public const string Argument_InvalidConstructorDeclaringType = "Argument_InvalidConstructorDeclaringType";
+    public const string Argument_InvalidConstructorDeclaringType =
+        "Argument_InvalidConstructorDeclaringType";
 
     public const string Argument_InvalidConstructorInfo = "Argument_InvalidConstructorInfo";
 
     public const string Argument_InvalidCultureName = "Argument_InvalidCultureName";
 
-    public const string Argument_InvalidPredefinedCultureName = "Argument_InvalidPredefinedCultureName";
+    public const string Argument_InvalidPredefinedCultureName =
+        "Argument_InvalidPredefinedCultureName";
 
     public const string Argument_InvalidDateTimeKind = "Argument_InvalidDateTimeKind";
 
@@ -669,7 +705,8 @@ public static class SR
 
     public const string Argument_InvalidFieldDeclaringType = "Argument_InvalidFieldDeclaringType";
 
-    public const string Argument_InvalidFileModeAndAccessCombo = "Argument_InvalidFileModeAndAccessCombo";
+    public const string Argument_InvalidFileModeAndAccessCombo =
+        "Argument_InvalidFileModeAndAccessCombo";
 
     public const string Argument_InvalidFlag = "Argument_InvalidFlag";
 
@@ -689,7 +726,8 @@ public static class SR
 
     public const string Argument_InvalidLowSurrogate = "Argument_InvalidLowSurrogate";
 
-    public const string Argument_InvalidMemberForNamedArgument = "Argument_InvalidMemberForNamedArgument";
+    public const string Argument_InvalidMemberForNamedArgument =
+        "Argument_InvalidMemberForNamedArgument";
 
     public const string Argument_InvalidMethodDeclaringType = "Argument_InvalidMethodDeclaringType";
 
@@ -707,7 +745,8 @@ public static class SR
 
     public const string Argument_InvalidOffLen = "Argument_InvalidOffLen";
 
-    public const string Argument_InvalidOpCodeOnDynamicMethod = "Argument_InvalidOpCodeOnDynamicMethod";
+    public const string Argument_InvalidOpCodeOnDynamicMethod =
+        "Argument_InvalidOpCodeOnDynamicMethod";
 
     public const string Argument_InvalidParameterInfo = "Argument_InvalidParameterInfo";
 
@@ -723,7 +762,8 @@ public static class SR
 
     public const string Argument_InvalidSerializedString = "Argument_InvalidSerializedString";
 
-    public const string Argument_InvalidStartupHookSignature = "Argument_InvalidStartupHookSignature";
+    public const string Argument_InvalidStartupHookSignature =
+        "Argument_InvalidStartupHookSignature";
 
     public const string Argument_InvalidTimeSpanStyles = "Argument_InvalidTimeSpanStyles";
 
@@ -731,11 +771,13 @@ public static class SR
 
     public const string Argument_InvalidTypeForCA = "Argument_InvalidTypeForCA";
 
-    public const string Argument_InvalidTypeForDynamicMethod = "Argument_InvalidTypeForDynamicMethod";
+    public const string Argument_InvalidTypeForDynamicMethod =
+        "Argument_InvalidTypeForDynamicMethod";
 
     public const string Argument_InvalidTypeName = "Argument_InvalidTypeName";
 
-    public const string Argument_InvalidTypeWithPointersNotSupported = "Argument_InvalidTypeWithPointersNotSupported";
+    public const string Argument_InvalidTypeWithPointersNotSupported =
+        "Argument_InvalidTypeWithPointersNotSupported";
 
     public const string Argument_InvalidUnity = "Argument_InvalidUnity";
 
@@ -745,9 +787,11 @@ public static class SR
 
     public const string Argument_MethodDeclaringTypeGeneric = "Argument_MethodDeclaringTypeGeneric";
 
-    public const string Argument_MethodDeclaringTypeGenericLcg = "Argument_MethodDeclaringTypeGenericLcg";
+    public const string Argument_MethodDeclaringTypeGenericLcg =
+        "Argument_MethodDeclaringTypeGenericLcg";
 
-    public const string Argument_MethodNeedGenericDeclaringType = "Argument_MethodNeedGenericDeclaringType";
+    public const string Argument_MethodNeedGenericDeclaringType =
+        "Argument_MethodNeedGenericDeclaringType";
 
     public const string Argument_MinMaxValue = "Argument_MinMaxValue";
 
@@ -767,11 +811,14 @@ public static class SR
 
     public const string Argument_MustHaveAttributeBaseClass = "Argument_MustHaveAttributeBaseClass";
 
-    public const string Argument_NativeOverlappedAlreadyFree = "Argument_NativeOverlappedAlreadyFree";
+    public const string Argument_NativeOverlappedAlreadyFree =
+        "Argument_NativeOverlappedAlreadyFree";
 
-    public const string Argument_NativeOverlappedWrongBoundHandle = "Argument_NativeOverlappedWrongBoundHandle";
+    public const string Argument_NativeOverlappedWrongBoundHandle =
+        "Argument_NativeOverlappedWrongBoundHandle";
 
-    public const string Argument_NeedGenericMethodDefinition = "Argument_NeedGenericMethodDefinition";
+    public const string Argument_NeedGenericMethodDefinition =
+        "Argument_NeedGenericMethodDefinition";
 
     public const string Argument_NeedNonGenericType = "Argument_NeedNonGenericType";
 
@@ -797,7 +844,8 @@ public static class SR
 
     public const string Argument_NotMethodCallOpcode = "Argument_NotMethodCallOpcode";
 
-    public const string Argument_OffsetAndCapacityOutOfBounds = "Argument_OffsetAndCapacityOutOfBounds";
+    public const string Argument_OffsetAndCapacityOutOfBounds =
+        "Argument_OffsetAndCapacityOutOfBounds";
 
     public const string Argument_OffsetLocalMismatch = "Argument_OffsetLocalMismatch";
 
@@ -817,7 +865,8 @@ public static class SR
 
     public const string Argument_PathEmpty = "Argument_PathEmpty";
 
-    public const string Argument_PreAllocatedAlreadyAllocated = "Argument_PreAllocatedAlreadyAllocated";
+    public const string Argument_PreAllocatedAlreadyAllocated =
+        "Argument_PreAllocatedAlreadyAllocated";
 
     public const string Argument_RecursiveFallback = "Argument_RecursiveFallback";
 
@@ -845,9 +894,11 @@ public static class SR
 
     public const string Argument_SemaphoreInitialMaximum = "Argument_SemaphoreInitialMaximum";
 
-    public const string Argument_ShouldNotSpecifyExceptionType = "Argument_ShouldNotSpecifyExceptionType";
+    public const string Argument_ShouldNotSpecifyExceptionType =
+        "Argument_ShouldNotSpecifyExceptionType";
 
-    public const string Argument_ShouldOnlySetVisibilityFlags = "Argument_ShouldOnlySetVisibilityFlags";
+    public const string Argument_ShouldOnlySetVisibilityFlags =
+        "Argument_ShouldOnlySetVisibilityFlags";
 
     public const string Argument_SigIsFinalized = "Argument_SigIsFinalized";
 
@@ -863,11 +914,13 @@ public static class SR
 
     public const string Argument_TimeZoneInfoInvalidTZif = "Argument_TimeZoneInfoInvalidTZif";
 
-    public const string Argument_ToExclusiveLessThanFromExclusive = "Argument_ToExclusiveLessThanFromExclusive";
+    public const string Argument_ToExclusiveLessThanFromExclusive =
+        "Argument_ToExclusiveLessThanFromExclusive";
 
     public const string Argument_TooManyFinallyClause = "Argument_TooManyFinallyClause";
 
-    public const string Argument_TransitionTimesAreIdentical = "Argument_TransitionTimesAreIdentical";
+    public const string Argument_TransitionTimesAreIdentical =
+        "Argument_TransitionTimesAreIdentical";
 
     public const string Argument_TypedReferenceInvalidField = "Argument_TypedReferenceInvalidField";
 
@@ -879,7 +932,8 @@ public static class SR
 
     public const string Argument_UnknownUnmanagedCallConv = "Argument_UnknownUnmanagedCallConv";
 
-    public const string Argument_UnmanagedMemAccessorWrapAround = "Argument_UnmanagedMemAccessorWrapAround";
+    public const string Argument_UnmanagedMemAccessorWrapAround =
+        "Argument_UnmanagedMemAccessorWrapAround";
 
     public const string Argument_UnmatchedMethodForLocal = "Argument_UnmatchedMethodForLocal";
 
@@ -893,17 +947,22 @@ public static class SR
 
     public const string ArgumentException_BufferNotFromPool = "ArgumentException_BufferNotFromPool";
 
-    public const string ArgumentException_OtherNotArrayOfCorrectLength = "ArgumentException_OtherNotArrayOfCorrectLength";
+    public const string ArgumentException_OtherNotArrayOfCorrectLength =
+        "ArgumentException_OtherNotArrayOfCorrectLength";
 
     public const string ArgumentException_NotIsomorphic = "ArgumentException_NotIsomorphic";
 
-    public const string ArgumentException_TupleIncorrectType = "ArgumentException_TupleIncorrectType";
+    public const string ArgumentException_TupleIncorrectType =
+        "ArgumentException_TupleIncorrectType";
 
-    public const string ArgumentException_TupleLastArgumentNotATuple = "ArgumentException_TupleLastArgumentNotATuple";
+    public const string ArgumentException_TupleLastArgumentNotATuple =
+        "ArgumentException_TupleLastArgumentNotATuple";
 
-    public const string ArgumentException_ValueTupleIncorrectType = "ArgumentException_ValueTupleIncorrectType";
+    public const string ArgumentException_ValueTupleIncorrectType =
+        "ArgumentException_ValueTupleIncorrectType";
 
-    public const string ArgumentException_ValueTupleLastArgumentNotAValueTuple = "ArgumentException_ValueTupleLastArgumentNotAValueTuple";
+    public const string ArgumentException_ValueTupleLastArgumentNotAValueTuple =
+        "ArgumentException_ValueTupleLastArgumentNotAValueTuple";
 
     public const string ArgumentNull_Array = "ArgumentNull_Array";
 
@@ -925,15 +984,19 @@ public static class SR
 
     public const string ArgumentOutOfRange_AddValue = "ArgumentOutOfRange_AddValue";
 
-    public const string ArgumentOutOfRange_BadHourMinuteSecond = "ArgumentOutOfRange_BadHourMinuteSecond";
+    public const string ArgumentOutOfRange_BadHourMinuteSecond =
+        "ArgumentOutOfRange_BadHourMinuteSecond";
 
     public const string ArgumentOutOfRange_BadYearMonthDay = "ArgumentOutOfRange_BadYearMonthDay";
 
-    public const string ArgumentOutOfRange_BiggerThanCollection = "ArgumentOutOfRange_BiggerThanCollection";
+    public const string ArgumentOutOfRange_BiggerThanCollection =
+        "ArgumentOutOfRange_BiggerThanCollection";
 
-    public const string ArgumentOutOfRange_BinaryReaderFillBuffer = "ArgumentOutOfRange_BinaryReaderFillBuffer";
+    public const string ArgumentOutOfRange_BinaryReaderFillBuffer =
+        "ArgumentOutOfRange_BinaryReaderFillBuffer";
 
-    public const string ArgumentOutOfRange_Bounds_Lower_Upper = "ArgumentOutOfRange_Bounds_Lower_Upper";
+    public const string ArgumentOutOfRange_Bounds_Lower_Upper =
+        "ArgumentOutOfRange_Bounds_Lower_Upper";
 
     public const string ArgumentOutOfRange_CalendarRange = "ArgumentOutOfRange_CalendarRange";
 
@@ -943,7 +1006,8 @@ public static class SR
 
     public const string ArgumentOutOfRange_DateArithmetic = "ArgumentOutOfRange_DateArithmetic";
 
-    public const string ArgumentOutOfRange_DateTimeBadMonths = "ArgumentOutOfRange_DateTimeBadMonths";
+    public const string ArgumentOutOfRange_DateTimeBadMonths =
+        "ArgumentOutOfRange_DateTimeBadMonths";
 
     public const string ArgumentOutOfRange_DateTimeBadTicks = "ArgumentOutOfRange_DateTimeBadTicks";
 
@@ -959,7 +1023,8 @@ public static class SR
 
     public const string ArgumentOutOfRange_DecimalRound = "ArgumentOutOfRange_DecimalRound";
 
-    public const string ArgumentOutOfRange_EndIndexStartIndex = "ArgumentOutOfRange_EndIndexStartIndex";
+    public const string ArgumentOutOfRange_EndIndexStartIndex =
+        "ArgumentOutOfRange_EndIndexStartIndex";
 
     public const string ArgumentOutOfRange_Enum = "ArgumentOutOfRange_Enum";
 
@@ -969,17 +1034,22 @@ public static class SR
 
     public const string ArgumentOutOfRange_FileTimeInvalid = "ArgumentOutOfRange_FileTimeInvalid";
 
-    public const string ArgumentOutOfRange_GetByteCountOverflow = "ArgumentOutOfRange_GetByteCountOverflow";
+    public const string ArgumentOutOfRange_GetByteCountOverflow =
+        "ArgumentOutOfRange_GetByteCountOverflow";
 
-    public const string ArgumentOutOfRange_GetCharCountOverflow = "ArgumentOutOfRange_GetCharCountOverflow";
+    public const string ArgumentOutOfRange_GetCharCountOverflow =
+        "ArgumentOutOfRange_GetCharCountOverflow";
 
-    public const string ArgumentOutOfRange_HashtableLoadFactor = "ArgumentOutOfRange_HashtableLoadFactor";
+    public const string ArgumentOutOfRange_HashtableLoadFactor =
+        "ArgumentOutOfRange_HashtableLoadFactor";
 
-    public const string ArgumentOutOfRange_HugeArrayNotSupported = "ArgumentOutOfRange_HugeArrayNotSupported";
+    public const string ArgumentOutOfRange_HugeArrayNotSupported =
+        "ArgumentOutOfRange_HugeArrayNotSupported";
 
     public const string ArgumentOutOfRange_IndexMustBeLess = "ArgumentOutOfRange_IndexMustBeLess";
 
-    public const string ArgumentOutOfRange_IndexMustBeLessOrEqual = "ArgumentOutOfRange_IndexMustBeLessOrEqual";
+    public const string ArgumentOutOfRange_IndexMustBeLessOrEqual =
+        "ArgumentOutOfRange_IndexMustBeLessOrEqual";
 
     public const string ArgumentOutOfRange_IndexCount = "ArgumentOutOfRange_IndexCount";
 
@@ -991,15 +1061,19 @@ public static class SR
 
     public const string ArgumentOutOfRange_InvalidEraValue = "ArgumentOutOfRange_InvalidEraValue";
 
-    public const string ArgumentOutOfRange_InvalidHighSurrogate = "ArgumentOutOfRange_InvalidHighSurrogate";
+    public const string ArgumentOutOfRange_InvalidHighSurrogate =
+        "ArgumentOutOfRange_InvalidHighSurrogate";
 
-    public const string ArgumentOutOfRange_InvalidLowSurrogate = "ArgumentOutOfRange_InvalidLowSurrogate";
+    public const string ArgumentOutOfRange_InvalidLowSurrogate =
+        "ArgumentOutOfRange_InvalidLowSurrogate";
 
     public const string ArgumentOutOfRange_InvalidUTF32 = "ArgumentOutOfRange_InvalidUTF32";
 
-    public const string ArgumentOutOfRange_LengthGreaterThanCapacity = "ArgumentOutOfRange_LengthGreaterThanCapacity";
+    public const string ArgumentOutOfRange_LengthGreaterThanCapacity =
+        "ArgumentOutOfRange_LengthGreaterThanCapacity";
 
-    public const string ArgumentOutOfRange_LessEqualToIntegerMaxVal = "ArgumentOutOfRange_LessEqualToIntegerMaxVal";
+    public const string ArgumentOutOfRange_LessEqualToIntegerMaxVal =
+        "ArgumentOutOfRange_LessEqualToIntegerMaxVal";
 
     public const string ArgumentOutOfRange_ListInsert = "ArgumentOutOfRange_ListInsert";
 
@@ -1015,7 +1089,8 @@ public static class SR
 
     public const string ArgumentOutOfRange_NeedNonNegNum = "ArgumentOutOfRange_NeedNonNegNum";
 
-    public const string ArgumentOutOfRange_NeedNonNegOrNegative1 = "ArgumentOutOfRange_NeedNonNegOrNegative1";
+    public const string ArgumentOutOfRange_NeedNonNegOrNegative1 =
+        "ArgumentOutOfRange_NeedNonNegOrNegative1";
 
     public const string ArgumentOutOfRange_NeedValidId = "ArgumentOutOfRange_NeedValidId";
 
@@ -1027,61 +1102,78 @@ public static class SR
 
     public const string ArgumentOutOfRange_PartialWCHAR = "ArgumentOutOfRange_PartialWCHAR";
 
-    public const string ArgumentOutOfRange_PositionLessThanCapacityRequired = "ArgumentOutOfRange_PositionLessThanCapacityRequired";
+    public const string ArgumentOutOfRange_PositionLessThanCapacityRequired =
+        "ArgumentOutOfRange_PositionLessThanCapacityRequired";
 
     public const string ArgumentOutOfRange_Range = "ArgumentOutOfRange_Range";
 
     public const string ArgumentOutOfRange_RoundingDigits = "ArgumentOutOfRange_RoundingDigits";
 
-    public const string ArgumentOutOfRange_RoundingDigits_MathF = "ArgumentOutOfRange_RoundingDigits_MathF";
+    public const string ArgumentOutOfRange_RoundingDigits_MathF =
+        "ArgumentOutOfRange_RoundingDigits_MathF";
 
     public const string ArgumentOutOfRange_SmallCapacity = "ArgumentOutOfRange_SmallCapacity";
 
     public const string ArgumentOutOfRange_StartIndex = "ArgumentOutOfRange_StartIndex";
 
-    public const string ArgumentOutOfRange_StartIndexLargerThanLength = "ArgumentOutOfRange_StartIndexLargerThanLength";
+    public const string ArgumentOutOfRange_StartIndexLargerThanLength =
+        "ArgumentOutOfRange_StartIndexLargerThanLength";
 
     public const string ArgumentOutOfRange_StreamLength = "ArgumentOutOfRange_StreamLength";
 
     public const string ArgumentOutOfRange_UIntPtrMax = "ArgumentOutOfRange_UIntPtrMax";
 
-    public const string ArgumentOutOfRange_UnmanagedMemStreamLength = "ArgumentOutOfRange_UnmanagedMemStreamLength";
+    public const string ArgumentOutOfRange_UnmanagedMemStreamLength =
+        "ArgumentOutOfRange_UnmanagedMemStreamLength";
 
-    public const string ArgumentOutOfRange_UnmanagedMemStreamWrapAround = "ArgumentOutOfRange_UnmanagedMemStreamWrapAround";
+    public const string ArgumentOutOfRange_UnmanagedMemStreamWrapAround =
+        "ArgumentOutOfRange_UnmanagedMemStreamWrapAround";
 
     public const string ArgumentOutOfRange_UtcOffset = "ArgumentOutOfRange_UtcOffset";
 
-    public const string ArgumentOutOfRange_UtcOffsetAndDaylightDelta = "ArgumentOutOfRange_UtcOffsetAndDaylightDelta";
+    public const string ArgumentOutOfRange_UtcOffsetAndDaylightDelta =
+        "ArgumentOutOfRange_UtcOffsetAndDaylightDelta";
 
     public const string ArgumentOutOfRange_Week = "ArgumentOutOfRange_Week";
 
     public const string ArgumentOutOfRange_Year = "ArgumentOutOfRange_Year";
 
-    public const string ArgumentOutOfRange_Generic_MustBeNonZero = "ArgumentOutOfRange_Generic_MustBeNonZero";
+    public const string ArgumentOutOfRange_Generic_MustBeNonZero =
+        "ArgumentOutOfRange_Generic_MustBeNonZero";
 
-    public const string ArgumentOutOfRange_Generic_MustBeNonNegative = "ArgumentOutOfRange_Generic_MustBeNonNegative";
+    public const string ArgumentOutOfRange_Generic_MustBeNonNegative =
+        "ArgumentOutOfRange_Generic_MustBeNonNegative";
 
-    public const string ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero = "ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero";
+    public const string ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero =
+        "ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero";
 
-    public const string ArgumentOutOfRange_Generic_MustBeLessOrEqual = "ArgumentOutOfRange_Generic_MustBeLessOrEqual";
+    public const string ArgumentOutOfRange_Generic_MustBeLessOrEqual =
+        "ArgumentOutOfRange_Generic_MustBeLessOrEqual";
 
-    public const string ArgumentOutOfRange_Generic_MustBeLess = "ArgumentOutOfRange_Generic_MustBeLess";
+    public const string ArgumentOutOfRange_Generic_MustBeLess =
+        "ArgumentOutOfRange_Generic_MustBeLess";
 
-    public const string ArgumentOutOfRange_Generic_MustBeGreaterOrEqual = "ArgumentOutOfRange_Generic_MustBeGreaterOrEqual";
+    public const string ArgumentOutOfRange_Generic_MustBeGreaterOrEqual =
+        "ArgumentOutOfRange_Generic_MustBeGreaterOrEqual";
 
-    public const string ArgumentOutOfRange_Generic_MustBeGreater = "ArgumentOutOfRange_Generic_MustBeGreater";
+    public const string ArgumentOutOfRange_Generic_MustBeGreater =
+        "ArgumentOutOfRange_Generic_MustBeGreater";
 
-    public const string ArgumentOutOfRange_Generic_MustBeEqual = "ArgumentOutOfRange_Generic_MustBeEqual";
+    public const string ArgumentOutOfRange_Generic_MustBeEqual =
+        "ArgumentOutOfRange_Generic_MustBeEqual";
 
-    public const string ArgumentOutOfRange_Generic_MustBeNotEqual = "ArgumentOutOfRange_Generic_MustBeNotEqual";
+    public const string ArgumentOutOfRange_Generic_MustBeNotEqual =
+        "ArgumentOutOfRange_Generic_MustBeNotEqual";
 
     public const string Arithmetic_NaN = "Arithmetic_NaN";
 
     public const string ArrayTypeMismatch_ConstrainedCopy = "ArrayTypeMismatch_ConstrainedCopy";
 
-    public const string AssemblyLoadContext_Unload_CannotUnloadIfNotCollectible = "AssemblyLoadContext_Unload_CannotUnloadIfNotCollectible";
+    public const string AssemblyLoadContext_Unload_CannotUnloadIfNotCollectible =
+        "AssemblyLoadContext_Unload_CannotUnloadIfNotCollectible";
 
-    public const string AssemblyLoadContext_Verify_NotUnloading = "AssemblyLoadContext_Verify_NotUnloading";
+    public const string AssemblyLoadContext_Verify_NotUnloading =
+        "AssemblyLoadContext_Verify_NotUnloading";
 
     public const string AssertionFailed = "AssertionFailed";
 
@@ -1091,7 +1183,8 @@ public static class SR
 
     public const string AssumptionFailed_Cnd = "AssumptionFailed_Cnd";
 
-    public const string AsyncMethodBuilder_InstanceNotInitialized = "AsyncMethodBuilder_InstanceNotInitialized";
+    public const string AsyncMethodBuilder_InstanceNotInitialized =
+        "AsyncMethodBuilder_InstanceNotInitialized";
 
     public const string BadImageFormat_BadILFormat = "BadImageFormat_BadILFormat";
 
@@ -1099,45 +1192,60 @@ public static class SR
 
     public const string BadImageFormat_NegativeStringLength = "BadImageFormat_NegativeStringLength";
 
-    public const string BadImageFormat_ParameterSignatureMismatch = "BadImageFormat_ParameterSignatureMismatch";
+    public const string BadImageFormat_ParameterSignatureMismatch =
+        "BadImageFormat_ParameterSignatureMismatch";
 
-    public const string BadImageFormat_ResType_SerBlobMismatch = "BadImageFormat_ResType_SerBlobMismatch";
+    public const string BadImageFormat_ResType_SerBlobMismatch =
+        "BadImageFormat_ResType_SerBlobMismatch";
 
-    public const string BadImageFormat_ResourceDataLengthInvalid = "BadImageFormat_ResourceDataLengthInvalid";
+    public const string BadImageFormat_ResourceDataLengthInvalid =
+        "BadImageFormat_ResourceDataLengthInvalid";
 
-    public const string BadImageFormat_ResourceNameCorrupted = "BadImageFormat_ResourceNameCorrupted";
+    public const string BadImageFormat_ResourceNameCorrupted =
+        "BadImageFormat_ResourceNameCorrupted";
 
-    public const string BadImageFormat_ResourceNameCorrupted_NameIndex = "BadImageFormat_ResourceNameCorrupted_NameIndex";
+    public const string BadImageFormat_ResourceNameCorrupted_NameIndex =
+        "BadImageFormat_ResourceNameCorrupted_NameIndex";
 
-    public const string BadImageFormat_ResourcesDataInvalidOffset = "BadImageFormat_ResourcesDataInvalidOffset";
+    public const string BadImageFormat_ResourcesDataInvalidOffset =
+        "BadImageFormat_ResourcesDataInvalidOffset";
 
-    public const string BadImageFormat_ResourcesHeaderCorrupted = "BadImageFormat_ResourcesHeaderCorrupted";
+    public const string BadImageFormat_ResourcesHeaderCorrupted =
+        "BadImageFormat_ResourcesHeaderCorrupted";
 
-    public const string BadImageFormat_ResourcesIndexTooLong = "BadImageFormat_ResourcesIndexTooLong";
+    public const string BadImageFormat_ResourcesIndexTooLong =
+        "BadImageFormat_ResourcesIndexTooLong";
 
-    public const string BadImageFormat_ResourcesNameInvalidOffset = "BadImageFormat_ResourcesNameInvalidOffset";
+    public const string BadImageFormat_ResourcesNameInvalidOffset =
+        "BadImageFormat_ResourcesNameInvalidOffset";
 
     public const string BadImageFormat_ResourcesNameTooLong = "BadImageFormat_ResourcesNameTooLong";
 
     public const string BadImageFormat_TypeMismatch = "BadImageFormat_TypeMismatch";
 
-    public const string CancellationToken_CreateLinkedToken_TokensIsEmpty = "CancellationToken_CreateLinkedToken_TokensIsEmpty";
+    public const string CancellationToken_CreateLinkedToken_TokensIsEmpty =
+        "CancellationToken_CreateLinkedToken_TokensIsEmpty";
 
     public const string CancellationTokenSource_Disposed = "CancellationTokenSource_Disposed";
 
-    public const string ConcurrentCollection_SyncRoot_NotSupported = "ConcurrentCollection_SyncRoot_NotSupported";
+    public const string ConcurrentCollection_SyncRoot_NotSupported =
+        "ConcurrentCollection_SyncRoot_NotSupported";
 
-    public const string EventSource_AbstractMustNotDeclareEventMethods = "EventSource_AbstractMustNotDeclareEventMethods";
+    public const string EventSource_AbstractMustNotDeclareEventMethods =
+        "EventSource_AbstractMustNotDeclareEventMethods";
 
-    public const string EventSource_AbstractMustNotDeclareKTOC = "EventSource_AbstractMustNotDeclareKTOC";
+    public const string EventSource_AbstractMustNotDeclareKTOC =
+        "EventSource_AbstractMustNotDeclareKTOC";
 
     public const string EventSource_AddScalarOutOfRange = "EventSource_AddScalarOutOfRange";
 
     public const string EventSource_BadHexDigit = "EventSource_BadHexDigit";
 
-    public const string EventSource_ChannelTypeDoesNotMatchEventChannelValue = "EventSource_ChannelTypeDoesNotMatchEventChannelValue";
+    public const string EventSource_ChannelTypeDoesNotMatchEventChannelValue =
+        "EventSource_ChannelTypeDoesNotMatchEventChannelValue";
 
-    public const string EventSource_DataDescriptorsOutOfRange = "EventSource_DataDescriptorsOutOfRange";
+    public const string EventSource_DataDescriptorsOutOfRange =
+        "EventSource_DataDescriptorsOutOfRange";
 
     public const string EventSource_DuplicateStringKey = "EventSource_DuplicateStringKey";
 
@@ -1149,9 +1257,11 @@ public static class SR
 
     public const string EventSource_EventIdReused = "EventSource_EventIdReused";
 
-    public const string EventSource_EventMustHaveTaskIfNonDefaultOpcode = "EventSource_EventMustHaveTaskIfNonDefaultOpcode";
+    public const string EventSource_EventMustHaveTaskIfNonDefaultOpcode =
+        "EventSource_EventMustHaveTaskIfNonDefaultOpcode";
 
-    public const string EventSource_EventMustNotBeExplicitImplementation = "EventSource_EventMustNotBeExplicitImplementation";
+    public const string EventSource_EventMustNotBeExplicitImplementation =
+        "EventSource_EventMustNotBeExplicitImplementation";
 
     public const string EventSource_EventNameReused = "EventSource_EventNameReused";
 
@@ -1161,7 +1271,8 @@ public static class SR
 
     public const string EventSource_EventTooBig = "EventSource_EventTooBig";
 
-    public const string EventSource_EventWithAdminChannelMustHaveMessage = "EventSource_EventWithAdminChannelMustHaveMessage";
+    public const string EventSource_EventWithAdminChannelMustHaveMessage =
+        "EventSource_EventWithAdminChannelMustHaveMessage";
 
     public const string EventSource_IllegalKeywordsValue = "EventSource_IllegalKeywordsValue";
 
@@ -1171,7 +1282,8 @@ public static class SR
 
     public const string EventSource_IllegalValue = "EventSource_IllegalValue";
 
-    public const string EventSource_IncorrentlyAuthoredTypeInfo = "EventSource_IncorrentlyAuthoredTypeInfo";
+    public const string EventSource_IncorrentlyAuthoredTypeInfo =
+        "EventSource_IncorrentlyAuthoredTypeInfo";
 
     public const string EventSource_InvalidCommand = "EventSource_InvalidCommand";
 
@@ -1181,7 +1293,8 @@ public static class SR
 
     public const string EventSource_KeywordNeedPowerOfTwo = "EventSource_KeywordNeedPowerOfTwo";
 
-    public const string EventSource_ListenerCreatedInsideCallback = "EventSource_ListenerCreatedInsideCallback";
+    public const string EventSource_ListenerCreatedInsideCallback =
+        "EventSource_ListenerCreatedInsideCallback";
 
     public const string EventSource_ListenerNotFound = "EventSource_ListenerNotFound";
 
@@ -1203,13 +1316,16 @@ public static class SR
 
     public const string EventSource_NoRelatedActivityId = "EventSource_NoRelatedActivityId";
 
-    public const string EventSource_NotSupportedArrayOfBinary = "EventSource_NotSupportedArrayOfBinary";
+    public const string EventSource_NotSupportedArrayOfBinary =
+        "EventSource_NotSupportedArrayOfBinary";
 
     public const string EventSource_NotSupportedArrayOfNil = "EventSource_NotSupportedArrayOfNil";
 
-    public const string EventSource_NotSupportedArrayOfNullTerminatedString = "EventSource_NotSupportedArrayOfNullTerminatedString";
+    public const string EventSource_NotSupportedArrayOfNullTerminatedString =
+        "EventSource_NotSupportedArrayOfNullTerminatedString";
 
-    public const string EventSource_NotSupportedNestedArraysEnums = "EventSource_NotSupportedNestedArraysEnums";
+    public const string EventSource_NotSupportedNestedArraysEnums =
+        "EventSource_NotSupportedNestedArraysEnums";
 
     public const string EventSource_NullInput = "EventSource_NullInput";
 
@@ -1233,9 +1349,11 @@ public static class SR
 
     public const string EventSource_TraitEven = "EventSource_TraitEven";
 
-    public const string EventSource_TypeMustBeSealedOrAbstract = "EventSource_TypeMustBeSealedOrAbstract";
+    public const string EventSource_TypeMustBeSealedOrAbstract =
+        "EventSource_TypeMustBeSealedOrAbstract";
 
-    public const string EventSource_TypeMustDeriveFromEventSource = "EventSource_TypeMustDeriveFromEventSource";
+    public const string EventSource_TypeMustDeriveFromEventSource =
+        "EventSource_TypeMustDeriveFromEventSource";
 
     public const string EventSource_UndefinedChannel = "EventSource_UndefinedChannel";
 
@@ -1245,19 +1363,24 @@ public static class SR
 
     public const string EventSource_UnknownEtwTrait = "EventSource_UnknownEtwTrait";
 
-    public const string EventSource_UnsupportedEventTypeInManifest = "EventSource_UnsupportedEventTypeInManifest";
+    public const string EventSource_UnsupportedEventTypeInManifest =
+        "EventSource_UnsupportedEventTypeInManifest";
 
-    public const string EventSource_UnsupportedMessageProperty = "EventSource_UnsupportedMessageProperty";
+    public const string EventSource_UnsupportedMessageProperty =
+        "EventSource_UnsupportedMessageProperty";
 
-    public const string EventSource_VarArgsParameterMismatch = "EventSource_VarArgsParameterMismatch";
+    public const string EventSource_VarArgsParameterMismatch =
+        "EventSource_VarArgsParameterMismatch";
 
     public const string Exception_EndOfInnerExceptionStack = "Exception_EndOfInnerExceptionStack";
 
-    public const string Exception_EndStackTraceFromPreviousThrow = "Exception_EndStackTraceFromPreviousThrow";
+    public const string Exception_EndStackTraceFromPreviousThrow =
+        "Exception_EndStackTraceFromPreviousThrow";
 
     public const string Exception_WasThrown = "Exception_WasThrown";
 
-    public const string ExecutionContext_ExceptionInAsyncLocalNotification = "ExecutionContext_ExceptionInAsyncLocalNotification";
+    public const string ExecutionContext_ExceptionInAsyncLocalNotification =
+        "ExecutionContext_ExceptionInAsyncLocalNotification";
 
     public const string FileNotFound_ResolveAssembly = "FileNotFound_ResolveAssembly";
 
@@ -1279,7 +1402,8 @@ public static class SR
 
     public const string Format_BadTimeOnly = "Format_BadTimeOnly";
 
-    public const string Format_DateTimeOnlyContainsNoneDateParts = "Format_DateTimeOnlyContainsNoneDateParts";
+    public const string Format_DateTimeOnlyContainsNoneDateParts =
+        "Format_DateTimeOnlyContainsNoneDateParts";
 
     public const string Format_BadDateTimeCalendar = "Format_BadDateTimeCalendar";
 
@@ -1323,15 +1447,18 @@ public static class SR
 
     public const string Format_IndexOutOfRange = "Format_IndexOutOfRange";
 
-    public const string Format_InvalidEnumFormatSpecification = "Format_InvalidEnumFormatSpecification";
+    public const string Format_InvalidEnumFormatSpecification =
+        "Format_InvalidEnumFormatSpecification";
 
-    public const string Format_InvalidGuidFormatSpecification = "Format_InvalidGuidFormatSpecification";
+    public const string Format_InvalidGuidFormatSpecification =
+        "Format_InvalidGuidFormatSpecification";
 
     public const string Format_InvalidString = "Format_InvalidString";
 
     public const string Format_InvalidStringWithValue = "Format_InvalidStringWithValue";
 
-    public const string Format_InvalidStringWithOffsetAndReason = "Format_InvalidStringWithOffsetAndReason";
+    public const string Format_InvalidStringWithOffsetAndReason =
+        "Format_InvalidStringWithOffsetAndReason";
 
     public const string Format_UnexpectedClosingBrace = "Format_UnexpectedClosingBrace";
 
@@ -1377,19 +1504,25 @@ public static class SR
 
     public const string InsufficientMemory_MemFailPoint = "InsufficientMemory_MemFailPoint";
 
-    public const string InsufficientMemory_MemFailPoint_TooBig = "InsufficientMemory_MemFailPoint_TooBig";
+    public const string InsufficientMemory_MemFailPoint_TooBig =
+        "InsufficientMemory_MemFailPoint_TooBig";
 
-    public const string InsufficientMemory_MemFailPoint_VAFrag = "InsufficientMemory_MemFailPoint_VAFrag";
+    public const string InsufficientMemory_MemFailPoint_VAFrag =
+        "InsufficientMemory_MemFailPoint_VAFrag";
 
     public const string Interop_Marshal_Unmappable_Char = "Interop_Marshal_Unmappable_Char";
 
-    public const string Interop_Marshal_SafeHandle_InvalidOperation = "Interop_Marshal_SafeHandle_InvalidOperation";
+    public const string Interop_Marshal_SafeHandle_InvalidOperation =
+        "Interop_Marshal_SafeHandle_InvalidOperation";
 
-    public const string Interop_Marshal_CannotCreateSafeHandleField = "Interop_Marshal_CannotCreateSafeHandleField";
+    public const string Interop_Marshal_CannotCreateSafeHandleField =
+        "Interop_Marshal_CannotCreateSafeHandleField";
 
-    public const string Interop_Marshal_CannotCreateCriticalHandleField = "Interop_Marshal_CannotCreateCriticalHandleField";
+    public const string Interop_Marshal_CannotCreateCriticalHandleField =
+        "Interop_Marshal_CannotCreateCriticalHandleField";
 
-    public const string InvalidCast_CannotCastNullToValueType = "InvalidCast_CannotCastNullToValueType";
+    public const string InvalidCast_CannotCastNullToValueType =
+        "InvalidCast_CannotCastNullToValueType";
 
     public const string InvalidCast_DBNull = "InvalidCast_DBNull";
 
@@ -1401,41 +1534,54 @@ public static class SR
 
     public const string InvalidCast_IConvertible = "InvalidCast_IConvertible";
 
-    public const string InvalidOperation_AsyncFlowCtrlCtxMismatch = "InvalidOperation_AsyncFlowCtrlCtxMismatch";
+    public const string InvalidOperation_AsyncFlowCtrlCtxMismatch =
+        "InvalidOperation_AsyncFlowCtrlCtxMismatch";
 
     public const string InvalidOperation_AsyncIOInProgress = "InvalidOperation_AsyncIOInProgress";
 
     public const string InvalidOperation_BadEmptyMethodBody = "InvalidOperation_BadEmptyMethodBody";
 
-    public const string InvalidOperation_BadILGeneratorUsage = "InvalidOperation_BadILGeneratorUsage";
+    public const string InvalidOperation_BadILGeneratorUsage =
+        "InvalidOperation_BadILGeneratorUsage";
 
-    public const string InvalidOperation_BadInstructionOrIndexOutOfBound = "InvalidOperation_BadInstructionOrIndexOutOfBound";
+    public const string InvalidOperation_BadInstructionOrIndexOutOfBound =
+        "InvalidOperation_BadInstructionOrIndexOutOfBound";
 
-    public const string InvalidOperation_BadInterfaceNotAbstract = "InvalidOperation_BadInterfaceNotAbstract";
+    public const string InvalidOperation_BadInterfaceNotAbstract =
+        "InvalidOperation_BadInterfaceNotAbstract";
 
     public const string InvalidOperation_BadMethodBody = "InvalidOperation_BadMethodBody";
 
-    public const string InvalidOperation_BadTypeAttributesNotAbstract = "InvalidOperation_BadTypeAttributesNotAbstract";
+    public const string InvalidOperation_BadTypeAttributesNotAbstract =
+        "InvalidOperation_BadTypeAttributesNotAbstract";
 
     public const string InvalidOperation_CalledTwice = "InvalidOperation_CalledTwice";
 
-    public const string InvalidOperation_CannotImportGlobalFromDifferentModule = "InvalidOperation_CannotImportGlobalFromDifferentModule";
+    public const string InvalidOperation_CannotImportGlobalFromDifferentModule =
+        "InvalidOperation_CannotImportGlobalFromDifferentModule";
 
-    public const string InvalidOperation_CannotRegisterSecondResolver = "InvalidOperation_CannotRegisterSecondResolver";
+    public const string InvalidOperation_CannotRegisterSecondResolver =
+        "InvalidOperation_CannotRegisterSecondResolver";
 
-    public const string InvalidOperation_CannotRestoreUnsuppressedFlow = "InvalidOperation_CannotRestoreUnsuppressedFlow";
+    public const string InvalidOperation_CannotRestoreUnsuppressedFlow =
+        "InvalidOperation_CannotRestoreUnsuppressedFlow";
 
-    public const string InvalidOperation_CannotUseAFCOtherThread = "InvalidOperation_CannotUseAFCOtherThread";
+    public const string InvalidOperation_CannotUseAFCOtherThread =
+        "InvalidOperation_CannotUseAFCOtherThread";
 
-    public const string InvalidOperation_CollectionCorrupted = "InvalidOperation_CollectionCorrupted";
+    public const string InvalidOperation_CollectionCorrupted =
+        "InvalidOperation_CollectionCorrupted";
 
-    public const string InvalidOperation_ConcurrentOperationsNotSupported = "InvalidOperation_ConcurrentOperationsNotSupported";
+    public const string InvalidOperation_ConcurrentOperationsNotSupported =
+        "InvalidOperation_ConcurrentOperationsNotSupported";
 
-    public const string InvalidOperation_ConstructorNotAllowedOnInterface = "InvalidOperation_ConstructorNotAllowedOnInterface";
+    public const string InvalidOperation_ConstructorNotAllowedOnInterface =
+        "InvalidOperation_ConstructorNotAllowedOnInterface";
 
     public const string InvalidOperation_DateTimeParsing = "InvalidOperation_DateTimeParsing";
 
-    public const string InvalidOperation_DefaultConstructorILGen = "InvalidOperation_DefaultConstructorILGen";
+    public const string InvalidOperation_DefaultConstructorILGen =
+        "InvalidOperation_DefaultConstructorILGen";
 
     public const string InvalidOperation_EnumEnded = "InvalidOperation_EnumEnded";
 
@@ -1445,13 +1591,17 @@ public static class SR
 
     public const string InvalidOperation_EnumOpCantHappen = "InvalidOperation_EnumOpCantHappen";
 
-    public const string InvalidOperation_EventInfoNotAvailable = "InvalidOperation_EventInfoNotAvailable";
+    public const string InvalidOperation_EventInfoNotAvailable =
+        "InvalidOperation_EventInfoNotAvailable";
 
-    public const string InvalidOperation_GenericParametersAlreadySet = "InvalidOperation_GenericParametersAlreadySet";
+    public const string InvalidOperation_GenericParametersAlreadySet =
+        "InvalidOperation_GenericParametersAlreadySet";
 
-    public const string InvalidOperation_GlobalsHaveBeenCreated = "InvalidOperation_GlobalsHaveBeenCreated";
+    public const string InvalidOperation_GlobalsHaveBeenCreated =
+        "InvalidOperation_GlobalsHaveBeenCreated";
 
-    public const string InvalidOperation_HandleIsNotInitialized = "InvalidOperation_HandleIsNotInitialized";
+    public const string InvalidOperation_HandleIsNotInitialized =
+        "InvalidOperation_HandleIsNotInitialized";
 
     public const string InvalidOperation_HandleIsNotPinned = "InvalidOperation_HandleIsNotPinned";
 
@@ -1467,27 +1617,35 @@ public static class SR
 
     public const string InvalidOperation_MustCallInitialize = "InvalidOperation_MustCallInitialize";
 
-    public const string InvalidOperation_NativeOverlappedReused = "InvalidOperation_NativeOverlappedReused";
+    public const string InvalidOperation_NativeOverlappedReused =
+        "InvalidOperation_NativeOverlappedReused";
 
-    public const string InvalidOperation_NestedControlledExecutionRun = "InvalidOperation_NestedControlledExecutionRun";
+    public const string InvalidOperation_NestedControlledExecutionRun =
+        "InvalidOperation_NestedControlledExecutionRun";
 
-    public const string InvalidOperation_NoMultiModuleAssembly = "InvalidOperation_NoMultiModuleAssembly";
+    public const string InvalidOperation_NoMultiModuleAssembly =
+        "InvalidOperation_NoMultiModuleAssembly";
 
     public const string InvalidOperation_NoPublicAddMethod = "InvalidOperation_NoPublicAddMethod";
 
-    public const string InvalidOperation_NoPublicRemoveMethod = "InvalidOperation_NoPublicRemoveMethod";
+    public const string InvalidOperation_NoPublicRemoveMethod =
+        "InvalidOperation_NoPublicRemoveMethod";
 
     public const string InvalidOperation_NotADebugModule = "InvalidOperation_NotADebugModule";
 
-    public const string InvalidOperation_NotAllowedInDynamicMethod = "InvalidOperation_NotAllowedInDynamicMethod";
+    public const string InvalidOperation_NotAllowedInDynamicMethod =
+        "InvalidOperation_NotAllowedInDynamicMethod";
 
-    public const string InvalidOperation_NotAVarArgCallingConvention = "InvalidOperation_NotAVarArgCallingConvention";
+    public const string InvalidOperation_NotAVarArgCallingConvention =
+        "InvalidOperation_NotAVarArgCallingConvention";
 
     public const string InvalidOperation_NotGenericType = "InvalidOperation_NotGenericType";
 
-    public const string InvalidOperation_NotWithConcurrentGC = "InvalidOperation_NotWithConcurrentGC";
+    public const string InvalidOperation_NotWithConcurrentGC =
+        "InvalidOperation_NotWithConcurrentGC";
 
-    public const string InvalidOperation_NoUnderlyingTypeOnEnum = "InvalidOperation_NoUnderlyingTypeOnEnum";
+    public const string InvalidOperation_NoUnderlyingTypeOnEnum =
+        "InvalidOperation_NoUnderlyingTypeOnEnum";
 
     public const string InvalidOperation_NoValue = "InvalidOperation_NoValue";
 
@@ -1497,29 +1655,38 @@ public static class SR
 
     public const string InvalidOperation_NullModuleHandle = "InvalidOperation_NullModuleHandle";
 
-    public const string InvalidOperation_OpenLocalVariableScope = "InvalidOperation_OpenLocalVariableScope";
+    public const string InvalidOperation_OpenLocalVariableScope =
+        "InvalidOperation_OpenLocalVariableScope";
 
     public const string InvalidOperation_Overlapped_Pack = "InvalidOperation_Overlapped_Pack";
 
-    public const string InvalidOperation_PropertyInfoNotAvailable = "InvalidOperation_PropertyInfoNotAvailable";
+    public const string InvalidOperation_PropertyInfoNotAvailable =
+        "InvalidOperation_PropertyInfoNotAvailable";
 
     public const string InvalidOperation_ReadOnly = "InvalidOperation_ReadOnly";
 
-    public const string InvalidOperation_ResMgrBadResSet_Type = "InvalidOperation_ResMgrBadResSet_Type";
+    public const string InvalidOperation_ResMgrBadResSet_Type =
+        "InvalidOperation_ResMgrBadResSet_Type";
 
-    public const string InvalidOperation_ResourceNotStream_Name = "InvalidOperation_ResourceNotStream_Name";
+    public const string InvalidOperation_ResourceNotStream_Name =
+        "InvalidOperation_ResourceNotStream_Name";
 
-    public const string InvalidOperation_ResourceNotString_Name = "InvalidOperation_ResourceNotString_Name";
+    public const string InvalidOperation_ResourceNotString_Name =
+        "InvalidOperation_ResourceNotString_Name";
 
-    public const string InvalidOperation_ResourceNotString_Type = "InvalidOperation_ResourceNotString_Type";
+    public const string InvalidOperation_ResourceNotString_Type =
+        "InvalidOperation_ResourceNotString_Type";
 
     public const string InvalidOperation_SetLatencyModeNoGC = "InvalidOperation_SetLatencyModeNoGC";
 
-    public const string InvalidOperation_ShouldNotHaveMethodBody = "InvalidOperation_ShouldNotHaveMethodBody";
+    public const string InvalidOperation_ShouldNotHaveMethodBody =
+        "InvalidOperation_ShouldNotHaveMethodBody";
 
-    public const string InvalidOperation_ThreadWrongThreadStart = "InvalidOperation_ThreadWrongThreadStart";
+    public const string InvalidOperation_ThreadWrongThreadStart =
+        "InvalidOperation_ThreadWrongThreadStart";
 
-    public const string InvalidOperation_TimeoutsNotSupported = "InvalidOperation_TimeoutsNotSupported";
+    public const string InvalidOperation_TimeoutsNotSupported =
+        "InvalidOperation_TimeoutsNotSupported";
 
     public const string InvalidOperation_TimerAlreadyClosed = "InvalidOperation_TimerAlreadyClosed";
 
@@ -1527,11 +1694,13 @@ public static class SR
 
     public const string InvalidOperation_TypeNotCreated = "InvalidOperation_TypeNotCreated";
 
-    public const string InvalidOperation_UnderlyingArrayListChanged = "InvalidOperation_UnderlyingArrayListChanged";
+    public const string InvalidOperation_UnderlyingArrayListChanged =
+        "InvalidOperation_UnderlyingArrayListChanged";
 
     public const string InvalidOperation_UnknownEnumType = "InvalidOperation_UnknownEnumType";
 
-    public const string InvalidOperation_WrongAsyncResultOrEndCalledMultiple = "InvalidOperation_WrongAsyncResultOrEndCalledMultiple";
+    public const string InvalidOperation_WrongAsyncResultOrEndCalledMultiple =
+        "InvalidOperation_WrongAsyncResultOrEndCalledMultiple";
 
     public const string InvalidProgram_Default = "InvalidProgram_Default";
 
@@ -1543,7 +1712,8 @@ public static class SR
 
     public const string InvalidTimeZone_NoTTInfoStructures = "InvalidTimeZone_NoTTInfoStructures";
 
-    public const string InvalidTimeZone_UnparsablePosixMDateString = "InvalidTimeZone_UnparsablePosixMDateString";
+    public const string InvalidTimeZone_UnparsablePosixMDateString =
+        "InvalidTimeZone_UnparsablePosixMDateString";
 
     public const string InvariantFailed = "InvariantFailed";
 
@@ -1603,7 +1773,8 @@ public static class SR
 
     public const string IO_UnknownFileName = "IO_UnknownFileName";
 
-    public const string Lazy_CreateValue_NoParameterlessCtorForT = "Lazy_CreateValue_NoParameterlessCtorForT";
+    public const string Lazy_CreateValue_NoParameterlessCtorForT =
+        "Lazy_CreateValue_NoParameterlessCtorForT";
 
     public const string Lazy_ctor_ModeInvalid = "Lazy_ctor_ModeInvalid";
 
@@ -1613,7 +1784,8 @@ public static class SR
 
     public const string Lazy_Value_RecursiveCallsToValue = "Lazy_Value_RecursiveCallsToValue";
 
-    public const string ManualResetEventSlim_ctor_TooManyWaiters = "ManualResetEventSlim_ctor_TooManyWaiters";
+    public const string ManualResetEventSlim_ctor_TooManyWaiters =
+        "ManualResetEventSlim_ctor_TooManyWaiters";
 
     public const string Marshaler_StringTooLong = "Marshaler_StringTooLong";
 
@@ -1623,11 +1795,14 @@ public static class SR
 
     public const string MissingField_Name = "MissingField_Name";
 
-    public const string MissingManifestResource_MultipleBlobs = "MissingManifestResource_MultipleBlobs";
+    public const string MissingManifestResource_MultipleBlobs =
+        "MissingManifestResource_MultipleBlobs";
 
-    public const string MissingManifestResource_NoNeutralAsm = "MissingManifestResource_NoNeutralAsm";
+    public const string MissingManifestResource_NoNeutralAsm =
+        "MissingManifestResource_NoNeutralAsm";
 
-    public const string MissingManifestResource_NoNeutralDisk = "MissingManifestResource_NoNeutralDisk";
+    public const string MissingManifestResource_NoNeutralDisk =
+        "MissingManifestResource_NoNeutralDisk";
 
     public const string MissingMember = "MissingMember";
 
@@ -1639,7 +1814,8 @@ public static class SR
 
     public const string MissingMethod_Name = "MissingMethod_Name";
 
-    public const string MissingSatelliteAssembly_Culture_Name = "MissingSatelliteAssembly_Culture_Name";
+    public const string MissingSatelliteAssembly_Culture_Name =
+        "MissingSatelliteAssembly_Culture_Name";
 
     public const string MissingSatelliteAssembly_Default = "MissingSatelliteAssembly_Default";
 
@@ -1663,11 +1839,13 @@ public static class SR
 
     public const string NotSupported_CannotCallEqualsOnSpan = "NotSupported_CannotCallEqualsOnSpan";
 
-    public const string NotSupported_CannotCallGetHashCodeOnSpan = "NotSupported_CannotCallGetHashCodeOnSpan";
+    public const string NotSupported_CannotCallGetHashCodeOnSpan =
+        "NotSupported_CannotCallGetHashCodeOnSpan";
 
     public const string NotSupported_ChangeType = "NotSupported_ChangeType";
 
-    public const string NotSupported_CreateInstanceWithTypeBuilder = "NotSupported_CreateInstanceWithTypeBuilder";
+    public const string NotSupported_CreateInstanceWithTypeBuilder =
+        "NotSupported_CreateInstanceWithTypeBuilder";
 
     public const string NotSupported_DynamicAssembly = "NotSupported_DynamicAssembly";
 
@@ -1677,11 +1855,14 @@ public static class SR
 
     public const string NotSupported_FixedSizeCollection = "NotSupported_FixedSizeCollection";
 
-    public const string InvalidOperation_SpanOverlappedOperation = "InvalidOperation_SpanOverlappedOperation";
+    public const string InvalidOperation_SpanOverlappedOperation =
+        "InvalidOperation_SpanOverlappedOperation";
 
-    public const string InvalidOperation_TimeProviderNullLocalTimeZone = "InvalidOperation_TimeProviderNullLocalTimeZone";
+    public const string InvalidOperation_TimeProviderNullLocalTimeZone =
+        "InvalidOperation_TimeProviderNullLocalTimeZone";
 
-    public const string InvalidOperation_TimeProviderInvalidTimestampFrequency = "InvalidOperation_TimeProviderInvalidTimestampFrequency";
+    public const string InvalidOperation_TimeProviderInvalidTimestampFrequency =
+        "InvalidOperation_TimeProviderInvalidTimestampFrequency";
 
     public const string NotSupported_IllegalOneByteBranch = "NotSupported_IllegalOneByteBranch";
 
@@ -1695,11 +1876,13 @@ public static class SR
 
     public const string NotSupported_NoCodepageData = "NotSupported_NoCodepageData";
 
-    public const string InvalidOperation_FunctionMissingUnmanagedCallersOnly = "InvalidOperation_FunctionMissingUnmanagedCallersOnly";
+    public const string InvalidOperation_FunctionMissingUnmanagedCallersOnly =
+        "InvalidOperation_FunctionMissingUnmanagedCallersOnly";
 
     public const string NotSupported_NonReflectedType = "NotSupported_NonReflectedType";
 
-    public const string NotSupported_NoParentDefaultConstructor = "NotSupported_NoParentDefaultConstructor";
+    public const string NotSupported_NoParentDefaultConstructor =
+        "NotSupported_NoParentDefaultConstructor";
 
     public const string NotSupported_NoTypeInfo = "NotSupported_NoTypeInfo";
 
@@ -1707,7 +1890,8 @@ public static class SR
 
     public const string NotSupported_ObsoleteResourcesFile = "NotSupported_ObsoleteResourcesFile";
 
-    public const string NotSupported_OutputStreamUsingTypeBuilder = "NotSupported_OutputStreamUsingTypeBuilder";
+    public const string NotSupported_OutputStreamUsingTypeBuilder =
+        "NotSupported_OutputStreamUsingTypeBuilder";
 
     public const string NotSupported_RangeCollection = "NotSupported_RangeCollection";
 
@@ -1715,7 +1899,8 @@ public static class SR
 
     public const string NotSupported_ReadOnlyCollection = "NotSupported_ReadOnlyCollection";
 
-    public const string NotSupported_ResourceObjectSerialization = "NotSupported_ResourceObjectSerialization";
+    public const string NotSupported_ResourceObjectSerialization =
+        "NotSupported_ResourceObjectSerialization";
 
     public const string NotSupported_StringComparison = "NotSupported_StringComparison";
 
@@ -1741,7 +1926,8 @@ public static class SR
 
     public const string NotSupported_Writing = "NotSupported_Writing";
 
-    public const string NotSupported_WrongResourceReader_Type = "NotSupported_WrongResourceReader_Type";
+    public const string NotSupported_WrongResourceReader_Type =
+        "NotSupported_WrongResourceReader_Type";
 
     public const string ObjectDisposed_FileClosed = "ObjectDisposed_FileClosed";
 
@@ -1801,7 +1987,8 @@ public static class SR
 
     public const string PlatformNotSupported_ComInterop = "PlatformNotSupported_ComInterop";
 
-    public const string PlatformNotSupported_NamedSynchronizationPrimitives = "PlatformNotSupported_NamedSynchronizationPrimitives";
+    public const string PlatformNotSupported_NamedSynchronizationPrimitives =
+        "PlatformNotSupported_NamedSynchronizationPrimitives";
 
     public const string PlatformNotSupported_OSXFileLocking = "PlatformNotSupported_OSXFileLocking";
 
@@ -1809,9 +1996,11 @@ public static class SR
 
     public const string PlatformNotSupported_Remoting = "PlatformNotSupported_Remoting";
 
-    public const string PlatformNotSupported_SecureBinarySerialization = "PlatformNotSupported_SecureBinarySerialization";
+    public const string PlatformNotSupported_SecureBinarySerialization =
+        "PlatformNotSupported_SecureBinarySerialization";
 
-    public const string PlatformNotSupported_StrongNameSigning = "PlatformNotSupported_StrongNameSigning";
+    public const string PlatformNotSupported_StrongNameSigning =
+        "PlatformNotSupported_StrongNameSigning";
 
     public const string PlatformNotSupported_OverlappedIO = "PlatformNotSupported_OverlappedIO";
 
@@ -1847,9 +2036,11 @@ public static class SR
 
     public const string RFLCT_AmbigCust = "RFLCT_AmbigCust";
 
-    public const string InvalidFilterCriteriaException_CritInt = "InvalidFilterCriteriaException_CritInt";
+    public const string InvalidFilterCriteriaException_CritInt =
+        "InvalidFilterCriteriaException_CritInt";
 
-    public const string InvalidFilterCriteriaException_CritString = "InvalidFilterCriteriaException_CritString";
+    public const string InvalidFilterCriteriaException_CritString =
+        "InvalidFilterCriteriaException_CritString";
 
     public const string RFLCT_InvalidFieldFail = "RFLCT_InvalidFieldFail";
 
@@ -1865,7 +2056,8 @@ public static class SR
 
     public const string Security_CannotReadFileData = "Security_CannotReadFileData";
 
-    public const string SemaphoreSlim_ctor_InitialCountWrong = "SemaphoreSlim_ctor_InitialCountWrong";
+    public const string SemaphoreSlim_ctor_InitialCountWrong =
+        "SemaphoreSlim_ctor_InitialCountWrong";
 
     public const string SemaphoreSlim_ctor_MaxCountWrong = "SemaphoreSlim_ctor_MaxCountWrong";
 
@@ -1877,7 +2069,8 @@ public static class SR
 
     public const string Serialization_CorruptField = "Serialization_CorruptField";
 
-    public const string Serialization_DateTimeTicksOutOfRange = "Serialization_DateTimeTicksOutOfRange";
+    public const string Serialization_DateTimeTicksOutOfRange =
+        "Serialization_DateTimeTicksOutOfRange";
 
     public const string Serialization_DelegatesNotSupported = "Serialization_DelegatesNotSupported";
 
@@ -1891,7 +2084,8 @@ public static class SR
 
     public const string Serialization_InvalidType = "Serialization_InvalidType";
 
-    public const string Serialization_KeyValueDifferentSizes = "Serialization_KeyValueDifferentSizes";
+    public const string Serialization_KeyValueDifferentSizes =
+        "Serialization_KeyValueDifferentSizes";
 
     public const string Serialization_MissingDateTimeData = "Serialization_MissingDateTimeData";
 
@@ -1905,23 +2099,29 @@ public static class SR
 
     public const string Serialization_NullKey = "Serialization_NullKey";
 
-    public const string Serialization_OptionalFieldVersionValue = "Serialization_OptionalFieldVersionValue";
+    public const string Serialization_OptionalFieldVersionValue =
+        "Serialization_OptionalFieldVersionValue";
 
     public const string Serialization_SameNameTwice = "Serialization_SameNameTwice";
 
     public const string Serialization_StringBuilderCapacity = "Serialization_StringBuilderCapacity";
 
-    public const string Serialization_StringBuilderMaxCapacity = "Serialization_StringBuilderMaxCapacity";
+    public const string Serialization_StringBuilderMaxCapacity =
+        "Serialization_StringBuilderMaxCapacity";
 
-    public const string SpinLock_Exit_SynchronizationLockException = "SpinLock_Exit_SynchronizationLockException";
+    public const string SpinLock_Exit_SynchronizationLockException =
+        "SpinLock_Exit_SynchronizationLockException";
 
     public const string SpinLock_IsHeldByCurrentThread = "SpinLock_IsHeldByCurrentThread";
 
-    public const string SpinLock_TryEnter_ArgumentOutOfRange = "SpinLock_TryEnter_ArgumentOutOfRange";
+    public const string SpinLock_TryEnter_ArgumentOutOfRange =
+        "SpinLock_TryEnter_ArgumentOutOfRange";
 
-    public const string SpinLock_TryEnter_LockRecursionException = "SpinLock_TryEnter_LockRecursionException";
+    public const string SpinLock_TryEnter_LockRecursionException =
+        "SpinLock_TryEnter_LockRecursionException";
 
-    public const string SpinLock_TryReliableEnter_ArgumentException = "SpinLock_TryReliableEnter_ArgumentException";
+    public const string SpinLock_TryReliableEnter_ArgumentException =
+        "SpinLock_TryReliableEnter_ArgumentException";
 
     public const string SpinWait_SpinUntil_TimeoutWrong = "SpinWait_SpinUntil_TimeoutWrong";
 
@@ -1939,13 +2139,16 @@ public static class SR
 
     public const string Task_FromAsync_PreferFairness = "Task_FromAsync_PreferFairness";
 
-    public const string Task_MultiTaskContinuation_EmptyTaskList = "Task_MultiTaskContinuation_EmptyTaskList";
+    public const string Task_MultiTaskContinuation_EmptyTaskList =
+        "Task_MultiTaskContinuation_EmptyTaskList";
 
-    public const string Task_MultiTaskContinuation_FireOptions = "Task_MultiTaskContinuation_FireOptions";
+    public const string Task_MultiTaskContinuation_FireOptions =
+        "Task_MultiTaskContinuation_FireOptions";
 
     public const string Task_MultiTaskContinuation_NullTask = "Task_MultiTaskContinuation_NullTask";
 
-    public const string Task_RunSynchronously_AlreadyStarted = "Task_RunSynchronously_AlreadyStarted";
+    public const string Task_RunSynchronously_AlreadyStarted =
+        "Task_RunSynchronously_AlreadyStarted";
 
     public const string Task_RunSynchronously_Continuation = "Task_RunSynchronously_Continuation";
 
@@ -1965,43 +2168,58 @@ public static class SR
 
     public const string Task_WaitMulti_NullTask = "Task_WaitMulti_NullTask";
 
-    public const string TaskCanceledException_ctor_DefaultMessage = "TaskCanceledException_ctor_DefaultMessage";
+    public const string TaskCanceledException_ctor_DefaultMessage =
+        "TaskCanceledException_ctor_DefaultMessage";
 
-    public const string TaskCompletionSourceT_TrySetException_NoExceptions = "TaskCompletionSourceT_TrySetException_NoExceptions";
+    public const string TaskCompletionSourceT_TrySetException_NoExceptions =
+        "TaskCompletionSourceT_TrySetException_NoExceptions";
 
-    public const string TaskCompletionSourceT_TrySetException_NullException = "TaskCompletionSourceT_TrySetException_NullException";
+    public const string TaskCompletionSourceT_TrySetException_NullException =
+        "TaskCompletionSourceT_TrySetException_NullException";
 
-    public const string TaskExceptionHolder_UnhandledException = "TaskExceptionHolder_UnhandledException";
+    public const string TaskExceptionHolder_UnhandledException =
+        "TaskExceptionHolder_UnhandledException";
 
-    public const string TaskExceptionHolder_UnknownExceptionType = "TaskExceptionHolder_UnknownExceptionType";
+    public const string TaskExceptionHolder_UnknownExceptionType =
+        "TaskExceptionHolder_UnknownExceptionType";
 
-    public const string TaskScheduler_ExecuteTask_WrongTaskScheduler = "TaskScheduler_ExecuteTask_WrongTaskScheduler";
+    public const string TaskScheduler_ExecuteTask_WrongTaskScheduler =
+        "TaskScheduler_ExecuteTask_WrongTaskScheduler";
 
-    public const string TaskScheduler_FromCurrentSynchronizationContext_NoCurrent = "TaskScheduler_FromCurrentSynchronizationContext_NoCurrent";
+    public const string TaskScheduler_FromCurrentSynchronizationContext_NoCurrent =
+        "TaskScheduler_FromCurrentSynchronizationContext_NoCurrent";
 
-    public const string TaskScheduler_InconsistentStateAfterTryExecuteTaskInline = "TaskScheduler_InconsistentStateAfterTryExecuteTaskInline";
+    public const string TaskScheduler_InconsistentStateAfterTryExecuteTaskInline =
+        "TaskScheduler_InconsistentStateAfterTryExecuteTaskInline";
 
-    public const string TaskSchedulerException_ctor_DefaultMessage = "TaskSchedulerException_ctor_DefaultMessage";
+    public const string TaskSchedulerException_ctor_DefaultMessage =
+        "TaskSchedulerException_ctor_DefaultMessage";
 
     public const string TaskT_DebuggerNoResult = "TaskT_DebuggerNoResult";
 
-    public const string TaskT_TransitionToFinal_AlreadyCompleted = "TaskT_TransitionToFinal_AlreadyCompleted";
+    public const string TaskT_TransitionToFinal_AlreadyCompleted =
+        "TaskT_TransitionToFinal_AlreadyCompleted";
 
-    public const string Thread_GetSetCompressedStack_NotSupported = "Thread_GetSetCompressedStack_NotSupported";
+    public const string Thread_GetSetCompressedStack_NotSupported =
+        "Thread_GetSetCompressedStack_NotSupported";
 
-    public const string Thread_Operation_RequiresCurrentThread = "Thread_Operation_RequiresCurrentThread";
+    public const string Thread_Operation_RequiresCurrentThread =
+        "Thread_Operation_RequiresCurrentThread";
 
     public const string Threading_AbandonedMutexException = "Threading_AbandonedMutexException";
 
-    public const string Threading_WaitHandleCannotBeOpenedException = "Threading_WaitHandleCannotBeOpenedException";
+    public const string Threading_WaitHandleCannotBeOpenedException =
+        "Threading_WaitHandleCannotBeOpenedException";
 
-    public const string Threading_WaitHandleCannotBeOpenedException_InvalidHandle = "Threading_WaitHandleCannotBeOpenedException_InvalidHandle";
+    public const string Threading_WaitHandleCannotBeOpenedException_InvalidHandle =
+        "Threading_WaitHandleCannotBeOpenedException_InvalidHandle";
 
     public const string Threading_WaitHandleTooManyPosts = "Threading_WaitHandleTooManyPosts";
 
     public const string Threading_SemaphoreFullException = "Threading_SemaphoreFullException";
 
-    public const string ThreadLocal_Value_RecursiveCallsToValue = "ThreadLocal_Value_RecursiveCallsToValue";
+    public const string ThreadLocal_Value_RecursiveCallsToValue =
+        "ThreadLocal_Value_RecursiveCallsToValue";
 
     public const string ThreadLocal_ValuesNotAvailable = "ThreadLocal_ValuesNotAvailable";
 
@@ -2017,7 +2235,8 @@ public static class SR
 
     public const string TypeLoad_ResolveTypeFromAssembly = "TypeLoad_ResolveTypeFromAssembly";
 
-    public const string UnauthorizedAccess_IODenied_NoPathName = "UnauthorizedAccess_IODenied_NoPathName";
+    public const string UnauthorizedAccess_IODenied_NoPathName =
+        "UnauthorizedAccess_IODenied_NoPathName";
 
     public const string UnauthorizedAccess_IODenied_Path = "UnauthorizedAccess_IODenied_Path";
 
@@ -2031,27 +2250,38 @@ public static class SR
 
     public const string DebugAssertShortMessage = "DebugAssertShortMessage";
 
-    public const string LockRecursionException_ReadAfterWriteNotAllowed = "LockRecursionException_ReadAfterWriteNotAllowed";
+    public const string LockRecursionException_ReadAfterWriteNotAllowed =
+        "LockRecursionException_ReadAfterWriteNotAllowed";
 
-    public const string LockRecursionException_RecursiveReadNotAllowed = "LockRecursionException_RecursiveReadNotAllowed";
+    public const string LockRecursionException_RecursiveReadNotAllowed =
+        "LockRecursionException_RecursiveReadNotAllowed";
 
-    public const string LockRecursionException_RecursiveWriteNotAllowed = "LockRecursionException_RecursiveWriteNotAllowed";
+    public const string LockRecursionException_RecursiveWriteNotAllowed =
+        "LockRecursionException_RecursiveWriteNotAllowed";
 
-    public const string LockRecursionException_RecursiveUpgradeNotAllowed = "LockRecursionException_RecursiveUpgradeNotAllowed";
+    public const string LockRecursionException_RecursiveUpgradeNotAllowed =
+        "LockRecursionException_RecursiveUpgradeNotAllowed";
 
-    public const string LockRecursionException_WriteAfterReadNotAllowed = "LockRecursionException_WriteAfterReadNotAllowed";
+    public const string LockRecursionException_WriteAfterReadNotAllowed =
+        "LockRecursionException_WriteAfterReadNotAllowed";
 
-    public const string SynchronizationLockException_MisMatchedUpgrade = "SynchronizationLockException_MisMatchedUpgrade";
+    public const string SynchronizationLockException_MisMatchedUpgrade =
+        "SynchronizationLockException_MisMatchedUpgrade";
 
-    public const string SynchronizationLockException_MisMatchedRead = "SynchronizationLockException_MisMatchedRead";
+    public const string SynchronizationLockException_MisMatchedRead =
+        "SynchronizationLockException_MisMatchedRead";
 
-    public const string SynchronizationLockException_IncorrectDispose = "SynchronizationLockException_IncorrectDispose";
+    public const string SynchronizationLockException_IncorrectDispose =
+        "SynchronizationLockException_IncorrectDispose";
 
-    public const string LockRecursionException_UpgradeAfterReadNotAllowed = "LockRecursionException_UpgradeAfterReadNotAllowed";
+    public const string LockRecursionException_UpgradeAfterReadNotAllowed =
+        "LockRecursionException_UpgradeAfterReadNotAllowed";
 
-    public const string LockRecursionException_UpgradeAfterWriteNotAllowed = "LockRecursionException_UpgradeAfterWriteNotAllowed";
+    public const string LockRecursionException_UpgradeAfterWriteNotAllowed =
+        "LockRecursionException_UpgradeAfterWriteNotAllowed";
 
-    public const string SynchronizationLockException_MisMatchedWrite = "SynchronizationLockException_MisMatchedWrite";
+    public const string SynchronizationLockException_MisMatchedWrite =
+        "SynchronizationLockException_MisMatchedWrite";
 
     public const string NotSupported_SignatureType = "NotSupported_SignatureType";
 
@@ -2065,11 +2295,14 @@ public static class SR
 
     public const string Arg_BasePathNotFullyQualified = "Arg_BasePathNotFullyQualified";
 
-    public const string Argument_AggressiveGCRequiresMaxGeneration = "Argument_AggressiveGCRequiresMaxGeneration";
+    public const string Argument_AggressiveGCRequiresMaxGeneration =
+        "Argument_AggressiveGCRequiresMaxGeneration";
 
-    public const string Argument_AggressiveGCRequiresBlocking = "Argument_AggressiveGCRequiresBlocking";
+    public const string Argument_AggressiveGCRequiresBlocking =
+        "Argument_AggressiveGCRequiresBlocking";
 
-    public const string Argument_AggressiveGCRequiresCompacting = "Argument_AggressiveGCRequiresCompacting";
+    public const string Argument_AggressiveGCRequiresCompacting =
+        "Argument_AggressiveGCRequiresCompacting";
 
     public const string Argument_OverlapAlignmentMismatch = "Argument_OverlapAlignmentMismatch";
 
@@ -2091,43 +2324,57 @@ public static class SR
 
     public const string Argument_PrecisionTooLarge = "Argument_PrecisionTooLarge";
 
-    public const string AssemblyDependencyResolver_FailedToLoadHostpolicy = "AssemblyDependencyResolver_FailedToLoadHostpolicy";
+    public const string AssemblyDependencyResolver_FailedToLoadHostpolicy =
+        "AssemblyDependencyResolver_FailedToLoadHostpolicy";
 
-    public const string AssemblyDependencyResolver_FailedToResolveDependencies = "AssemblyDependencyResolver_FailedToResolveDependencies";
+    public const string AssemblyDependencyResolver_FailedToResolveDependencies =
+        "AssemblyDependencyResolver_FailedToResolveDependencies";
 
     public const string Argument_StructArrayTooLarge = "Argument_StructArrayTooLarge";
 
     public const string IndexOutOfRange_ArrayWithOffset = "IndexOutOfRange_ArrayWithOffset";
 
-    public const string Serialization_DangerousDeserialization_Switch = "Serialization_DangerousDeserialization_Switch";
+    public const string Serialization_DangerousDeserialization_Switch =
+        "Serialization_DangerousDeserialization_Switch";
 
-    public const string Argument_InvalidStartupHookSimpleAssemblyName = "Argument_InvalidStartupHookSimpleAssemblyName";
+    public const string Argument_InvalidStartupHookSimpleAssemblyName =
+        "Argument_InvalidStartupHookSimpleAssemblyName";
 
-    public const string Argument_StartupHookAssemblyLoadFailed = "Argument_StartupHookAssemblyLoadFailed";
+    public const string Argument_StartupHookAssemblyLoadFailed =
+        "Argument_StartupHookAssemblyLoadFailed";
 
-    public const string InvalidOperation_ResetGlobalComWrappersInstance = "InvalidOperation_ResetGlobalComWrappersInstance";
+    public const string InvalidOperation_ResetGlobalComWrappersInstance =
+        "InvalidOperation_ResetGlobalComWrappersInstance";
 
-    public const string InvalidOperation_ResetGlobalObjectiveCMsgSend = "InvalidOperation_ResetGlobalObjectiveCMsgSend";
+    public const string InvalidOperation_ResetGlobalObjectiveCMsgSend =
+        "InvalidOperation_ResetGlobalObjectiveCMsgSend";
 
-    public const string InvalidOperation_ReinitializeObjectiveCMarshal = "InvalidOperation_ReinitializeObjectiveCMarshal";
+    public const string InvalidOperation_ReinitializeObjectiveCMarshal =
+        "InvalidOperation_ReinitializeObjectiveCMarshal";
 
-    public const string InvalidOperation_SuppliedInnerMustBeMarkedAggregation = "InvalidOperation_SuppliedInnerMustBeMarkedAggregation";
+    public const string InvalidOperation_SuppliedInnerMustBeMarkedAggregation =
+        "InvalidOperation_SuppliedInnerMustBeMarkedAggregation";
 
-    public const string InvalidOperationException_NoGCRegionCallbackAlreadyRegistered = "InvalidOperationException_NoGCRegionCallbackAlreadyRegistered";
+    public const string InvalidOperationException_NoGCRegionCallbackAlreadyRegistered =
+        "InvalidOperationException_NoGCRegionCallbackAlreadyRegistered";
 
     public const string Argument_SpansMustHaveSameLength = "Argument_SpansMustHaveSameLength";
 
-    public const string NotSupported_CannotWriteToBufferedStreamIfReadBufferCannotBeFlushed = "NotSupported_CannotWriteToBufferedStreamIfReadBufferCannotBeFlushed";
+    public const string NotSupported_CannotWriteToBufferedStreamIfReadBufferCannotBeFlushed =
+        "NotSupported_CannotWriteToBufferedStreamIfReadBufferCannotBeFlushed";
 
     public const string GenericInvalidData = "GenericInvalidData";
 
-    public const string Argument_ResourceScopeWrongDirection = "Argument_ResourceScopeWrongDirection";
+    public const string Argument_ResourceScopeWrongDirection =
+        "Argument_ResourceScopeWrongDirection";
 
-    public const string ArgumentNull_TypeRequiredByResourceScope = "ArgumentNull_TypeRequiredByResourceScope";
+    public const string ArgumentNull_TypeRequiredByResourceScope =
+        "ArgumentNull_TypeRequiredByResourceScope";
 
     public const string Argument_BadResourceScopeTypeBits = "Argument_BadResourceScopeTypeBits";
 
-    public const string Argument_BadResourceScopeVisibilityBits = "Argument_BadResourceScopeVisibilityBits";
+    public const string Argument_BadResourceScopeVisibilityBits =
+        "Argument_BadResourceScopeVisibilityBits";
 
     public const string Argument_EmptyString = "Argument_EmptyString";
 
@@ -2135,9 +2382,11 @@ public static class SR
 
     public const string Argument_FrameworkNameInvalid = "Argument_FrameworkNameInvalid";
 
-    public const string Argument_FrameworkNameInvalidVersion = "Argument_FrameworkNameInvalidVersion";
+    public const string Argument_FrameworkNameInvalidVersion =
+        "Argument_FrameworkNameInvalidVersion";
 
-    public const string Argument_FrameworkNameMissingVersion = "Argument_FrameworkNameMissingVersion";
+    public const string Argument_FrameworkNameMissingVersion =
+        "Argument_FrameworkNameMissingVersion";
 
     public const string Argument_FrameworkNameTooShort = "Argument_FrameworkNameTooShort";
 
@@ -2147,27 +2396,33 @@ public static class SR
 
     public const string Arg_AppDomainUnloadedException = "Arg_AppDomainUnloadedException";
 
-    public const string SwitchExpressionException_UnmatchedValue = "SwitchExpressionException_UnmatchedValue";
+    public const string SwitchExpressionException_UnmatchedValue =
+        "SwitchExpressionException_UnmatchedValue";
 
     public const string Encoding_UTF7_Disabled = "Encoding_UTF7_Disabled";
 
-    public const string IDynamicInterfaceCastable_DoesNotImplementRequested = "IDynamicInterfaceCastable_DoesNotImplementRequested";
+    public const string IDynamicInterfaceCastable_DoesNotImplementRequested =
+        "IDynamicInterfaceCastable_DoesNotImplementRequested";
 
-    public const string IDynamicInterfaceCastable_MissingImplementationAttribute = "IDynamicInterfaceCastable_MissingImplementationAttribute";
+    public const string IDynamicInterfaceCastable_MissingImplementationAttribute =
+        "IDynamicInterfaceCastable_MissingImplementationAttribute";
 
-    public const string IDynamicInterfaceCastable_NotInterface = "IDynamicInterfaceCastable_NotInterface";
+    public const string IDynamicInterfaceCastable_NotInterface =
+        "IDynamicInterfaceCastable_NotInterface";
 
     public const string Arg_MustBeHalf = "Arg_MustBeHalf";
 
     public const string Arg_MustBeRune = "Arg_MustBeRune";
 
-    public const string BinaryFormatter_SerializationDisallowed = "BinaryFormatter_SerializationDisallowed";
+    public const string BinaryFormatter_SerializationDisallowed =
+        "BinaryFormatter_SerializationDisallowed";
 
     public const string NotSupported_CodeBase = "NotSupported_CodeBase";
 
     public const string Activator_CannotCreateInstance = "Activator_CannotCreateInstance";
 
-    public const string ResourceManager_ReflectionNotAllowed = "ResourceManager_ReflectionNotAllowed";
+    public const string ResourceManager_ReflectionNotAllowed =
+        "ResourceManager_ReflectionNotAllowed";
 
     public const string InvalidOperation_EmptyQueue = "InvalidOperation_EmptyQueue";
 
@@ -2195,19 +2450,26 @@ public static class SR
 
     public const string NullReference_InvokeNullRefReturned = "NullReference_InvokeNullRefReturned";
 
-    public const string ArgumentOutOfRangeException_NoGCRegionSizeTooLarge = "ArgumentOutOfRangeException_NoGCRegionSizeTooLarge";
+    public const string ArgumentOutOfRangeException_NoGCRegionSizeTooLarge =
+        "ArgumentOutOfRangeException_NoGCRegionSizeTooLarge";
 
-    public const string InvalidOperationException_AlreadyInNoGCRegion = "InvalidOperationException_AlreadyInNoGCRegion";
+    public const string InvalidOperationException_AlreadyInNoGCRegion =
+        "InvalidOperationException_AlreadyInNoGCRegion";
 
-    public const string InvalidOperationException_NoGCRegionAllocationExceeded = "InvalidOperationException_NoGCRegionAllocationExceeded";
+    public const string InvalidOperationException_NoGCRegionAllocationExceeded =
+        "InvalidOperationException_NoGCRegionAllocationExceeded";
 
-    public const string InvalidOperationException_NoGCRegionInduced = "InvalidOperationException_NoGCRegionInduced";
+    public const string InvalidOperationException_NoGCRegionInduced =
+        "InvalidOperationException_NoGCRegionInduced";
 
-    public const string InvalidOperationException_NoGCRegionNotInProgress = "InvalidOperationException_NoGCRegionNotInProgress";
+    public const string InvalidOperationException_NoGCRegionNotInProgress =
+        "InvalidOperationException_NoGCRegionNotInProgress";
 
-    public const string InvalidOperationException_HardLimitTooLow = "InvalidOperationException_HardLimitTooLow";
+    public const string InvalidOperationException_HardLimitTooLow =
+        "InvalidOperationException_HardLimitTooLow";
 
-    public const string InvalidOperationException_HardLimitInvalid = "InvalidOperationException_HardLimitInvalid";
+    public const string InvalidOperationException_HardLimitInvalid =
+        "InvalidOperationException_HardLimitInvalid";
 
     public const string PlatformNotSupported_ReflectionEmit = "PlatformNotSupported_ReflectionEmit";
 
@@ -2215,9 +2477,11 @@ public static class SR
 
     public const string ClassLoad_General = "ClassLoad_General";
 
-    public const string ArgumentOutOfRange_NotGreaterThanBufferLength = "ArgumentOutOfRange_NotGreaterThanBufferLength";
+    public const string ArgumentOutOfRange_NotGreaterThanBufferLength =
+        "ArgumentOutOfRange_NotGreaterThanBufferLength";
 
-    public const string Argument_AssemblyGetTypeCannotSpecifyAssembly = "Argument_AssemblyGetTypeCannotSpecifyAssembly";
+    public const string Argument_AssemblyGetTypeCannotSpecifyAssembly =
+        "Argument_AssemblyGetTypeCannotSpecifyAssembly";
 
     public const string Argument_DirectorySeparatorInvalid = "Argument_DirectorySeparatorInvalid";
 
@@ -2225,7 +2489,8 @@ public static class SR
 
     public const string NotSupported_ModifiedType = "NotSupported_ModifiedType";
 
-    public const string Argument_UnexpectedStateForKnownCallback = "Argument_UnexpectedStateForKnownCallback";
+    public const string Argument_UnexpectedStateForKnownCallback =
+        "Argument_UnexpectedStateForKnownCallback";
 
     public const string OutOfMemory_StringTooLong = "OutOfMemory_StringTooLong";
 

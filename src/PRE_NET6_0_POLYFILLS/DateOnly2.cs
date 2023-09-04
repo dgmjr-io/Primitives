@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DateOnly2.cs
  *
  *   Created: 2023-07-22-11:50:25
@@ -22,7 +22,7 @@ using System.Text;
 /// <summary>
 /// Represents a date without a time component.
 /// </summary>
-public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IEquatable<DateOnly>//, ISpanFormattable, IUtf8SpanFormattable
+public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IEquatable<DateOnly> //, ISpanFormattable, IUtf8SpanFormattable
 {
     // ...
 
@@ -73,7 +73,12 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="format">The format string used to format the DateOnly (optional).</param>
     /// <param name="formatProvider">The provider used to format the DateOnly (optional).</param>
     /// <returns>True if the formatting is successful; otherwise, false.</returns>
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? formatProvider = null)
+    public bool TryFormat(
+        Span<char> destination,
+        out int charsWritten,
+        ReadOnlySpan<char> format = default,
+        IFormatProvider? formatProvider = null
+    )
     {
         if (format.IsEmpty || format.SequenceEqual("d".AsSpan()))
         {
@@ -82,15 +87,21 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
         }
         if (format.SequenceEqual("D".AsSpan()))
         {
-            return dt.ToString("D", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
+            return dt.ToString("D", formatProvider)
+                .AsSpan()
+                .TryCopyTo(destination, out charsWritten);
         }
         if (format.SequenceEqual("O".AsSpan()))
         {
-            return dt.ToString("yyyy-MM-dd", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
+            return dt.ToString("yyyy-MM-dd", formatProvider)
+                .AsSpan()
+                .TryCopyTo(destination, out charsWritten);
         }
         if (format.SequenceEqual("R".AsSpan()))
         {
-            return dt.ToString("ddd, dd MMM yyyy", formatProvider).AsSpan().TryCopyTo(destination, out charsWritten);
+            return dt.ToString("ddd, dd MMM yyyy", formatProvider)
+                .AsSpan()
+                .TryCopyTo(destination, out charsWritten);
         }
 
         charsWritten = 0;
@@ -105,7 +116,12 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="format">The format string used to format the DateOnly (optional).</param>
     /// <param name="formatProvider">The provider used to format the DateOnly (optional).</param>
     /// <returns>True if the formatting is successful; otherwise, false.</returns>
-    public bool TryFormatUtf8(Span<byte> destination, out int bytesWritten, ReadOnlySpan<byte> format = default, IFormatProvider? formatProvider = null)
+    public bool TryFormatUtf8(
+        Span<byte> destination,
+        out int bytesWritten,
+        ReadOnlySpan<byte> format = default,
+        IFormatProvider? formatProvider = null
+    )
     {
         if (format.IsEmpty || format.SequenceEqual(Encoding.UTF8.GetBytes("d")))
         {
@@ -114,15 +130,24 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
         }
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("D")))
         {
-            return Encoding.UTF8.GetBytes(dt.ToString("D", formatProvider)).AsSpan().TryCopyTo(destination, out bytesWritten);
+            return Encoding.UTF8
+                .GetBytes(dt.ToString("D", formatProvider))
+                .AsSpan()
+                .TryCopyTo(destination, out bytesWritten);
         }
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("O")))
         {
-            return Encoding.UTF8.GetBytes(dt.ToString("yyyy-MM-dd", formatProvider)).AsSpan().TryCopyTo(destination, out bytesWritten);
+            return Encoding.UTF8
+                .GetBytes(dt.ToString("yyyy-MM-dd", formatProvider))
+                .AsSpan()
+                .TryCopyTo(destination, out bytesWritten);
         }
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("R")))
         {
-            return Encoding.UTF8.GetBytes(dt.ToString("ddd, dd MMM yyyy", formatProvider)).AsSpan().TryCopyTo(destination, out bytesWritten);
+            return Encoding.UTF8
+                .GetBytes(dt.ToString("ddd, dd MMM yyyy", formatProvider))
+                .AsSpan()
+                .TryCopyTo(destination, out bytesWritten);
         }
 
         bytesWritten = 0;
@@ -132,13 +157,23 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
 
 internal static class DateOnlyExtensions
 {
-    internal static bool TryFormat(this DateTime dt, Span<char> destination, out int charsWritten, IFormatProvider? formatProvider = null)
+    internal static bool TryFormat(
+        this DateTime dt,
+        Span<char> destination,
+        out int charsWritten,
+        IFormatProvider? formatProvider = null
+    )
     {
         var result = dt.TryFormat(destination, out charsWritten, formatProvider);
         return result;
     }
 
-    internal static bool TryFormatUtf8(this DateTime dt, Span<byte> destination, out int bytesWritten, IFormatProvider? formatProvider = null)
+    internal static bool TryFormatUtf8(
+        this DateTime dt,
+        Span<byte> destination,
+        out int bytesWritten,
+        IFormatProvider? formatProvider = null
+    )
     {
         var result = dt.TryFormatUtf8(destination, out bytesWritten, formatProvider);
         return result;
@@ -147,7 +182,11 @@ internal static class DateOnlyExtensions
 
 public static class SpanHelpers
 {
-    public static unsafe bool TryCopyTo<T>(this ReadOnlySpan<T> @from, Span<T> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo<T>(
+        this ReadOnlySpan<T> @from,
+        Span<T> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -160,7 +199,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this ReadOnlySpan<char> @from, Span<byte> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this ReadOnlySpan<char> @from,
+        Span<byte> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -181,7 +224,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this ReadOnlySpan<byte> @from, Span<char> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this ReadOnlySpan<byte> @from,
+        Span<char> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -202,7 +249,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this ReadOnlySpan<char> @from, Span<char> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this ReadOnlySpan<char> @from,
+        Span<char> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -223,7 +274,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this ReadOnlySpan<byte> @from, Span<byte> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this ReadOnlySpan<byte> @from,
+        Span<byte> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -244,7 +299,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this Span<char> @from, Span<byte> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this Span<char> @from,
+        Span<byte> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -265,7 +324,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this Span<byte> @from, Span<char> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this Span<byte> @from,
+        Span<char> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -286,7 +349,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this Span<char> @from, Span<char> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this Span<char> @from,
+        Span<char> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {
@@ -307,7 +374,11 @@ public static class SpanHelpers
         return false;
     }
 
-    public static unsafe bool TryCopyTo(this Span<byte> @from, Span<byte> destination, out int bytesWritten)
+    public static unsafe bool TryCopyTo(
+        this Span<byte> @from,
+        Span<byte> destination,
+        out int bytesWritten
+    )
     {
         if (from.Length <= destination.Length)
         {

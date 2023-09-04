@@ -1,4 +1,3 @@
-
 // #if !NET7_0_OR_GREATER
 // internal enum ParseFailureKind
 // {

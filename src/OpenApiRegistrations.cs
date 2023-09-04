@@ -1,4 +1,4 @@
-/*
+﻿/*
  * OpenApiRegistrations.cs
  *
  *   Created: 2022-12-28-01:42:05
@@ -20,7 +20,6 @@ using System.Reflection;
 
 public static class OpenApiRegistrations
 {
-
 #if NET6_0_OR_GREATER
     public static WebApplicationBuilder Describe<T>(this WebApplicationBuilder builder)
         where T : IStringWithRegexValueObject<T>
@@ -31,7 +30,7 @@ public static class OpenApiRegistrations
 #endif
 
 #if NETSTANDARD2_0_OR_GREATER
-        public static IServiceCollection Describe<T>(this IServiceCollection services)
+    public static IServiceCollection Describe<T>(this IServiceCollection services)
         where T : IStringWithRegexValueObject<T>
     {
         services.ConfigureSwaggerGen(options =>
@@ -46,7 +45,9 @@ public static class OpenApiRegistrations
                 Example = new OpenApiString(T.ExampleValue.ToString())
             };
 #else
-            throw new PlatformNotSupportedException("This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it.");
+            throw new PlatformNotSupportedException(
+                "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it."
+            );
             // options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () => new OpenApiSchema
             // {
             //     Type = "string",
