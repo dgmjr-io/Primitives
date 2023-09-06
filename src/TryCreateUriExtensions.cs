@@ -12,16 +12,21 @@
 
 namespace System;
 
+/// <summary>Provides extension methods for working with URIs</summary>
 public static partial class TryCreateUriExtensions
 {
+    /// <summary>Converts a string to a nullable Uri object</summary>
     public static uri? ToUri(this string uriString) => uriString.CreateUri(true);
 
+    /// <summary>Converts a string to a nullable Uri object, with a default fallback Uri provided as a string</summary>
     public static uri? ToUri(this string uriString, string defaultFallbackUri) =>
         uri.From(uriString.CreateUri(defaultFallbackUri).ToString());
 
+    /// <summary>Converts a string to a nullable Uri object, with a default fallback Uri provided as a Uri object</summary>
     public static uri? ToUri(this string uriString, Uri defaultFallbackUri) =>
         uri.From(uriString.CreateUri(defaultFallbackUri.ToString()).ToString());
 
+    /// <summary>Tries to create a Uri object from a string and returns true if successful, false otherwise</summary>
     public static bool TryCreateUri(this string uriString, out uri? uri)
     {
         try
@@ -36,6 +41,7 @@ public static partial class TryCreateUriExtensions
         }
     }
 
+    /// <summary>Creates a Uri object from a string, with an option to throw an exception on invalid URIs</summary>
     public static uri? CreateUri(this string uriString, bool throwOnInvalidUri = true) =>
         !string.IsNullOrEmpty(uriString)
             ? System.uri.TryCreate(uriString, UriKind.Absolute, out var uri)
@@ -45,20 +51,22 @@ public static partial class TryCreateUriExtensions
                         "The provided string is not a valid URI.",
                         nameof(uriString)
                     )
-                    : null
+                    : null as uri?
             : throw new ArgumentException(
                 "The provided URI string is null or empty.",
                 nameof(uriString)
             );
 
-    public static uri CreateUri(this string uriString, Uri defaultFallbackUri) =>
-        uriString.CreateUri(defaultFallbackUri.ToString());
-
+    /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a string</summary>
     public static uri CreateUri(this string uriString, string defaultFallbackUri) =>
-        !string.IsNullOrEmpty(defaultFallbackUri)
+        uriString.CreateUri(defaultFallbackUri);
+
+    /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a Uri object</summary>
+    public static uri CreateUri(this string uriString, Uri? defaultFallbackUri) =>
+        !string.IsNullOrEmpty(defaultFallbackUri.ToString())
             ? System.uri.TryCreate(uriString, UriKind.Absolute, out var uri)
                 ? uri
-                : System.uri.From(string.Format(defaultFallbackUri, uriString))
+                : System.uri.From(string.Format(defaultFallbackUri.ToString(), uriString))
             : throw new ArgumentException(
                 "The provided default fallback URI is null or empty.",
                 nameof(defaultFallbackUri)

@@ -41,7 +41,7 @@ public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedStrin
     where TSelf : RegexGuardedString<TSelf>
     where TRegexProvider : IRegexProvider
 {
-    public static REx Regex() => TRegexProvider.Regex();
+    public static new REx Regex() => TRegexProvider.Regex();
 }
 
 // [RegexGuardedString.JConverter]
@@ -51,7 +51,7 @@ public class RegexGuardedString<TSelf, TRegexProvider>
     where TSelf : RegexGuardedString<TSelf, TRegexProvider>
     where TRegexProvider : IRegexProvider
 {
-    public static REx Regex() => TRegexProvider.Regex();
+    public static new REx Regex() => TRegexProvider.Regex();
 
     public RegexGuardedString(string value) : base(value, TRegexProvider.Regex()) { }
 

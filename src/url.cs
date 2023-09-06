@@ -68,7 +68,7 @@ public partial record struct url
     // public static url Parse(string url) => From(url);
 
 
-    public Uri? Uri => this;
+    public Uri Uri => this;
 
     public static url FromUri(url url) =>
         From(url.ToString()) with
@@ -116,8 +116,10 @@ public partial record struct url
             OriginalString = url.ToString()
         };
 
-    public static implicit operator System.Uri?(url u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(url u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
 
     public static implicit operator url(string s) => From(s) with { OriginalString = s };
 

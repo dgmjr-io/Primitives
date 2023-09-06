@@ -113,7 +113,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         return false;
     }
 
-    public Uri? Uri => this;
+    public Uri Uri => this;
 
     public static urn FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -124,8 +124,10 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
 
     public static urn From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
 
-    public static implicit operator System.Uri?(urn u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(urn u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
 
     public static implicit operator urn(string s) => From(s) with { OriginalString = s };
 

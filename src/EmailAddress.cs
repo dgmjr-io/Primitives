@@ -212,7 +212,7 @@ public partial record struct EmailAddress
         {
             return (email = From(s) with { OriginalString = s }) != Empty;
         }
-        catch (Vogen.ValueObjectValidationException vovex)
+        catch (Vogen.ValueObjectValidationException)
         {
             email = Empty;
             return false;

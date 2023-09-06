@@ -3,7 +3,7 @@
 // /usr/local/share/dotnet/shared/Microsoft.NETCore.App/8.0.0-preview.5.23280.8/System.Private.CoreLib.dll
 // Decompiled with ICSharpCode.Decompiler 7.2.1.6856
 #endregion
-
+#pragma warning disable CS0436
 namespace System.Diagnostics.CodeAnalysis;
 
 [AttributeUsage(
@@ -26,3 +26,4 @@ public sealed class MemberNotNullAttribute : Attribute
     }
 }
 #endif
+#pragma warning restore CS0436

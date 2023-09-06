@@ -24,14 +24,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
-        <NoWarn>$(NoWarn);CA2252;CS8335;</NoWarn>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
         <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
         <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
-        <NoWarn Include="CS8335" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+        <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">

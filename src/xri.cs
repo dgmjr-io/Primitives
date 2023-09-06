@@ -38,7 +38,7 @@ public partial record struct xri
     public const string Description = "an eXtensible resource locator (xri)";
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
     public const string _RegexString =
-        @"^(?<Scheme>xri):(?<DoubleSlashes>\/\/)?(?<Path>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
+        @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);
     public bool IsEmpty => base.ToString() == EmptyStringValue;
@@ -62,7 +62,7 @@ public partial record struct xri
 
     // public static xri Parse(string xri) => From(xri);
 
-    public Uri? Uri => this;
+    public Uri Uri => this;
 
     public static xri FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -121,8 +121,10 @@ public partial record struct xri
 
     public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
-    public static implicit operator System.Uri?(xri u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(xri u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
 
     public static implicit operator xri(string s) => From(s) with { OriginalString = s };
 

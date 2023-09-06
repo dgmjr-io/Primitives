@@ -82,7 +82,7 @@ public partial record struct uri
 
     // public static uri Parse(string uri) => From(uri);
 
-    public Uri? Uri => this;
+    public Uri Uri => this;
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | RegexOptions)]
@@ -138,8 +138,10 @@ public partial record struct uri
 
     public static uri From(Uri uri) => new uri(uri) with { OriginalString = uri.ToString() };
 
-    public static implicit operator System.Uri?(uri u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(uri u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
 
     public static implicit operator uri(string s) => From(s) with { OriginalString = s };
 

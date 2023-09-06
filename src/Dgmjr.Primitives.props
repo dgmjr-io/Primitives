@@ -10,8 +10,8 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
         <SourceGenerator Include="Dgmjr.RegexDtoGenerator" />
+        <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
         <UsingsReference Include="System.Text.Json.Usings" />
         <UsingsReference Include="System.Text.RegularExpressions.Usings"/>
         <UsingsReference Include="System.Usings"/>
@@ -24,7 +24,7 @@
         <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
         <PackageReference Include="libphonenumber-csharp"/>
         <PackageReference Include="System.Compat" IncludeAssets="Compile" ExcludeAssets="None" PrivateAssets="All"/>
-        <PackageReference Include="System.ComponentModel.Usings"/>
+        <!-- <PackageReference Include="System.ComponentModel.Usings"/> -->
         <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
         <!-- <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/> -->
     </ItemGroup>
