@@ -10,23 +10,23 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     <ItemGroup>
-        <SourceGenerator Include="Dgmjr.RegexDtoGenerator" />
-        <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
-        <UsingsReference Include="System.Text.Json.Usings" />
-        <UsingsReference Include="System.Text.RegularExpressions.Usings"/>
-        <UsingsReference Include="System.Usings"/>
+        <!-- <PackageReference Include="System.ComponentModel.Usings"/> -->
+        <!-- <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/> -->
+        <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
+        <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
+        <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
         <PackageReference Include="Dgmjr.System.Extensions"/>
+        <PackageReference Include="libphonenumber-csharp"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
-        <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
-        <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
-        <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
-        <PackageReference Include="libphonenumber-csharp"/>
         <PackageReference Include="System.Compat" IncludeAssets="Compile" ExcludeAssets="None" PrivateAssets="All"/>
-        <!-- <PackageReference Include="System.ComponentModel.Usings"/> -->
-        <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
-        <!-- <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/> -->
+        <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
+        <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
+        <SourceGenerator Include="Dgmjr.RegexDtoGenerator" />
+        <UsingsReference Include="System.Text.Json.Usings" />
+        <UsingsReference Include="System.Text.RegularExpressions.Usings"/>
+        <UsingsReference Include="System.Usings"/>
     </ItemGroup>
     <ItemGroup>
         <!-- <Using Include="System.Text.RegularExpressions"/>

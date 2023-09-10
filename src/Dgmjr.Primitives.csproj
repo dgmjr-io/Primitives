@@ -20,7 +20,7 @@
         <RootNamespace>Dgmjr.Primitives</RootNamespace>
         <Description>A collection of useful data and behavioral value types.</Description>
         <SlnGenSolutionFolder>src</SlnGenSolutionFolder>
-        <ProjectGuid>{4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6}</ProjectGuid>
+        <ProjectGuid>4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6</ProjectGuid>
         <ImplicitUsings>enable</ImplicitUsings>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <EnablePreviewFeatures>true</EnablePreviewFeatures>
@@ -29,8 +29,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
+        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
         <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
     </ItemGroup>

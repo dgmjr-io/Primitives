@@ -27,7 +27,7 @@ public partial record struct YearMonthDuration
         duration.FromMilliseconds(
             new duration(
                 (int)
-                    Math.Floor(
+                    MathF.Floor(
                         (ymd.Years.HasValue ? ymd.Years.Value * DaysPerYear : 0)
                             + (ymd.Months.HasValue ? ymd.Months.Value * DaysPerMonth : 0)
                     ),
