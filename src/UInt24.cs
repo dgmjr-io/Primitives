@@ -14,6 +14,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace System
 {
     /// <summary>
@@ -353,17 +356,17 @@ namespace System
         ///<returns>An object that contains the value of the converted sbyte.</returns>
         public static explicit operator UInt24(sbyte value) => new UInt24(value);
 
-        public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();
+        public int ToInt32(IFormatProvider? provider) => (int)this.ToInt32();
 
-        public uint ToUInt32(IFormatProvider? formatProvider) => (uint)this.ToInt32();
+        public uint ToUInt32(IFormatProvider? provider) => (uint)this.ToInt32();
 
-        public long ToInt64(IFormatProvider? formatProvider) => (long)this.ToInt32();
+        public long ToInt64(IFormatProvider? provider) => (long)this.ToInt32();
 
-        public ulong ToUInt64(IFormatProvider? formatProvider) => (ulong)this.ToInt32();
+        public ulong ToUInt64(IFormatProvider? provider) => (ulong)this.ToInt32();
 
-        public short ToInt16(IFormatProvider? formatProvider) => (short)this.ToInt32();
+        public short ToInt16(IFormatProvider? provider) => (short)this.ToInt32();
 
-        public ushort ToUInt16(IFormatProvider? formatProvider) => (ushort)this.ToInt32();
+        public ushort ToUInt16(IFormatProvider? provider) => (ushort)this.ToInt32();
 
 #if NET7_0_OR_GREATER
         public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)this.ToInt32();
@@ -371,27 +374,51 @@ namespace System
         public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)this.ToInt32();
 #endif
 
-        public byte ToByte(IFormatProvider? formatProvider) => (byte)this.ToInt32();
+        public byte ToByte(IFormatProvider? provider) => (byte)this.ToInt32();
 
-        public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)this.ToInt32();
+        public sbyte ToSByte(IFormatProvider? provider) => (sbyte)this.ToInt32();
 
-        public float ToSingle(IFormatProvider? formatProvider) => (float)this.ToInt32();
+        public float ToSingle(IFormatProvider? provider) => (float)this.ToInt32();
 
-        public double ToDouble(IFormatProvider? formatProvider) => (double)this.ToInt32();
+        public double ToDouble(IFormatProvider? provider) => (double)this.ToInt32();
 
-        public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)this.ToInt32();
+        public decimal ToDecimal(IFormatProvider? provider) => (decimal)this.ToInt32();
 
-        public char ToChar(IFormatProvider? formatProvider) => (char)this.ToInt32();
+        public char ToChar(IFormatProvider? provider) => (char)this.ToInt32();
 
-        public DateTime ToDateTime(IFormatProvider? formatProvider) =>
+        public DateTime ToDateTime(IFormatProvider? provider) =>
             DateTime.FromBinary((long)this.ToInt32());
 
-        public bool ToBoolean(IFormatProvider? formatProvider) => this.ToInt32() > 0;
+        public bool ToBoolean(IFormatProvider? provider) => this.ToInt32() > 0;
 
-        public object ToType(Type conversionType, IFormatProvider? formatProvider) =>
-            Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
+        public object ToType(Type conversionType, IFormatProvider? provider) =>
+            Convert.ChangeType(ToInt32(), conversionType, provider);
 
-        public string ToString(IFormatProvider? formatProvider) =>
-            ((Int32)this.ToInt32()).ToString(formatProvider);
+        public string ToString(IFormatProvider? provider) =>
+            ToInt32().ToString(provider);
+
+        /// <summary>
+        /// Converts an int24 to and from an int for storage in a database table
+        /// </summary>
+        public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+        {
+            public EfCoreValueConverter() : base(v => v.ToInt32(), v => (i24)v) { }
+        }
     }
+
+#if NETSTANDARD2_0_OR_GREATER
+    public static class UInt24EfCoreExtensions
+    {
+        public static void ConfigureUInt24<TEntity>(
+            this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, uri>> propertyExpression
+        ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUInt24(propertyExpression);
+
+        public static void ConfigureUInt24<TEntity>(
+            this EntityTypeBuilder<TEntity> entityBuilder,
+            Expression<Func<TEntity, uri>> propertyExpression
+        ) where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<ui24.EfCoreValueConverter>();
+    }
+#endif
 }

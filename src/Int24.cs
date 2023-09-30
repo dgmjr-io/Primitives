@@ -2,6 +2,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace System
 {
     /// <summary>
@@ -394,5 +397,29 @@ namespace System
 
         public string ToString(IFormatProvider? formatProvider) =>
             ((Int32)this.ToInt32()).ToString(formatProvider);
+
+        /// <summary>
+        /// Converts an int24 to and from an int for storage in a database table
+        /// </summary>
+        public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+        {
+            public EfCoreValueConverter() : base(v => v.ToInt32(), v => (Int24)v) { }
+        }
     }
+
+#if NETSTANDARD2_0_OR_GREATER
+    public static class Int24EfCoreExtensions
+    {
+        public static void ConfigureInt24<TEntity>(
+            this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, uri>> propertyExpression
+        ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureInt24(propertyExpression);
+
+        public static void ConfigureInt24<TEntity>(
+            this EntityTypeBuilder<TEntity> entityBuilder,
+            Expression<Func<TEntity, uri>> propertyExpression
+        ) where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<Int24.EfCoreValueConverter>();
+    }
+#endif
 }

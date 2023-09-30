@@ -32,9 +32,6 @@ using Validation = global::Validation;
 [EmailAddress.JConverter]
 public partial record struct EmailAddress
     : IStringWithRegexValueObject<EmailAddress>,
-        IComparable<EmailAddress>,
-        IComparable,
-        IEquatable<EmailAddress>,
         IFormattable
 {
     /// <summary>
@@ -51,11 +48,10 @@ public partial record struct EmailAddress
     /// The description.
     /// </summary>
     public const string Description = "an email address in the form of *user@domain.ext*";
-
     public const string UriPrefix = "mailto:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
 
-    public Uri Uri => IsEmpty ? null! : new(Format(UriPrefix, ToString()));
+    public Uri Uri => IsEmpty ? null! : new(Format(UriPattern, ToString()));
 
     public string OriginalString { get; set; }
 
