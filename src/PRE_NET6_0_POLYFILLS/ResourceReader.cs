@@ -863,75 +863,75 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
             case ResourceTypeCode.Decimal:
                 return _store.ReadDecimal();
             case ResourceTypeCode.DateTime:
-            {
-                long dateData = _store.ReadInt64();
-                return DateTime.FromBinary(dateData);
-            }
-            case ResourceTypeCode.TimeSpan:
-            {
-                long ticks = _store.ReadInt64();
-                return new TimeSpan(ticks);
-            }
-            case ResourceTypeCode.ByteArray:
-            {
-                int num2 = _store.ReadInt32();
-                if (num2 < 0)
                 {
-                    throw new BadImageFormatException(
-                        SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
-                    );
+                    long dateData = _store.ReadInt64();
+                    return DateTime.FromBinary(dateData);
                 }
-                if (_ums == null)
+            case ResourceTypeCode.TimeSpan:
                 {
-                    if (num2 > _store.BaseStream.Length)
+                    long ticks = _store.ReadInt64();
+                    return new TimeSpan(ticks);
+                }
+            case ResourceTypeCode.ByteArray:
+                {
+                    int num2 = _store.ReadInt32();
+                    if (num2 < 0)
                     {
                         throw new BadImageFormatException(
                             SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
                         );
                     }
-                    return _store.ReadBytes(num2);
+                    if (_ums == null)
+                    {
+                        if (num2 > _store.BaseStream.Length)
+                        {
+                            throw new BadImageFormatException(
+                                SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
+                            );
+                        }
+                        return _store.ReadBytes(num2);
+                    }
+                    if (num2 > _ums.Length - _ums.Position)
+                    {
+                        throw new BadImageFormatException(
+                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
+                        );
+                    }
+                    byte[] array2 = new byte[num2];
+                    int num3 = _ums.Read(array2, 0, num2);
+                    return array2;
                 }
-                if (num2 > _ums.Length - _ums.Position)
-                {
-                    throw new BadImageFormatException(
-                        SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
-                    );
-                }
-                byte[] array2 = new byte[num2];
-                int num3 = _ums.Read(array2, 0, num2);
-                return array2;
-            }
             case ResourceTypeCode.Stream:
-            {
-                int num = _store.ReadInt32();
-                if (num < 0)
                 {
-                    throw new BadImageFormatException(
-                        SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
-                    );
+                    int num = _store.ReadInt32();
+                    if (num < 0)
+                    {
+                        throw new BadImageFormatException(
+                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
+                        );
+                    }
+                    if (_ums == null)
+                    {
+                        byte[] array = _store.ReadBytes(num);
+                        return new MemoryStream(array);
+                    }
+                    if (num > _ums.Length - _ums.Position)
+                    {
+                        throw new BadImageFormatException(
+                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
+                        );
+                    }
+                    return new UnmanagedMemoryStream(_ums.PositionPointer, num, num, FileAccess.Read);
                 }
-                if (_ums == null)
-                {
-                    byte[] array = _store.ReadBytes(num);
-                    return new MemoryStream(array);
-                }
-                if (num > _ums.Length - _ums.Position)
-                {
-                    throw new BadImageFormatException(
-                        SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
-                    );
-                }
-                return new UnmanagedMemoryStream(_ums.PositionPointer, num, num, FileAccess.Read);
-            }
             default:
-            {
-                if (typeCode < ResourceTypeCode.StartOfUserTypes)
                 {
-                    throw new BadImageFormatException(SR.BadImageFormat_TypeMismatch);
+                    if (typeCode < ResourceTypeCode.StartOfUserTypes)
+                    {
+                        throw new BadImageFormatException(SR.BadImageFormat_TypeMismatch);
+                    }
+                    int typeIndex = (int)(typeCode - 64);
+                    return DeserializeObject(typeIndex);
                 }
-                int typeIndex = (int)(typeCode - 64);
-                return DeserializeObject(typeIndex);
-            }
         }
     }
 
