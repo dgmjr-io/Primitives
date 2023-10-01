@@ -2,7 +2,8 @@ namespace Dgmjr.Primitives.Tests;
 
 public class urnTests : PrimitivesTests<urn, urnTests>
 {
-    public urnTests(ITestOutputHelper output) : base(output) { }
+    public urnTests(ITestOutputHelper output)
+        : base(output) { }
 
     protected override string[][] InvalidValuesStrings =>
         new[] { new[] { "fcku!!!!!!" }, new[] { "not-a-urn:foo:bar-baz-quux" }, };

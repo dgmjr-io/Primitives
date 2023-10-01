@@ -1,6 +1,7 @@
 namespace System;
 
-public interface IUriConvertible<T> where T : IUriConvertible<T>, IHaveAUri
+public interface IUriConvertible<T>
+    where T : IUriConvertible<T>, IHaveAUri
 {
 #if NET70_OR_GREATER
     public static virtual T FromUri(Uri uri) =>

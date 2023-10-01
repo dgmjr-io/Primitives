@@ -11,6 +11,7 @@
  */
 
 namespace System.Domain;
+
 using System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
@@ -195,7 +196,8 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
     public sealed class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
-        public JConverterAttribute() : base(typeof(PhoneNumberSystemTextJsonConverter)) { }
+        public JConverterAttribute()
+            : base(typeof(PhoneNumberSystemTextJsonConverter)) { }
     }
 }
 
@@ -204,13 +206,15 @@ public static class PhoneNumberEfCoreExtensions
     public static void ConfigurePhoneNumber<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, PhoneNumber>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         modelBuilder.Entity<TEntity>().ConfigurePhoneNumber(propertyExpression);
 
     public static void ConfigurePhoneNumber<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, PhoneNumber>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder
             .Property(propertyExpression)
             .HasConversion<PhoneNumber.EfCoreValueConverter>();

@@ -13,6 +13,7 @@
 #if !NET6_0_OR_GREATER
 
 namespace System;
+
 using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;

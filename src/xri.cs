@@ -11,6 +11,7 @@
  */
 
 namespace System;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -76,9 +77,11 @@ public partial record struct xri
     //     public static REx Regex() => new(RegexString, RegexOptions);
     // #endif
     // public xri(string urlString) : base(urlString) { }
-    public xri(Uri xri) : this(xri.ToString()) { }
+    public xri(Uri xri)
+        : this(xri.ToString()) { }
 
-    public xri(xri xri) : this(xri.ToString()) { }
+    public xri(xri xri)
+        : this(xri.ToString()) { }
 
     // public xri() : this(EmptyStringValue) { }
     public static xri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
@@ -204,7 +207,8 @@ public partial record struct xri
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<xri>
@@ -303,11 +307,13 @@ public static class xriEfCoreExtensions
     public static void ConfigureXri<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
-    ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
 
     public static void ConfigureXri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
 }

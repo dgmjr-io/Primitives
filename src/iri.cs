@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace System;
+
 using static System.Text.RegularExpressions.RegexOptions;
 #if NETSTANDARD2_0_OR_GREATER
 using System.Linq.Expressions;
@@ -119,7 +120,8 @@ public partial record struct iri
     //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public iri(string uriString) : base(uriString) { }
-    public iri(Uri iri) : this(iri.ToString()) { }
+    public iri(Uri iri)
+        : this(iri.ToString()) { }
 
     // public iri() : base(EmptyStringValue) { }
     // public static iri Parse(string s) => From(s) with { OriginalString = s };
@@ -258,7 +260,8 @@ public partial record struct iri
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
@@ -358,12 +361,14 @@ public static class IriEfCoreExtensions
     public static void ConfigureIri<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
-    ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureIri(propertyExpression);
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureIri(propertyExpression);
 
     public static void ConfigureIri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder.Property(propertyExpression).HasConversion<iri.EfCoreValueConverter>();
 }
 #endif

@@ -61,7 +61,8 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
         return Ticks == other.Ticks;
     }
 
-    public TimeOnly(long ticks) : this(new TimeSpan(ticks)) { }
+    public TimeOnly(long ticks)
+        : this(new TimeSpan(ticks)) { }
 
     public TimeOnly(TimeSpan timespan)
         : this(timespan.Hours, timespan.Minutes, timespan.Seconds, timespan.Milliseconds) { }

@@ -16,7 +16,8 @@ using System.Domain;
 
 public class PhoneNumberTests : PrimitivesTests<PhoneNumber, PhoneNumberTests>
 {
-    public PhoneNumberTests(ITestOutputHelper output) : base(output) { }
+    public PhoneNumberTests(ITestOutputHelper output)
+        : base(output) { }
 
     protected override string[][] InvalidValuesStrings =>
         new[] { new[] { "not-a-phone-number" }, new[] { "+1+9172125869" } };

@@ -12,6 +12,7 @@
 #if NETSTANDARD2_0_OR_GREATER
 
 namespace Microsoft.Extensions.DependencyInjection;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -36,14 +37,15 @@ public static class OpenApiRegistrations
         services.ConfigureSwaggerGen(options =>
         {
 #if NET7_0_OR_GREATER
-            options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () => new OpenApiSchema
-            {
-                Type = "string",
-                Pattern = typeof(T).GetRuntimeProperty("RegexString").GetValue(null) as string,
-                Format = typeof(T).Name,
-                Description = T.Description,
-                Example = new OpenApiString(T.ExampleValue.ToString())
-            };
+            options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
+                new OpenApiSchema
+                {
+                    Type = "string",
+                    Pattern = typeof(T).GetRuntimeProperty("RegexString").GetValue(null) as string,
+                    Format = typeof(T).Name,
+                    Description = T.Description,
+                    Example = new OpenApiString(T.ExampleValue.ToString())
+                };
 #else
             throw new PlatformNotSupportedException(
                 "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it."

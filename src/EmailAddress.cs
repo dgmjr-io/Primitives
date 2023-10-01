@@ -10,6 +10,7 @@
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 namespace System.Net.Mail;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -30,9 +31,7 @@ using Validation = global::Validation;
 )]
 [StructLayout(LayoutKind.Auto)]
 [EmailAddress.JConverter]
-public partial record struct EmailAddress
-    : IStringWithRegexValueObject<EmailAddress>,
-        IFormattable
+public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAddress>, IFormattable
 {
     /// <summary>
     /// The example value string.
@@ -258,7 +257,8 @@ public partial record struct EmailAddress
 
     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
-        public JConverterAttribute() : base(typeof(EmailAddressSystemTextJsonConverter)) { }
+        public JConverterAttribute()
+            : base(typeof(EmailAddressSystemTextJsonConverter)) { }
     }
 }
 
@@ -276,7 +276,8 @@ public static class EmailAddressEfCoreExtensions
     public static void ConfigureEmailAddress<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, EmailAddress>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         modelBuilder.Entity<TEntity>().ConfigureEmailAddress(propertyExpression);
 
     /// <summary>
@@ -288,7 +289,8 @@ public static class EmailAddressEfCoreExtensions
     public static void ConfigureEmailAddress<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, EmailAddress>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder
             .Property(propertyExpression)
             .HasConversion<EmailAddress.EfCoreValueConverter>();

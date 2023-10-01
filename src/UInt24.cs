@@ -394,15 +394,16 @@ namespace System
         public object ToType(Type conversionType, IFormatProvider? provider) =>
             Convert.ChangeType(ToInt32(), conversionType, provider);
 
-        public string ToString(IFormatProvider? provider) =>
-            ToInt32().ToString(provider);
+        public string ToString(IFormatProvider? provider) => ToInt32().ToString(provider);
 
         /// <summary>
         /// Converts an int24 to and from an int for storage in a database table
         /// </summary>
-        public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+        public class EfCoreValueConverter
+            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
         {
-            public EfCoreValueConverter() : base(v => v.ToInt32(), v => (i24)v) { }
+            public EfCoreValueConverter()
+                : base(v => v.ToInt32(), v => (i24)v) { }
         }
     }
 
@@ -412,12 +413,15 @@ namespace System
         public static void ConfigureUInt24<TEntity>(
             this ModelBuilder modelBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
-        ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUInt24(propertyExpression);
+        )
+            where TEntity : class =>
+            modelBuilder.Entity<TEntity>().ConfigureUInt24(propertyExpression);
 
         public static void ConfigureUInt24<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
-        ) where TEntity : class =>
+        )
+            where TEntity : class =>
             entityBuilder.Property(propertyExpression).HasConversion<ui24.EfCoreValueConverter>();
     }
 #endif

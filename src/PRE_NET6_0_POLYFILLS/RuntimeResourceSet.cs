@@ -23,7 +23,8 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
     internal RuntimeResourceSet(string fileName)
         : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
 
-    internal RuntimeResourceSet(Stream stream, bool permitDeserialization = false) : base()
+    internal RuntimeResourceSet(Stream stream, bool permitDeserialization = false)
+        : base()
     {
         _resCache = new Dictionary<string, ResourceLocator>(FastResourceComparer.Default);
         _defaultReader = new _ResourceReader(stream, _resCache, permitDeserialization);

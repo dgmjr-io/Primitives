@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 
 namespace System;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -72,7 +73,8 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public urn(string uriString) : base(uriString) { }
-    public urn(Uri urn) : this(urn.ToString()) { }
+    public urn(Uri urn)
+        : this(urn.ToString()) { }
 
     // public urn() : this(EmptyStringValue) { }
     public static urn Parse(string s, IFormatProvider? formatProvider = null) =>
@@ -208,7 +210,8 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<urn>
@@ -310,12 +313,14 @@ public static class UrnEfCoreExtensions
     public static void ConfigureUrn<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
-    ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUrn(propertyExpression);
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUrn(propertyExpression);
 
     public static void ConfigureUrn<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder.Property(propertyExpression).HasConversion<urn.EfCoreValueConverter>();
 }
 #endif

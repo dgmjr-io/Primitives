@@ -1,4 +1,5 @@
 namespace Dgmjr.Primitives.Tests;
+
 using static Microsoft.Extensions.Logging.LogLevel;
 
 public static partial class LoggerExtensions

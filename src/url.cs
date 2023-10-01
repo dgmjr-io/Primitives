@@ -14,6 +14,7 @@
 using System.Diagnostics;
 
 namespace System;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -85,7 +86,8 @@ public partial record struct url
     //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public url(string urlString) : this(urlString) { }
-    public url(Uri url) : this(url.ToString()) { }
+    public url(Uri url)
+        : this(url.ToString()) { }
 
     // public url() : this(EmptyStringValue) { }
     public static url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
@@ -198,12 +200,14 @@ public partial record struct url
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
-        public JConverterAttribute() : base(typeof(url.JsonConverter)) { }
+        public JConverterAttribute()
+            : base(typeof(url.JsonConverter)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<url>
@@ -303,12 +307,14 @@ public static class urlEfCoreExtensions
     public static void Configureurl<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, url>> propertyExpression
-    ) where TEntity : class => modelBuilder.Entity<TEntity>().Configureurl(propertyExpression);
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().Configureurl(propertyExpression);
 
     public static void Configureurl<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, url>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder.Property(propertyExpression).HasConversion<url.EfCoreValueConverter>();
 }
 #endif

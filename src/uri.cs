@@ -16,6 +16,7 @@ using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace System;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -38,9 +39,7 @@ using Validation = global::Validation;
 [StructLayout(LayoutKind.Auto)]
 #if NET6_0_OR_GREATER
 #endif
-public partial record struct uri
-    : IStringWithRegexValueObject<uri>,
-        IResourceIdentifier
+public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<uri>
@@ -94,7 +93,8 @@ public partial record struct uri
     //     public static REx Regex() => new(RegexString, RegexOptions);
     // #endif
     // public uri(string uriString) : base(uriString) { }
-    public uri(Uri uri) : this(uri.ToString()) { }
+    public uri(Uri uri)
+        : this(uri.ToString()) { }
 
     // public uri() : base(EmptyStringValue) { }
     public static uri Parse(string s, IFormatProvider? formatProvider = null) =>
@@ -222,12 +222,14 @@ public partial record struct uri
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {
-        public JConverterAttribute() : base(typeof(JsonConverter)) { }
+        public JConverterAttribute()
+            : base(typeof(JsonConverter)) { }
     }
 
     public class JsonConverter : System.Text.Json.Serialization.JsonConverter<uri>
@@ -328,12 +330,14 @@ public static class UriEfCoreExtensions
     public static void ConfigureUri<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
-    ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUri(propertyExpression);
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUri(propertyExpression);
 
     public static void ConfigureUri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
-    ) where TEntity : class =>
+    )
+        where TEntity : class =>
         entityBuilder.Property(propertyExpression).HasConversion<uri.EfCoreValueConverter>();
 }
 #endif

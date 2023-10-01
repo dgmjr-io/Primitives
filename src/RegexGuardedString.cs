@@ -53,7 +53,8 @@ public class RegexGuardedString<TSelf, TRegexProvider>
 {
     public static new REx Regex() => TRegexProvider.Regex();
 
-    public RegexGuardedString(string value) : base(value, TRegexProvider.Regex()) { }
+    public RegexGuardedString(string value)
+        : base(value, TRegexProvider.Regex()) { }
 
     //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     //     {
@@ -135,7 +136,8 @@ public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
         string value,
         string regex,
         RegexOptions options = IRegexProvider.DefaultRegexOptions
-    ) : this(value, new(regex, options)) { }
+    )
+        : this(value, new(regex, options)) { }
 
     private static REx _regex;
 

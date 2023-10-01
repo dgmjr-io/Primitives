@@ -65,7 +65,7 @@ public interface IStringWithRegexValueObject<TSelf>
     /// </summary>
     /// <returns>an example (archetypal) value for the value object</returns>
     public abstract static TSelf ExampleValue { get; }
-    public abstract static TSelf Empty { get; }
+    public static abstract TSelf Empty { get; }
     // public abstract static Validation Validate(string value);
 #else
     /// <summary>

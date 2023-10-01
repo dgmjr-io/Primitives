@@ -151,7 +151,8 @@ public partial record struct ObjectId
 public class ObjectIdConverter
     : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<ObjectId, string>
 {
-    public ObjectIdConverter() : base(v => v.Value, v => ObjectId.Parse(v)) { }
+    public ObjectIdConverter()
+        : base(v => v.Value, v => ObjectId.Parse(v)) { }
 }
 #endif
 
@@ -159,5 +160,6 @@ public class ObjectIdConverter
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class ObjectIdAttribute : RegularExpressionAttribute
 {
-    public ObjectIdAttribute() : base(ObjectId.RegexString) { }
+    public ObjectIdAttribute()
+        : base(ObjectId.RegexString) { }
 }

@@ -22,7 +22,8 @@ public partial class HexString : RegexGuardedString<HexString, HexString>, IRege
     [GeneratedRegex(HexChars, Compiled | IgnoreCase | Multiline | IgnorePatternWhitespace)]
     public static new partial REx Regex();
 
-    public HexString(string? value = null) : base(value) { }
+    public HexString(string? value = null)
+        : base(value) { }
 
     public static implicit operator HexString(string value) => new(value);
 

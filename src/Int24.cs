@@ -11,11 +11,7 @@ namespace System
     /// Represents a 24-bit integer.
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 3)]
-    public readonly struct Int24
-        : IEquatable<Int24>,
-            IComparable<Int24>,
-            IFormattable,
-            IConvertible
+    public readonly struct Int24 : IEquatable<Int24>, IComparable<Int24>, IFormattable, IConvertible
 #if NE7_0_OR_GREATER
             ,
             IAdditionOperators<Int24, Int24, Int24>,
@@ -401,9 +397,11 @@ namespace System
         /// <summary>
         /// Converts an int24 to and from an int for storage in a database table
         /// </summary>
-        public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+        public class EfCoreValueConverter
+            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
         {
-            public EfCoreValueConverter() : base(v => v.ToInt32(), v => (Int24)v) { }
+            public EfCoreValueConverter()
+                : base(v => v.ToInt32(), v => (Int24)v) { }
         }
     }
 
@@ -413,12 +411,15 @@ namespace System
         public static void ConfigureInt24<TEntity>(
             this ModelBuilder modelBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
-        ) where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureInt24(propertyExpression);
+        )
+            where TEntity : class =>
+            modelBuilder.Entity<TEntity>().ConfigureInt24(propertyExpression);
 
         public static void ConfigureInt24<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
-        ) where TEntity : class =>
+        )
+            where TEntity : class =>
             entityBuilder.Property(propertyExpression).HasConversion<Int24.EfCoreValueConverter>();
     }
 #endif

@@ -5,7 +5,8 @@ namespace Dgmjr.Primitives.Tests;
 
 public partial class iriTests : PrimitivesTests<iri, iriTests>
 {
-    public iriTests(ITestOutputHelper output) : base(output) { }
+    public iriTests(ITestOutputHelper output)
+        : base(output) { }
 
     [StringSyntax(StringSyntaxAttribute.Regex)]
     private const string RegexString =

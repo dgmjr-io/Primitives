@@ -2,7 +2,8 @@ namespace Dgmjr.Primitives.Tests;
 
 public class urlTests : PrimitivesTests<url, urlTests>
 {
-    public urlTests(ITestOutputHelper output) : base(output) { }
+    public urlTests(ITestOutputHelper output)
+        : base(output) { }
 
     protected override string[][] InvalidValuesStrings => new[] { new[] { "fcku!!!!!!" } };
 
