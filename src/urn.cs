@@ -25,7 +25,10 @@ using Vogen;
 
 using static System.Text.RegularExpressions.RegexOptions;
 
-[RegexDto(urn._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// /// Represents an "uniform resource name"
+/// </summary>
+[RegexDto(urn._RegexString, RegexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(urn.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
@@ -115,7 +118,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         return false;
     }
 
-    public Uri Uri => this;
+    public readonly Uri Uri => this;
 
     public static urn FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -155,15 +158,15 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     public static bool operator >(urn? left, IResourceIdentifier right) =>
         left?.CompareTo(right) > 0;
 
-    public int CompareTo(IResourceIdentifier other) =>
+    public readonly int CompareTo(IResourceIdentifier other) =>
         other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
 
     // public override bool Equals(object? obj) => obj is urn urn && urn.ToString() == ToString();
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override readonly int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => OriginalString;
+    private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out urn urn) =>
         TryParse(s, out urn);
@@ -191,20 +194,22 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         return false;
     }
 
-    public bool Equals(urn? other) => Equals(other.ToString());
+    public readonly bool Equals(urn? other) => Equals(other.ToString());
 
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is urn urn
             ? CompareTo(urn)
             : obj is string str
                 ? CompareTo(str)
                 : throw new ArgumentException("Object is not a urn.");
 
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(urn other) => CompareTo(other.ToString());
+    public readonly int CompareTo(urn other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
     public class EfCoreValueConverter
@@ -233,7 +238,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     {
         public override urn Read(
             ref global::System.Text.Json.Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            type typeToConvert,
             global::System.Text.Json.JsonSerializerOptions options
         )
         {
@@ -250,24 +255,20 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
         }
     }
 
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
         )
         {
-            var stringValue = value as global::System.String;
+            var stringValue = value as string;
             if (stringValue is not null)
             {
                 return urn.From(stringValue);
@@ -276,26 +277,23 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
+            return sourceType == typeof(string)
                 || base.CanConvertTo(context, sourceType)
                 || base.CanConvertTo(context, sourceType);
         }
 
         public override object? ConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value,
-            global::System.Type? destinationType
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
         )
         {
             if (value is urn idValue)
             {
-                if (destinationType == typeof(global::System.String))
+                if (destinationType == typeof(string))
                 {
                     return idValue.ToString();
                 }

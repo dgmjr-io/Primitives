@@ -32,6 +32,9 @@ using Util = PhoneNumbers.PhoneNumberUtil;
 using Validation = global::Validation;
 #endif
 
+/// <summary>
+/// A value object that represents a phone number
+/// </summary>
 [ValueObject(
     typeof(string),
     conversions: Conversions.EfCoreValueConverter
@@ -42,6 +45,9 @@ using Validation = global::Validation;
 [PhoneNumber.JConverter]
 public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumber>
 {
+    /// <summary>
+    /// The string that will be prefixed to the number when converting it to a URI
+    /// </summary>
     public const string UriPrefix = "tel:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
     public static string Description => "a phone number in e.164 format";
@@ -54,14 +60,14 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
     public string? Number { get; private set; }
-    public int? CountryCode => ParsedNumber?.CountryCode;
-    public ulong? NationalNumber => ParsedNumber?.NationalNumber;
-    public string? Extension => ParsedNumber?.Extension;
-    public Phone ParsedNumber => _util.Parse(Value, DefaultRegion);
-    public bool IsEmpty => this == Empty;
+    public readonly int? CountryCode => ParsedNumber?.CountryCode;
+    public readonly ulong? NationalNumber => ParsedNumber?.NationalNumber;
+    public readonly string? Extension => ParsedNumber?.Extension;
+    public readonly Phone ParsedNumber => _util.Parse(Value, DefaultRegion);
+    public readonly bool IsEmpty => this == Empty;
     public string OriginalString { get; set; }
 
-    public Uri Uri => new(Format(UriPattern, ToString()));
+    public readonly Uri Uri => new(Format(UriPattern, ToString()));
 
     public static PhoneNumber FromUri(string s) =>
         From(s.Remove(0, UriPrefix.Length)) with
@@ -78,22 +84,14 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
     static string IStringWithRegexValueObject<PhoneNumber>.Description => Description;
-    // PhoneNumber IStringWithRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
 #else
-    // REx IStringWithRegexValueObject<PhoneNumber>.Regex() => Regex();
-    string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
-    string IStringWithRegexValueObject<PhoneNumber>.Description => Description;
-    PhoneNumber IStringWithRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
+    readonly string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<PhoneNumber>.Description => Description;
+    readonly PhoneNumber IStringWithRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
 #endif
 
-    public override string ToString() =>
-        IsEmpty ? string.Empty : _util.Format(this.ParsedNumber, PhoneNumberFormat.E164);
-
-    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider = null) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    public override readonly string ToString() =>
+        IsEmpty ? string.Empty : _util.Format(ParsedNumber, PhoneNumberFormat.E164);
 
     public static bool TryParse(
         string? s,
@@ -125,9 +123,9 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static REx Regex() => new(RegexString, RegexOptions);
     // REx IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
 #else
-    private static REx _regex = new(RegexString, RegexOptions);
+    private static readonly REx _regex = new(RegexString, RegexOptions);
 
-    REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
+    readonly REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
     public static implicit operator PhoneNumber?(string? s) =>
@@ -154,7 +152,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static bool operator >=(PhoneNumber? a, PhoneNumber? b) =>
         a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) >= 0;
 
-    public uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
+    public readonly uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
 
 #if NET6_0_OR_GREATER
     public static Validation Validate(string s) =>
@@ -169,15 +167,16 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             : Validation.Invalid("Phone number is not valid.");
 #endif
 
+    public static PhoneNumber Parse(string s, IFormatProvider? formatProvider) =>
+        From(s) with
+        {
+            OriginalString = s
+        };
+
     public static PhoneNumber Parse(string value) => From(value) with { OriginalString = value };
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
-
-#if !NET7_0_OR_GREATER
-    // REx IStringWithRegexValueObject<PhoneNumber>.Regex() => Regex();
-    // string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
-#endif
 
 #if !NETSTANDARD2_0_OR_GREATER
     public string Value { get; private set; }
@@ -191,7 +190,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             }
             : throw new ArgumentException("Phone number is not valid.", nameof(s));
 
-    public int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
+    public readonly int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
 #endif
 
     public sealed class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute

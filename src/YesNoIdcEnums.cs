@@ -11,7 +11,7 @@
  */
 namespace System.Enums;
 
-// [GenerateEnumerationRecordClass]
+[GenerateEnumerationRecordClass("YesNoIdc", "System")]
 public enum YesNoIdc : sbyte
 {
     /// <summary>I don't care</summary>
@@ -34,7 +34,7 @@ public enum YesNoIdc : sbyte
     Idgaf = Idc,
 }
 
-// [GenerateEnumerationRecordStruct]
+[GenerateEnumerationRecordClass("YesNo", "System")]
 public enum YesNo : sbyte
 {
     /// <summary>No, negative, nope, fuck no, negatory, false, etc.</summary>

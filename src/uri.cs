@@ -32,8 +32,10 @@ using static System.Text.RegularExpressions.RegexOptions;
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-
-[RegexDto(uri._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// Represents an "uniform resource identifier"
+/// </summary>
+[RegexDto(uri._RegexString, RegexOptions: uri._RegexOptions)]
 [uri.JConverter]
 [DebuggerDisplay("{ToString()}")]
 [StructLayout(LayoutKind.Auto)]
@@ -52,14 +54,13 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
-    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
-    public bool IsEmpty => BaseToString() == EmptyStringValue;
-    public string PathAndQuery =>
+    public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
+    public readonly string PathAndQuery =>
         $"{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
 
-    public string Value => ToString();
+    public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<uri>.RegexString => RegexString;
     static string IStringWithRegexValueObject<uri>.Description => Description;
@@ -72,54 +73,34 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
             OriginalString = s
         };
 #else
-    string IStringWithRegexValueObject<uri>.Description => Description;
-    uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
-    string IStringWithRegexValueObject<uri>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<uri>.Description => Description;
+    readonly uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<uri>.RegexString => RegexString;
 
-    REx IStringWithRegexValueObject<uri>.Regex() => Regex();
+    readonly REx IStringWithRegexValueObject<uri>.Regex() => Regex();
 #endif
 
-    // public static uri Parse(string uri) => From(uri);
+    public readonly Uri Uri => this;
 
-    public Uri Uri => this;
-
-    // #if NET70_OR_GREATER
-    //     [GeneratedRegex(RegexString, Compiled | RegexOptions)]
-    //     public static partial REx Regex();
-
-    //     // static uri IUriConvertible<uri>.FromUri(string s) => From(s);
-    //     // static uri IUriConvertible<uri>.FromUri(Uri uri) => From(urn.ToString());
-    // #else
-    //     public static REx Regex() => new(RegexString, RegexOptions);
-    // #endif
-    // public uri(string uriString) : base(uriString) { }
     public uri(Uri uri)
         : this(uri.ToString()) { }
 
-    // public uri() : base(EmptyStringValue) { }
-    public static uri Parse(string s, IFormatProvider? formatProvider = null) =>
+    public static uri Parse(string s, IFormatProvider? formatProvider) =>
         From(s) with
         {
             OriginalString = s
         };
 
-    public static Validation Validate(string value)
-    {
-        if (value is null)
-        {
-            return Validation.Invalid("Cannot create a value object with null.");
-        }
-        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
-        {
-            return Validation.Invalid("The value is not a valid URI.");
-        }
-
-        return Validation.Ok;
-    }
+    public static Validation Validate(string value) =>
+        value is null
+            ? Validation.Invalid("Cannot create a value object with null.")
+            : !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _)
+                ? Validation.Invalid("The value is not a valid URI.")
+                : Validation.Ok;
 
     public static bool TryCreate(string? uriString, UriKind uriKind, out uri uri)
     {
-        if (string.IsNullOrEmpty(uriString))
+        if (IsNullOrEmpty(uriString))
         {
             uri = Empty;
             return false;
@@ -138,7 +119,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
 
     public static uri From(Uri uri) => new uri(uri) with { OriginalString = uri.ToString() };
 
-    public static implicit operator System.Uri(uri u) =>
+    public static implicit operator Uri(uri u) =>
         Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
             ? uri
             : new(EmptyStringValue);
@@ -146,8 +127,6 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public static implicit operator uri(string s) => From(s) with { OriginalString = s };
 
     public static implicit operator string(uri uri) => uri.ToString();
-
-    // public static implicit operator uri(uri? uri) => uri.HasValue ? uri.Value : Empty;
 
     public static bool operator ==(uri? left, IResourceIdentifier right) =>
         left?.CompareTo(right) == 0;
@@ -167,15 +146,14 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public static bool operator >(uri? left, IResourceIdentifier right) =>
         left?.CompareTo(right) > 0;
 
-    public int CompareTo(IResourceIdentifier other) =>
+    public readonly int CompareTo(IResourceIdentifier other) =>
         other is uri uri ? CompareTo(uri) : CompareTo(other.ToString());
 
-    // public override bool Equals(object? obj) => obj is uri uri && uri.ToString() == ToString();
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override readonly int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => OriginalString;
+    private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) =>
         TryParse(s, out uri);
@@ -184,12 +162,12 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 uri = Empty;
                 return false;
             }
-            if (global::System.Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
             {
                 uri = From(suri.ToString());
                 return true;
@@ -203,20 +181,22 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
         return false;
     }
 
-    public bool Equals(uri? other) => Equals(other.ToString());
+    public readonly bool Equals(uri? other) => Equals(other.ToString());
 
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is uri uri
             ? CompareTo(uri)
             : obj is string str
                 ? CompareTo(str)
                 : throw new ArgumentException("Object is not a uri.");
 
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(uri other) => CompareTo(other.ToString());
+    public readonly int CompareTo(uri other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
     public class EfCoreValueConverter
@@ -232,94 +212,61 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
             : base(typeof(JsonConverter)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<uri>
+    public class JsonConverter : JsonConverter<uri>
     {
-        public override uri Read(
-            ref System.Text.Json.Utf8JsonReader reader,
-            Type typeToConvert,
-            System.Text.Json.JsonSerializerOptions options
-        ) => From(reader.GetString());
+        public override uri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options) =>
+            From(reader.GetString());
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            uri value,
-            System.Text.Json.JsonSerializerOptions options
-        ) => writer.WriteStringValue(value.ToString());
+        public override void Write(Utf8JsonWriter writer, uri value, Jso options) =>
+            writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<uri>
+    public class SystemTextJsonConverter : JsonConverter<uri>
     {
-        public override uri Read(
-            ref global::System.Text.Json.Utf8JsonReader reader,
-            global::System.Type typeToConvert,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override uri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options)
         {
             return uri.From(reader.GetString());
         }
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            uri value,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override void Write(Utf8JsonWriter writer, uri value, Jso options)
         {
             writer.WriteStringValue(value.ToString());
         }
     }
 
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
         )
         {
-            var stringValue = value as global::System.String;
-            if (stringValue is not null)
-            {
-                return uri.From(stringValue);
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            var stringValue = value as string;
+            return stringValue is not null
+                ? From(stringValue)
+                : base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? destinationType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertTo(context, sourceType);
+            return destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
         }
 
         public override object? ConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value,
-            global::System.Type? destinationType
-        )
-        {
-            if (value is uri idValue)
-            {
-                if (destinationType == typeof(global::System.String))
-                {
-                    return idValue.ToString();
-                }
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
+        ) =>
+            value is uri idValue && destinationType == typeof(string)
+                ? idValue.ToString()
+                : base.ConvertTo(context, culture, value, destinationType);
     }
 #endif
 }

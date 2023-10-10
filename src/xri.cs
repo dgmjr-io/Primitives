@@ -26,7 +26,10 @@ using static System.Text.RegularExpressions.RegexOptions;
 using Validation = global::Validation;
 #endif
 
-[RegexDto(xri._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// Represents an "extensible resource identifier"
+/// </summary>
+[RegexDto(xri._RegexString, RegexOptions: uri._RegexOptions)]
 [StructLayout(LayoutKind.Auto)]
 public partial record struct xri
     : IStringWithRegexValueObject<xri>,
@@ -54,51 +57,33 @@ public partial record struct xri
     static string IStringWithRegexValueObject<xri>.RegexString => RegexString;
     static xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
 #else
-    string IStringWithRegexValueObject<xri>.Description => Description;
-    xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
-    string IStringWithRegexValueObject<xri>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<xri>.Description => Description;
+    readonly xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<xri>.RegexString => RegexString;
 
-    REx IStringWithRegexValueObject<xri>.Regex() => Regex();
+    readonly REx IStringWithRegexValueObject<xri>.Regex() => Regex();
 #endif
 
-    // public static xri Parse(string xri) => From(xri);
-
-    public Uri Uri => this;
+    public readonly Uri Uri => this;
 
     public static xri FromUri(string s) => From(s) with { OriginalString = s };
 
     public static xri FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
-    //     private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
-    // #if NET70_OR_GREATER
-    //     [GeneratedRegex(RegexString, RegexOptions)]
-    //     public static partial REx Regex();
-    // #else
-    //     public static REx Regex() => new(RegexString, RegexOptions);
-    // #endif
-    // public xri(string urlString) : base(urlString) { }
     public xri(Uri xri)
         : this(xri.ToString()) { }
 
     public xri(xri xri)
         : this(xri.ToString()) { }
 
-    // public xri() : this(EmptyStringValue) { }
     public static xri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
-    public static Validation Validate(string value)
-    {
-        if (value is null)
-        {
-            return Validation.Invalid("Cannot create a value object with null.");
-        }
-        if (!xri.TryCreate(value, default, out _))
-        {
-            return Validation.Invalid("The value is not a valid xri.");
-        }
-
-        return Validation.Ok;
-    }
+    public static Validation Validate(string value) =>
+        value is null
+            ? Validation.Invalid("Cannot create a value object with null.")
+            : !xri.TryCreate(value, default, out _)
+                ? Validation.Invalid("The value is not a valid xri.")
+                : Validation.Ok;
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out xri xri)
     {
@@ -133,8 +118,6 @@ public partial record struct xri
 
     public static implicit operator string(xri xri) => xri.ToString();
 
-    // public static implicit operator xri(xri? xri) => xri.HasValue ? xri.Value : Empty;
-
     public static bool operator ==(xri? left, IResourceIdentifier right) =>
         left?.CompareTo(right) == 0;
 
@@ -153,15 +136,14 @@ public partial record struct xri
     public static bool operator >(xri? left, IResourceIdentifier right) =>
         left?.CompareTo(right) > 0;
 
-    public int CompareTo(IResourceIdentifier other) =>
+    public readonly int CompareTo(IResourceIdentifier other) =>
         other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
 
-    // public override bool Equals(object? obj) => obj is xri xri && string.Equals(xri.Value, Value);
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override readonly int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => OriginalString;
+    private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) =>
         TryParse(s, out xri);
@@ -189,20 +171,22 @@ public partial record struct xri
         return false;
     }
 
-    public bool Equals(xri? other) => Equals(other.ToString());
+    public readonly bool Equals(xri? other) => Equals(other.ToString());
 
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is xri xri
             ? CompareTo(xri)
             : obj is string str
                 ? CompareTo(str)
                 : throw new ArgumentException("Object is not a xri.");
 
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(xri other) => CompareTo(other.ToString());
+    public readonly int CompareTo(xri other) => CompareTo(other.ToString());
 
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
@@ -230,7 +214,7 @@ public partial record struct xri
     {
         public override xri Read(
             ref global::System.Text.Json.Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            type typeToConvert,
             global::System.Text.Json.JsonSerializerOptions options
         )
         {
@@ -247,24 +231,20 @@ public partial record struct xri
         }
     }
 
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
         )
         {
-            var stringValue = value as global::System.String;
+            var stringValue = value as string;
             if (stringValue is not null)
             {
                 return xri.From(stringValue);
@@ -273,25 +253,21 @@ public partial record struct xri
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertTo(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertTo(context, sourceType);
         }
 
         public override object? ConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value,
-            global::System.Type? destinationType
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
         )
         {
             if (value is xri idValue)
             {
-                if (destinationType == typeof(global::System.String))
+                if (destinationType == typeof(string))
                 {
                     return idValue.ToString();
                 }

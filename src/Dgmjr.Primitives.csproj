@@ -11,31 +11,39 @@
 -->
 
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
-        <!-- <TargetFramework>net7.0</TargetFramework> -->
-        <LangVersion>preview</LangVersion>
-        <AssemblyName>Dgmjr.Primitives</AssemblyName>
-        <PackageId>Dgmjr.Primitives</PackageId>
-        <RootNamespace>Dgmjr.Primitives</RootNamespace>
-        <Description>A collection of useful data and behavioral value types.</Description>
-        <SlnGenSolutionFolder>src</SlnGenSolutionFolder>
-        <ProjectGuid>4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6</ProjectGuid>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-        <EnablePreviewFeatures>true</EnablePreviewFeatures>
-        <NoWarn>$(NoWarn);CS0436</NoWarn>
-        <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <!-- <TargetFramework>net7.0</TargetFramework> -->
+    <LangVersion>preview</LangVersion>
+    <AssemblyName>Dgmjr.Primitives</AssemblyName>
+    <PackageId>Dgmjr.Primitives</PackageId>
+    <RootNamespace>Dgmjr.Primitives</RootNamespace>
+    <Description>A collection of useful data and behavioral value types.</Description>
+    <SlnGenSolutionFolder>src</SlnGenSolutionFolder>
+    <ProjectGuid>4E1F4A52-7F97-43E1-AAA6-2EEEE07326E6</ProjectGuid>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+    <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
-        <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs"  Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
-        <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
-        <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
-    </ItemGroup>
-    <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
-        <Compile Remove="./RegexGuardedString.cs" />
-        <Compile Remove="./HexString.cs" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
+    <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+    <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+    <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <SourceCodePackageReference Include="System.Private.CoreLib.Polyfills" />
+    <SourceGeneratorPackageReference Include="Dgmjr.RegexDtoGenerator" />
+    <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" />
+    <UsingsPackageReference Include="System.Text.Json.Usings" />
+    <UsingsPackageReference Include="System.Text.RegularExpressions.Usings"/>
+    <UsingsPackageReference Include="System.Usings"/>
+  </ItemGroup>
+  <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
+    <Compile Remove="./RegexGuardedString.cs" />
+    <Compile Remove="./HexString.cs" />
+  </ItemGroup>
 </Project>

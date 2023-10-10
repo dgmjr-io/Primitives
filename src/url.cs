@@ -28,7 +28,10 @@ using static System.Text.RegularExpressions.RegexOptions;
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-[RegexDto(url._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// Represents an "internationalized resource locator"
+/// </summary>
+[RegexDto(url._RegexString, RegexOptions: uri._RegexOptions)]
 [url.JConverter]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
@@ -45,31 +48,27 @@ public partial record struct url
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
-    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public const string EmptyStringValue = "about:blank";
     public static url Empty => From(EmptyStringValue);
-    public bool IsEmpty => OriginalString == EmptyStringValue;
+    public readonly bool IsEmpty => OriginalString == EmptyStringValue;
 
-    public string PathAndQuery =>
+    public readonly string PathAndQuery =>
         $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
-    public string Value => ToString();
+    public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<url>.Description => Description;
     static string IStringWithRegexValueObject<url>.RegexString => RegexString;
     static url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
 #else
-    string IStringWithRegexValueObject<url>.Description => Description;
-    url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
-    string IStringWithRegexValueObject<url>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<url>.Description => Description;
+    readonly url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<url>.RegexString => RegexString;
 
-    REx IStringWithRegexValueObject<url>.Regex() => Regex();
+    readonly REx IStringWithRegexValueObject<url>.Regex() => Regex();
 #endif
 
-    // public static url Parse(string url) => From(url);
-
-
-    public Uri Uri => this;
+    public readonly Uri Uri => this;
 
     public static url FromUri(url url) =>
         From(url.ToString()) with
@@ -79,32 +78,17 @@ public partial record struct url
 
     public static url FromUri(string s) => From(s) with { OriginalString = s };
 
-    // #if NET70_OR_GREATER
-    //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
-    //     public static partial REx Regex();
-    // #else
-    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
-    // #endif
-    // public url(string urlString) : this(urlString) { }
     public url(Uri url)
         : this(url.ToString()) { }
 
-    // public url() : this(EmptyStringValue) { }
     public static url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
-    public static Validation Validate(string value)
-    {
-        if (value is null)
-        {
-            return Validation.Invalid("Cannot create a value object with null.");
-        }
-        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _))
-        {
-            return Validation.Invalid("The value is not a valid URL.");
-        }
-
-        return Validation.Ok;
-    }
+    public static Validation Validate(string value) =>
+        value is null
+            ? Validation.Invalid("Cannot create a value object with null.")
+            : !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _)
+                ? Validation.Invalid("The value is not a valid URL.")
+                : Validation.Ok;
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out url url) =>
         TryParse(urlString, out url);
@@ -127,7 +111,6 @@ public partial record struct url
 
     public static implicit operator string(url url) => url.ToString();
 
-    // public static implicit operator url(url? url) => url.HasValue ? url.Value : Empty;
     public static bool operator ==(url? left, IResourceIdentifier right) =>
         left?.CompareTo(right) == 0;
 
@@ -146,15 +129,14 @@ public partial record struct url
     public static bool operator >(url? left, IResourceIdentifier right) =>
         left?.CompareTo(right) > 0;
 
-    public int CompareTo(IResourceIdentifier other) =>
+    public readonly int CompareTo(IResourceIdentifier other) =>
         other is url url ? CompareTo(url) : CompareTo(other.ToString());
 
-    // public override bool Equals(object? obj) => obj is url url && url.ToString() == ToString();
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override readonly int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => OriginalString;
+    private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out url url) =>
         TryParse(s, out url);
@@ -168,7 +150,7 @@ public partial record struct url
                 url = Empty;
                 return false;
             }
-            if (global::System.Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
             {
                 url = From(suri.ToString());
                 return true;
@@ -182,20 +164,22 @@ public partial record struct url
         return false;
     }
 
-    public bool Equals(url? other) => Equals(other.ToString());
+    public readonly bool Equals(url? other) => Equals(other.ToString());
 
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is url url
             ? CompareTo(url)
             : obj is string str
                 ? CompareTo(str)
                 : throw new ArgumentException("Object is not a url.");
 
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(url other) => CompareTo(other.ToString());
+    public readonly int CompareTo(url other) => CompareTo(other.ToString());
 
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url, string>
@@ -229,7 +213,7 @@ public partial record struct url
     {
         public override url Read(
             ref global::System.Text.Json.Utf8JsonReader reader,
-            global::System.Type typeToConvert,
+            type typeToConvert,
             global::System.Text.Json.JsonSerializerOptions options
         )
         {
@@ -246,24 +230,20 @@ public partial record struct url
         }
     }
 
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
         )
         {
-            var stringValue = value as global::System.String;
+            var stringValue = value as string;
             if (stringValue is not null)
             {
                 return url.From(stringValue);
@@ -272,25 +252,21 @@ public partial record struct url
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertTo(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertTo(context, sourceType);
         }
 
         public override object? ConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value,
-            global::System.Type? destinationType
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
         )
         {
             if (value is url idValue)
             {
-                if (destinationType == typeof(global::System.String))
+                if (destinationType == typeof(string))
                 {
                     return idValue.ToString();
                 }

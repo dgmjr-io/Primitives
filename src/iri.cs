@@ -22,7 +22,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Validation = Vogen.Validation;
 
-[RegexDto(iri._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// Represents an "internationalized resource identifier"
+/// </summary>
+[RegexDto(iri._RegexString, RegexOptions: uri._RegexOptions)]
 [global::System.Text.Json.Serialization.JsonConverter(typeof(iri.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 #endif

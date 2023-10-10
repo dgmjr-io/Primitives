@@ -71,17 +71,18 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
 #else
-    REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
+    readonly REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
 
-    string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
-    string IStringWithRegexValueObject<EmailAddress>.Description => Description;
-    EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
+    readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
+    readonly EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue =>
+        From(ExampleValueString);
 #endif
 
     /// <summary>
     /// Gets a value indicating whether is empty.
     /// </summary>
-    public bool IsEmpty => Value == Empty.Value;
+    public readonly bool IsEmpty => Value == Empty.Value;
 
     /// <summary>
     /// Gets the empty.
@@ -163,14 +164,14 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="formatProvider">The format provider.</param>
     /// <returns>the string representation of the <see cref="EmailAddress"/>.
     ///     </returns>
-    public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
+    public readonly string ToString(string? format, IFormatProvider? formatProvider) => ToString();
 
     /// <summary>
     /// Returns <inheritdoc cref="ToString()" path="/returns"/>
     /// </summary>
     /// <returns>the string representation of the <see cref="EmailAddress"/>.
     ///     </returns>
-    public override string ToString() => IsEmpty ? string.Empty : Value;
+    public readonly override string ToString() => IsEmpty ? string.Empty : Value;
 
     /// <summary>
     /// Returns
@@ -179,7 +180,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <returns>a negative value if the current value is less than
     ///     <paramref name="obj"/>, 0 if they're equal, and a positive value if
     ///     it's greater than <paramref name="obj"/>..</returns>
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         string.CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
 
     /// <summary>
@@ -251,9 +252,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     public static implicit operator string?(EmailAddress? addr) =>
         addr.HasValue ? addr.Value.Value : string.Empty;
 
-    public int CompareTo(EmailAddress? other) => CompareTo(other?.Value ?? string.Empty);
-
-    // public static EmailAddress From(string s) => Validate(s) == Validation.Ok ? new() { Value = s } : Empty;
+    public readonly int CompareTo(EmailAddress? other) => CompareTo(other?.Value ?? string.Empty);
 
     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
     {

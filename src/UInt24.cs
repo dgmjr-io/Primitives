@@ -70,7 +70,7 @@ namespace System
             (uint)value | (uint)(value >> BitOffset) | (uint)(value >> BitOffset * 2);
 
         public static implicit operator int(UInt24 value) =>
-            (int)value | (int)(value >> BitOffset) | (int)(value >> BitOffset * 2);
+            (int)value | (value >> BitOffset) | (value >> BitOffset * 2);
 
         /// <summary>
         /// Gets the value of the integer.
@@ -180,9 +180,9 @@ namespace System
         /// Compares this instance to another UInt24 instance and returns an indication of their relative values.
         /// </summary> =
         /// <param name="other">An object to compare with this instance.</param> =
-        public int CompareTo(UInt24 other)
+        public readonly int CompareTo(UInt24 other)
         {
-            uint thisValue = this.SignExtend();
+            uint thisValue = SignExtend();
             uint otherValue = other.SignExtend();
             return thisValue.CompareTo(otherValue);
         }
@@ -192,9 +192,9 @@ namespace System
         /// </summary>
         /// <param name="other">The UInt24 to compare to this instance.</param>
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
-        public bool Equals(UInt24 other)
+        public readonly bool Equals(UInt24 other)
         {
-            return this.SignExtend() == other.SignExtend();
+            return SignExtend() == other.SignExtend();
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace System
         /// <returns>true if obj is an UInt24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is UInt24 other && this.Equals(other);
+            return obj is UInt24 other && Equals(other);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace System
         /// Returns a hash code for this instance.
         /// </summary>
         ///<returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return ((int)this).GetHashCode();
         }
@@ -229,7 +229,7 @@ namespace System
         /// Converts the numeric value of this instance to its equivalent string representation.
         /// </summary>
         ///<returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return ((uint)this).ToString();
         }
@@ -356,40 +356,40 @@ namespace System
         ///<returns>An object that contains the value of the converted sbyte.</returns>
         public static explicit operator UInt24(sbyte value) => new UInt24(value);
 
-        public int ToInt32(IFormatProvider? provider) => (int)this.ToInt32();
+        public int ToInt32(IFormatProvider? provider) => (int)ToInt32();
 
-        public uint ToUInt32(IFormatProvider? provider) => (uint)this.ToInt32();
+        public uint ToUInt32(IFormatProvider? provider) => (uint)ToInt32();
 
-        public long ToInt64(IFormatProvider? provider) => (long)this.ToInt32();
+        public long ToInt64(IFormatProvider? provider) => (long)ToInt32();
 
-        public ulong ToUInt64(IFormatProvider? provider) => (ulong)this.ToInt32();
+        public ulong ToUInt64(IFormatProvider? provider) => (ulong)ToInt32();
 
-        public short ToInt16(IFormatProvider? provider) => (short)this.ToInt32();
+        public short ToInt16(IFormatProvider? provider) => (short)ToInt32();
 
-        public ushort ToUInt16(IFormatProvider? provider) => (ushort)this.ToInt32();
+        public ushort ToUInt16(IFormatProvider? provider) => (ushort)ToInt32();
 
 #if NET7_0_OR_GREATER
-        public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)this.ToInt32();
+        public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)ToInt32();
 
-        public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)this.ToInt32();
+        public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)ToInt32();
 #endif
 
-        public byte ToByte(IFormatProvider? provider) => (byte)this.ToInt32();
+        public byte ToByte(IFormatProvider? provider) => (byte)ToInt32();
 
-        public sbyte ToSByte(IFormatProvider? provider) => (sbyte)this.ToInt32();
+        public sbyte ToSByte(IFormatProvider? provider) => (sbyte)ToInt32();
 
-        public float ToSingle(IFormatProvider? provider) => (float)this.ToInt32();
+        public float ToSingle(IFormatProvider? provider) => (float)ToInt32();
 
-        public double ToDouble(IFormatProvider? provider) => (double)this.ToInt32();
+        public double ToDouble(IFormatProvider? provider) => (double)ToInt32();
 
-        public decimal ToDecimal(IFormatProvider? provider) => (decimal)this.ToInt32();
+        public decimal ToDecimal(IFormatProvider? provider) => (decimal)ToInt32();
 
-        public char ToChar(IFormatProvider? provider) => (char)this.ToInt32();
+        public char ToChar(IFormatProvider? provider) => (char)ToInt32();
 
         public DateTime ToDateTime(IFormatProvider? provider) =>
-            DateTime.FromBinary((long)this.ToInt32());
+            DateTime.FromBinary((long)ToInt32());
 
-        public bool ToBoolean(IFormatProvider? provider) => this.ToInt32() > 0;
+        public bool ToBoolean(IFormatProvider? provider) => ToInt32() > 0;
 
         public object ToType(Type conversionType, IFormatProvider? provider) =>
             Convert.ChangeType(ToInt32(), conversionType, provider);
