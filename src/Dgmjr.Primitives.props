@@ -35,6 +35,7 @@
         <Using Include="System.Text.RegularExpressions.RegexOptions" Alias="Rxo"/> -->
     <!-- <Using Include="System.Console" Static="true"/> -->
     <Using Include="Dgmjr.Abstractions" />
+    <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true" />
     <!-- <Using Include="Validation" Alias="Validation" /> -->
     <!-- <Using Include="(int Day, int Month, int Year)" Alias="DayMonthYearTuple" /> -->
     <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives'" />
