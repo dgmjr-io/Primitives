@@ -29,8 +29,8 @@ public interface IStringWithRegexValueObject<TSelf>
     /// <summary>
     /// Returns <inheritdoc cref="Regex" path="/returns" />
     /// </summary>
-    /// <returns>a <see cref="REx" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
-    public abstract static REx Regex();
+    /// <returns>a <see cref="Regex" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
+    public abstract static Regex Regex();
 
     /// <summary>
     /// Returns <inheritdoc cref="RegexString" path="/returns" />
@@ -89,8 +89,8 @@ public interface IStringWithRegexValueObject<TSelf>
     /// <summary>
     /// Returns <inheritdoc cref="Regex" path="/returns" />
     /// </summary>
-    /// <returns>a <see cref="REx" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
-    REx Regex();
+    /// <returns>a <see cref="Regex" /> containing the regular expression, which can be used to parse/validate string versions of the value object</returns>
+    Regex Regex();
 #endif
 
     string OriginalString { get; }

@@ -44,10 +44,21 @@ public partial record struct url
 #endif
 {
     public const string Description = "a uniform resource locator (url)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "https://dgmjr.io/";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "about:blank";
     public static url Empty => From(EmptyStringValue);
     public readonly bool IsEmpty => OriginalString == EmptyStringValue;
@@ -65,7 +76,7 @@ public partial record struct url
     readonly url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
     readonly string IStringWithRegexValueObject<url>.RegexString => RegexString;
 
-    readonly REx IStringWithRegexValueObject<url>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<url>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;
@@ -86,7 +97,7 @@ public partial record struct url
     public static Validation Validate(string value) =>
         value is null
             ? Validation.Invalid("Cannot create a value object with null.")
-            : !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _)
+            : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
                 ? Validation.Invalid("The value is not a valid URL.")
                 : Validation.Ok;
 
@@ -145,12 +156,12 @@ public partial record struct url
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 url = Empty;
                 return false;
             }
-            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            if (Uri.TryCreate(s, RelativeOrAbsolute, out var suri))
             {
                 url = From(suri.ToString());
                 return true;
@@ -188,42 +199,42 @@ public partial record struct url
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public class JConverterAttribute : JsonConverterAttribute
     {
         public JConverterAttribute()
             : base(typeof(url.JsonConverter)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<url>
+    public class JsonConverter : JsonConverter<url>
     {
         public override url Read(
-            ref System.Text.Json.Utf8JsonReader reader,
+            ref Utf8JsonReader reader,
             Type typeToConvert,
-            System.Text.Json.JsonSerializerOptions options
+            JsonSerializerOptions options
         ) => From(reader.GetString());
 
         public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
+            Utf8JsonWriter writer,
             url value,
-            System.Text.Json.JsonSerializerOptions options
+            JsonSerializerOptions options
         ) => writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<url>
+    public class SystemTextJsonConverter : JsonConverter<url>
     {
         public override url Read(
-            ref global::System.Text.Json.Utf8JsonReader reader,
+            ref Utf8JsonReader reader,
             type typeToConvert,
-            global::System.Text.Json.JsonSerializerOptions options
+            Jso options
         )
         {
-            return url.From(reader.GetString());
+            return From(reader.GetString());
         }
 
         public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
+            Utf8JsonWriter writer,
             url value,
-            global::System.Text.Json.JsonSerializerOptions options
+            Jso options
         )
         {
             writer.WriteStringValue(value.ToString());
@@ -244,12 +255,7 @@ public partial record struct url
         )
         {
             var stringValue = value as string;
-            if (stringValue is not null)
-            {
-                return url.From(stringValue);
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            return stringValue is not null ? url.From(stringValue) : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
@@ -263,17 +269,9 @@ public partial record struct url
             object? value,
             type? destinationType
         )
-        {
-            if (value is url idValue)
-            {
-                if (destinationType == typeof(string))
-                {
-                    return idValue.ToString();
-                }
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+            => value is url idValue && destinationType == typeof(string)
+            ? idValue.ToString()
+            : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 

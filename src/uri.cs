@@ -47,13 +47,31 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
         IUriConvertible<uri>
 #endif
 {
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string Description = "a uniform resource identifier (uri)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "example:example";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
     public const RegexOptions _RegexOptions =
         Compiled | IgnoreCase | Singleline | IgnorePatternWhitespace;
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
@@ -77,7 +95,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     readonly uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
     readonly string IStringWithRegexValueObject<uri>.RegexString => RegexString;
 
-    readonly REx IStringWithRegexValueObject<uri>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<uri>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;
@@ -94,7 +112,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     public static Validation Validate(string value) =>
         value is null
             ? Validation.Invalid("Cannot create a value object with null.")
-            : !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _)
+            : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
                 ? Validation.Invalid("The value is not a valid URI.")
                 : Validation.Ok;
 
@@ -167,7 +185,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
                 uri = Empty;
                 return false;
             }
-            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            if (Uri.TryCreate(s, RelativeOrAbsolute, out var suri))
             {
                 uri = From(suri.ToString());
                 return true;
@@ -206,7 +224,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public class JConverterAttribute : JsonConverterAttribute
     {
         public JConverterAttribute()
             : base(typeof(JsonConverter)) { }

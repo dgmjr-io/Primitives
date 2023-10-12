@@ -43,8 +43,8 @@ public static partial class TryCreateUriExtensions
 
     /// <summary>Creates a Uri object from a string, with an option to throw an exception on invalid URIs</summary>
     public static uri? CreateUri(this string uriString, bool throwOnInvalidUri = true) =>
-        !string.IsNullOrEmpty(uriString)
-            ? System.uri.TryCreate(uriString, UriKind.Absolute, out var uri)
+        !IsNullOrEmpty(uriString)
+            ? System.uri.TryCreate(uriString, Absolute, out var uri)
                 ? uri
                 : throwOnInvalidUri
                     ? throw new ArgumentException(
@@ -63,8 +63,8 @@ public static partial class TryCreateUriExtensions
 
     /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a Uri object</summary>
     public static uri CreateUri(this string uriString, Uri? defaultFallbackUri) =>
-        !string.IsNullOrEmpty(defaultFallbackUri.ToString())
-            ? System.uri.TryCreate(uriString, UriKind.Absolute, out var uri)
+        !IsNullOrEmpty(defaultFallbackUri.ToString())
+            ? System.uri.TryCreate(uriString, Absolute, out var uri)
                 ? uri
                 : System.uri.From(string.Format(defaultFallbackUri.ToString(), uriString))
             : throw new ArgumentException(

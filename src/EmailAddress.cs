@@ -17,6 +17,8 @@ using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+using static System.Text.RegularExpressions.RegexOptions;
+
 using Vogen;
 
 #if !NETSTANDARD2_0_OR_GREATER
@@ -50,9 +52,9 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     public const string UriPrefix = "mailto:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
 
-    public Uri Uri => IsEmpty ? null! : new(Format(UriPattern, ToString()));
+    public readonly Uri Uri => IsEmpty ? null! : new(Format(UriPattern, ToString()));
 
-    public string OriginalString { get; set; }
+    public string OriginalString { get; init; }
 
 #if NET6_0_OR_GREATER
     /// <summary>
@@ -71,7 +73,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
 #else
-    readonly REx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
+    readonly Regx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
 
     readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
     readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
@@ -101,13 +103,13 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
 
 #if NET7_0_OR_GREATER
     /// <summary>
-    /// Regexes the <see cref="REx"/>.
+    /// Regexes the <see cref="Regex"/>.
     /// </summary>
-    /// <returns>A REx.</returns>
+    /// <returns>A Regex.</returns>
     [GeneratedRegex(RegexString)]
-    public static partial REx Regex();
+    public static partial Regex Regex();
 #else
-    public static REx Regex() => new(RegexString, Compiled);
+    public static Regex Regex() => new(RegexString, Compiled);
 #endif
 
     public static EmailAddress FromUri(string s) =>
@@ -140,22 +142,22 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
                     : Validation.Ok;
 
     public static bool operator !=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) == 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) == 0;
 
     public static bool operator ==(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) != 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) != 0;
 
     public static bool operator <(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) < 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) < 0;
 
     public static bool operator >(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) > 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) > 0;
 
     public static bool operator <=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) <= 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) <= 0;
 
     public static bool operator >=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value.Value, b.Value.Value) >= 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) >= 0;
 
     /// <summary>
     /// Returns <inheritdoc cref="ToString()" path="/returns"/>
@@ -181,7 +183,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     ///     <paramref name="obj"/>, 0 if they're equal, and a positive value if
     ///     it's greater than <paramref name="obj"/>..</returns>
     public readonly int CompareTo(object? obj) =>
-        string.CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
+        CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
 
     /// <summary>
     /// Parses the <see cref="EmailAddress"/>.
@@ -208,7 +210,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
         {
             return (email = From(s) with { OriginalString = s }) != Empty;
         }
-        catch (Vogen.ValueObjectValidationException)
+        catch (ValueObjectValidationException)
         {
             email = Empty;
             return false;
@@ -254,7 +256,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
 
     public readonly int CompareTo(EmailAddress? other) => CompareTo(other?.Value ?? string.Empty);
 
-    public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public class JConverterAttribute : JsonConverterAttribute
     {
         public JConverterAttribute()
             : base(typeof(EmailAddressSystemTextJsonConverter)) { }

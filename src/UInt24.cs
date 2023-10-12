@@ -1,5 +1,5 @@
 ﻿/*
- * UInt24.cs
+ * ui24.cs
  *
  *   Created: 2023-07-16-03:40:58
  *   Modified: 2023-07-16-03:41:41
@@ -23,23 +23,19 @@ namespace System
     /// Represents a 24-bit integer.
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 3)]
-    public readonly struct UInt24
-        : IEquatable<UInt24>,
-            IComparable<UInt24>,
-            IFormattable,
-            IConvertible
+    public readonly struct UInt24 : IEquatable<ui24>, IComparable<ui24>, IFormattable, IConvertible
 #if NE7_0_OR_GREATER
             ,
-            IAdditionOperators<UInt24, UInt24, UInt24>,
-            ISubtractionOperators<UInt24, UInt24, UInt24>,
-            IMultiplicationOperators<UInt24, UInt24, UInt24>,
-            IDivisionOperators<UInt24, UInt24, UInt24>,
-            IUnaryNegationOperators<UInt24, UInt24>,
-            IBinaryIntegerOperators<UInt24, UInt24, UInt24>,
-            IComparisonOperators<UInt24, UInt24>,
-            IMinMaxValue<UInt24>,
-            IIncrementOperators<UInt24>,
-            IDecrementOperators<UInt24>
+            IAdditionOperators<ui24, ui24, ui24>,
+            ISubtractionOperators<ui24, ui24, ui24>,
+            IMultiplicationOperators<ui24, ui24, ui24>,
+            IDivisionOperators<ui24, ui24, ui24>,
+            IUnaryNegationOperators<ui24, ui24>,
+            IBinaryIntegerOperators<ui24, ui24, ui24>,
+            IComparisonOperators<ui24, ui24>,
+            IMinMaxValue<ui24>,
+            IIncrementOperators<ui24>,
+            IDecrementOperators<ui24>
 #endif
     {
         /// <summary>
@@ -66,19 +62,19 @@ namespace System
         [FieldOffset(2)]
         private readonly byte _b2;
 
-        public static implicit operator uint(UInt24 value) =>
+        public static implicit operator uint(ui24 value) =>
             (uint)value | (uint)(value >> BitOffset) | (uint)(value >> BitOffset * 2);
 
-        public static implicit operator int(UInt24 value) =>
+        public static implicit operator int(ui24 value) =>
             (int)value | (value >> BitOffset) | (value >> BitOffset * 2);
 
         /// <summary>
         /// Gets the value of the integer.
         /// </summary>
-        public UInt24 Value => this;
+        public ui24 Value => this;
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with three bytes.
+        /// Initializes a new instance of the ui24 struct with three bytes.
         /// </summary>
         /// <param name="b0">The first byte.</param>
         /// <param name="b1">The second byte.</param>
@@ -91,7 +87,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with a signed byte value.
+        /// Initializes a new instance of the ui24 struct with a signed byte value.
         /// </summary>
         /// <param name="value">The signed byte value.</param>
         public UInt24(sbyte value)
@@ -102,7 +98,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with a short integer value.
+        /// Initializes a new instance of the ui24 struct with a short integer value.
         /// </summary>
         ///<param name="value">The short integer value.</param>
         public UInt24(short value)
@@ -113,7 +109,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with an integer value.
+        /// Initializes a new instance of the ui24 struct with an integer value.
         /// </summary>
         ///<param name="value">The integer value.</param>
         public UInt24(uint value)
@@ -124,14 +120,14 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with an unsigned integer value.
+        /// Initializes a new instance of the ui24 struct with an unsigned integer value.
         /// </summary>
         /// <param name="value">The unsigned integer value.</param>
         public UInt24(int value)
         {
             if (value > (1 << BitsSize - 1) - 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "Value too large for UInt24");
+                throw new ArgumentOutOfRangeException(nameof(value), "Value too large for ui24");
             }
 
             _b0 = (byte)value;
@@ -140,7 +136,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the UInt24 struct with a read-only span of bytes.
+        /// Initializes a new instance of the ui24 struct with a read-only span of bytes.
         /// </summary>
         /// <param name="bytes">The read-only span of bytes.</param>
         public UInt24(ReadOnlySpan<byte> bytes)
@@ -177,10 +173,10 @@ namespace System
         }
 
         /// <summary>
-        /// Compares this instance to another UInt24 instance and returns an indication of their relative values.
+        /// Compares this instance to another ui24 instance and returns an indication of their relative values.
         /// </summary> =
         /// <param name="other">An object to compare with this instance.</param> =
-        public readonly int CompareTo(UInt24 other)
+        public readonly int CompareTo(ui24 other)
         {
             uint thisValue = SignExtend();
             uint otherValue = other.SignExtend();
@@ -188,30 +184,30 @@ namespace System
         }
 
         /// <summary>
-        /// Determines whether this instance and another specified UInt24 object have the same value.
+        /// Determines whether this instance and another specified ui24 object have the same value.
         /// </summary>
-        /// <param name="other">The UInt24 to compare to this instance.</param>
+        /// <param name="other">The ui24 to compare to this instance.</param>
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
-        public readonly bool Equals(UInt24 other)
+        public readonly bool Equals(ui24 other)
         {
             return SignExtend() == other.SignExtend();
         }
 
         /// <summary>
-        /// Determines whether this instance and a specified object, which must also be an UInt24 object, have the same value.
+        /// Determines whether this instance and a specified object, which must also be an ui24 object, have the same value.
         /// </summary>
         /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>true if obj is an UInt24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
+        /// <returns>true if obj is an ui24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is UInt24 other && Equals(other);
+            return obj is ui24 other && Equals(other);
         }
 
         /// <summary>
-        /// Sign extends the current UInt24 struct.
+        /// Sign extends the current ui24 struct.
         /// </summary>
-        /// <returns>A new UInt24 struct with sign extension applied.</returns>
-        public UInt24 SignExtend()
+        /// <returns>A new ui24 struct with sign extension applied.</returns>
+        public ui24 SignExtend()
         {
             return this;
         }
@@ -248,7 +244,7 @@ namespace System
         private const uint Int32MinValue = 0;
         private const uint Int32MaxValue = 0x00FFFFFFFF;
 
-        // Implementations of IComparable, IComparable<UInt24>, IEquatable<UInt24>, and IConvertible
+        // Implementations of IComparable, IComparable<ui24>, IEquatable<ui24>, and IConvertible
         // ...
 
         /// <summary>
@@ -272,50 +268,50 @@ namespace System
         private const uint Bits = 24;
 
         /// <summary>
-        /// Implicitly converts an UInt24 struct to an integer.
+        /// Implicitly converts an ui24 struct to an integer.
         /// </summary>
-        ///<param name="value">The UInt24 struct to convert.</param>
-        public static implicit operator UInt24(uint value) => new UInt24(value);
+        ///<param name="value">The ui24 struct to convert.</param>
+        public static implicit operator ui24(uint value) => new ui24(value);
 
         /// <summary>
-        /// Determines whether two specified UInt24 objects have the same value.
+        /// Determines whether two specified ui24 objects have the same value.
         /// </summary>
-        /// <param name="left">The first UInt24 to compare.</param>
-        /// <param name="right">The second UInt24 to compare.</param>
+        /// <param name="left">The first ui24 to compare.</param>
+        /// <param name="right">The second ui24 to compare.</param>
         /// <returns>true if the value of left is the same as the value of right; otherwise, false.</returns>
-        public static bool operator ==(UInt24 left, UInt24 right) => left.Equals(right);
+        public static bool operator ==(ui24 left, ui24 right) => left.Equals(right);
 
         /// <summary>
-        /// Determines whether two specified UInt24 objects have different values.
+        /// Determines whether two specified ui24 objects have different values.
         /// </summary>
-        /// <param name="left">The first UInt24 to compare.</param>
-        /// <param name="right">The second UInt24 to compare.</param>
+        /// <param name="left">The first ui24 to compare.</param>
+        /// <param name="right">The second ui24 to compare.</param>
         /// <returns>true if the value of left is different from the value of right; otherwise, false.</returns>
-        public static bool operator !=(UInt24 left, UInt24 right) => !left.Equals(right);
+        public static bool operator !=(ui24 left, ui24 right) => !left.Equals(right);
 
         /// <summary>
-        /// Determines whether one specified UInt24 is less than another specified UInt24.
+        /// Determines whether one specified ui24 is less than another specified ui24.
         /// </summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is less than right; otherwise, false.</returns>
-        public static bool operator <(UInt24 left, UInt24 right) => left.CompareTo(right) < 0;
+        public static bool operator <(ui24 left, ui24 right) => left.CompareTo(right) < 0;
 
         /// <summary>
-        /// Determines whether one specified UInt24 is greater than another specified UInt24.
+        /// Determines whether one specified ui24 is greater than another specified ui24.
         /// </summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is greater than right; otherwise, false.</returns>
-        public static bool operator >(UInt24 left, UInt24 right) => left.CompareTo(right) > 0;
+        public static bool operator >(ui24 left, ui24 right) => left.CompareTo(right) > 0;
 
         /// <summary>
-        /// Determines whether one specified UInt24 is less than or equal to another specified Int32.
+        /// Determines whether one specified ui24 is less than or equal to another specified Int32.
         ///</summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is less than or equal to right; otherwise, false.</returns>
-        public static bool operator <=(UInt24 left, UInt24? right)
+        public static bool operator <=(ui24 left, ui24? right)
         {
             return !(left > right);
         }
@@ -326,7 +322,7 @@ namespace System
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is greater than or equal to right; otherwise, false.</returns>
-        public static bool operator >=(UInt24 left, UInt24? right)
+        public static bool operator >=(ui24 left, ui24? right)
         {
             return !(left < right);
         }
@@ -340,21 +336,21 @@ namespace System
         /// <summary>The maximum value that can be assigned to an instance of this type.</summary>
         /// <returns>A constant equal to 16777214.</returns>
         /// <value>16777214</value>
-        public static readonly UInt24 MaxValue = new(Int32MinValue);
+        public static readonly ui24 MaxValue = new(Int32MinValue);
 
         /// <summary>
         /// The minimum value that can be assigned to an instance of this type.
         /// </summary>
         /// <returns>A constant equal to -8388608.</returns>
         /// <value>-8388608</value>
-        public static readonly UInt24 MinValue = new(Int32MaxValue);
+        public static readonly ui24 MinValue = new(Int32MaxValue);
 
         /// <summary>
-        /// Explicitly converts a signed byte to an UInt24 struct.
+        /// Explicitly converts a signed byte to an ui24 struct.
         /// </summary>
         ///<param name="value">The signed byte to convert.</param>
         ///<returns>An object that contains the value of the converted sbyte.</returns>
-        public static explicit operator UInt24(sbyte value) => new UInt24(value);
+        public static explicit operator ui24(sbyte value) => new ui24(value);
 
         public int ToInt32(IFormatProvider? provider) => (int)ToInt32();
 
@@ -408,16 +404,16 @@ namespace System
     }
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static class UInt24EfCoreExtensions
+    public static class ui24EfCoreExtensions
     {
-        public static void ConfigureUInt24<TEntity>(
+        public static void Configureui24<TEntity>(
             this ModelBuilder modelBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
         )
             where TEntity : class =>
-            modelBuilder.Entity<TEntity>().ConfigureUInt24(propertyExpression);
+            modelBuilder.Entity<TEntity>().Configureui24(propertyExpression);
 
-        public static void ConfigureUInt24<TEntity>(
+        public static void Configureui24<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
         )

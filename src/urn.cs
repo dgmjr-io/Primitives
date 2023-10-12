@@ -29,51 +29,61 @@ using static System.Text.RegularExpressions.RegexOptions;
 /// /// Represents an "uniform resource name"
 /// </summary>
 [RegexDto(urn._RegexString, RegexOptions: uri._RegexOptions)]
-[global::System.Text.Json.Serialization.JsonConverter(typeof(urn.JsonConverter))]
+[JsonConverter(typeof(urn.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
-public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, IResourceIdentifier
+public partial record struct urn : IStringWithRegexValueObject<urn>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<urn>
 #endif
 {
     public const string Description = "a uniform resource name (urn)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
 
-    // public const string _RegexString = @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:%[0-9a-fA-F]{2}|[-._~!$&'()*+,;=:@]|(?:[a-zA-Z0-9]|%[0-9a-fA-F]{2})*)*)$";
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
     public const string _RegexString =
         @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "urn:about:blank";
     public static urn Empty => From(EmptyStringValue);
-    public bool IsEmpty => BaseToString() == EmptyStringValue;
-    public string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
-    public string? DoubleSlashes = null;
-    public string Value => ToString();
+    public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
+    public readonly string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
+    public readonly string? DoubleSlashes = null;
+    public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<urn>.Description => Description;
     static string IStringWithRegexValueObject<urn>.RegexString => RegexString;
     static urn IStringWithRegexValueObject<urn>.Empty => EmptyStringValue;
     static urn IStringWithRegexValueObject<urn>.ExampleValue => new(ExampleStringValue);
 #else
-    string IStringWithRegexValueObject<urn>.Description => Description;
-    urn IStringWithRegexValueObject<urn>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<urn>.Description => Description;
+    readonly urn IStringWithRegexValueObject<urn>.ExampleValue => ExampleStringValue;
 
     // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
-    string IStringWithRegexValueObject<urn>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<urn>.RegexString => RegexString;
 
-    REx IStringWithRegexValueObject<urn>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<urn>.Regex() => Regex();
 #endif
 
     // public static urn Parse(string urn) => From(urn);
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
-    //     public static partial REx Regex();
+    //     public static partial Regex Regex();
     //     // static urn IUriConvertible<urn>.FromUri(string s) => From(s);
     //     // static urn IUriConvertible<urn>.FromUri(Uri urn) => From(urn.ToString());
     // #else
-    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    //     public static Regex Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public urn(string uriString) : base(uriString) { }
     public urn(Uri urn)
@@ -103,8 +113,8 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
 
     public static bool TryCreate(string? uriString, UriKind? uriKind, out urn urn)
     {
-        uriKind ??= UriKind.Absolute;
-        if (string.IsNullOrEmpty(uriString))
+        uriKind ??= Absolute;
+        if (IsNullOrEmpty(uriString))
         {
             urn = Empty;
             return false;
@@ -161,7 +171,6 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     public readonly int CompareTo(IResourceIdentifier other) =>
         other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
 
-    // public override bool Equals(object? obj) => obj is urn urn && urn.ToString() == ToString();
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
     public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
@@ -175,7 +184,7 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 urn = Empty;
                 return false;
@@ -219,37 +228,27 @@ public partial record struct urn : IStringWithRegexValueObject<urn>, IHaveAUri, 
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<urn>
+    public class JsonConverter : JsonConverter<urn>
     {
-        public override urn Read(
-            ref System.Text.Json.Utf8JsonReader reader,
-            Type typeToConvert,
-            System.Text.Json.JsonSerializerOptions options
-        ) => From(reader.GetString());
+        public override urn Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
+            From(reader.GetString());
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            urn value,
-            System.Text.Json.JsonSerializerOptions options
-        ) => writer.WriteStringValue(value.ToString());
+        public override void Write(Utf8JsonWriter writer, urn value, Jso options) =>
+            writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<urn>
+    public class SystemTextJsonConverter : JsonConverter<urn>
     {
         public override urn Read(
-            ref global::System.Text.Json.Utf8JsonReader reader,
+            ref Utf8JsonReader reader,
             type typeToConvert,
-            global::System.Text.Json.JsonSerializerOptions options
+            JsonSerializerOptions options
         )
         {
             return urn.From(reader.GetString());
         }
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            urn value,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override void Write(Utf8JsonWriter writer, urn value, JsonSerializerOptions options)
         {
             writer.WriteStringValue(value.ToString());
         }

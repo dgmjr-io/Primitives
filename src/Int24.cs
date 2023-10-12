@@ -11,19 +11,19 @@ namespace System
     /// Represents a 24-bit integer.
     /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 3)]
-    public readonly struct Int24 : IEquatable<Int24>, IComparable<Int24>, IFormattable, IConvertible
+    public readonly struct Int24 : IEquatable<i24>, IComparable<i24>, IFormattable, IConvertible
 #if NE7_0_OR_GREATER
             ,
-            IAdditionOperators<Int24, Int24, Int24>,
-            ISubtractionOperators<Int24, Int24, Int24>,
-            IMultiplicationOperators<Int24, Int24, Int24>,
-            IDivisionOperators<Int24, Int24, Int24>,
-            IUnaryNegationOperators<Int24, Int24>,
-            IBinaryIntegerOperators<Int24, Int24, Int24>,
-            IComparisonOperators<Int24, Int24>,
-            IMinMaxValue<Int24>,
-            IIncrementOperators<Int24>,
-            IDecrementOperators<Int24>
+            IAdditionOperators<i24, i24, i24>,
+            ISubtractionOperators<i24, i24, i24>,
+            IMultiplicationOperators<i24, i24, i24>,
+            IDivisionOperators<i24, i24, i24>,
+            IUnaryNegationOperators<i24, i24>,
+            IBinaryIntegerOperators<i24, i24, i24>,
+            IComparisonOperators<i24, i24>,
+            IMinMaxValue<i24>,
+            IIncrementOperators<i24>,
+            IDecrementOperators<i24>
 #endif
     {
         /// <summary>
@@ -60,10 +60,10 @@ namespace System
         [FieldOffset(2)]
         private readonly byte _b2;
 
-        public static implicit operator uint(Int24 value) =>
+        public static implicit operator uint(i24 value) =>
             (uint)value | (uint)(value >> BitOffset) | (uint)(value >> BitOffset * 2);
 
-        public static implicit operator int(Int24 value) =>
+        public static implicit operator int(i24 value) =>
             (int)value | (int)(value >> BitOffset) | (int)(value >> BitOffset * 2);
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace System
         public Int24 Value => this;
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with three bytes.
+        /// Initializes a new instance of the i24 struct with three bytes.
         /// </summary>
         /// <param name="b0">The first byte.</param>
         /// <param name="b1">The second byte.</param>
@@ -85,7 +85,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with a signed byte value.
+        /// Initializes a new instance of the i24 struct with a signed byte value.
         /// </summary>
         /// <param name="value">The signed byte value.</param>
         public Int24(sbyte value)
@@ -96,7 +96,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with a short integer value.
+        /// Initializes a new instance of the i24 struct with a short integer value.
         /// </summary>
         ///<param name="value">The short integer value.</param>
         public Int24(short value)
@@ -107,7 +107,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with an integer value.
+        /// Initializes a new instance of the i24 struct with an integer value.
         /// </summary>
         ///<param name="value">The integer value.</param>
         public Int24(int value)
@@ -118,14 +118,14 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with an unsigned integer value.
+        /// Initializes a new instance of the i24 struct with an unsigned integer value.
         /// </summary>
         /// <param name="value">The unsigned integer value.</param>
         public Int24(uint value)
         {
             if (value > (1 << BitsSize - 1) - 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "Value too large for Int24");
+                throw new ArgumentOutOfRangeException(nameof(value), "Value too large for i24");
             }
 
             _b0 = (byte)value;
@@ -134,7 +134,7 @@ namespace System
         }
 
         /// <summary>
-        /// Initializes a new instance of the Int24 struct with a read-only span of bytes.
+        /// Initializes a new instance of the i24 struct with a read-only span of bytes.
         /// </summary>
         /// <param name="bytes">The read-only span of bytes.</param>
         public Int24(ReadOnlySpan<byte> bytes)
@@ -171,10 +171,10 @@ namespace System
         }
 
         /// <summary>
-        /// Compares this instance to another Int24 instance and returns an indication of their relative values.
+        /// Compares this instance to another i24 instance and returns an indication of their relative values.
         /// </summary>
         /// <param name="other">An object to compare with this instance.</param>
-        public int CompareTo(Int24 other)
+        public int CompareTo(i24 other)
         {
             int thisValue = this.SignExtend();
             int otherValue = other.SignExtend();
@@ -182,38 +182,38 @@ namespace System
         }
 
         /// <summary>
-        /// Determines whether this instance and another specified Int24 object have the same value.
+        /// Determines whether this instance and another specified i24 object have the same value.
         /// </summary>
-        /// <param name="other">The Int24 to compare to this instance.</param>
+        /// <param name="other">The i24 to compare to this instance.</param>
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
-        public bool Equals(Int24 other)
+        public bool Equals(i24 other)
         {
             return this.SignExtend() == other.SignExtend();
         }
 
         /// <summary>
-        /// Determines whether this instance and a specified object, which must also be an Int24 object, have the same value.
+        /// Determines whether this instance and a specified object, which must also be an i24 object, have the same value.
         /// </summary>
         /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>true if obj is an Int24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
+        /// <returns>true if obj is an i24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is Int24 other && this.Equals(other);
+            return obj is i24 other && this.Equals(other);
         }
 
         /// <summary>
-        /// Sign extends the current Int24 struct.
+        /// Sign extends the current i24 struct.
         /// </summary>
-        /// <returns>A new Int24 struct with sign extension applied.</returns>
-        public Int24 SignExtend()
+        /// <returns>A new i24 struct with sign extension applied.</returns>
+        public i24 SignExtend()
         {
             if ((Value & Zero) != 0)
             {
                 // Negative number: fill upper 8 bits with 1's
-                return new Int24((int)(Value | NegativeSignMask));
+                return new i24((int)(Value | NegativeSignMask));
             }
             // Positive number: fill upper 8 bits with 0's
-            return new Int24((int)(Value & PositiveSignMask));
+            return new i24((int)(Value & PositiveSignMask));
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace System
         private const int Int32MinValue = -8388608;
         private const int Int32MaxValue = 8388607;
 
-        // Implementations of IComparable, IComparable<Int24>, IEquatable<Int24>, and IConvertible
+        // Implementations of IComparable, IComparable<i24>, IEquatable<i24>, and IConvertible
         // ...
 
         /// <summary>
@@ -274,61 +274,61 @@ namespace System
         private const int MaxValueWithoutSignBit = SignBit - 1;
 
         /// <summary>
-        /// Implicitly converts an Int24 struct to an integer.
+        /// Implicitly converts an i24 struct to an integer.
         /// </summary>
-        ///<param name="value">The Int24 struct to convert.</param>
-        public static implicit operator Int24(int value) => new Int24(value);
+        ///<param name="value">The i24 struct to convert.</param>
+        public static implicit operator i24(int value) => new i24(value);
 
         /// <summary>
-        /// Determines whether two specified Int24 objects have the same value.
+        /// Determines whether two specified i24 objects have the same value.
         /// </summary>
-        /// <param name="left">The first Int24 to compare.</param>
-        /// <param name="right">The second Int24 to compare.</param>
+        /// <param name="left">The first i24 to compare.</param>
+        /// <param name="right">The second i24 to compare.</param>
         /// <returns>true if the value of left is the same as the value of right; otherwise, false.</returns>
-        public static bool operator ==(Int24 left, Int24 right) => left.Equals(right);
+        public static bool operator ==(i24 left, i24 right) => left.Equals(right);
 
         /// <summary>
-        /// Determines whether two specified Int24 objects have different values.
+        /// Determines whether two specified i24 objects have different values.
         /// </summary>
-        /// <param name="left">The first Int24 to compare.</param>
-        /// <param name="right">The second Int24 to compare.</param>
+        /// <param name="left">The first i24 to compare.</param>
+        /// <param name="right">The second i24 to compare.</param>
         /// <returns>true if the value of left is different from the value of right; otherwise, false.</returns>
-        public static bool operator !=(Int24 left, Int24 right) => !left.Equals(right);
+        public static bool operator !=(i24 left, i24 right) => !left.Equals(right);
 
         /// <summary>
-        /// Determines whether one specified Int24 is less than another specified Int24.
+        /// Determines whether one specified i24 is less than another specified i24.
         /// </summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is less than right; otherwise, false.</returns>
-        public static bool operator <(Int24 left, Int24 right) => left.CompareTo(right) < 0;
+        public static bool operator <(i24 left, i24 right) => left.CompareTo(right) < 0;
 
         /// <summary>
-        /// Determines whether one specified Int24 is greater than another specified Int24.
+        /// Determines whether one specified i24 is greater than another specified i24.
         /// </summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is greater than right; otherwise, false.</returns>
-        public static bool operator >(Int24 left, Int24 right) => left.CompareTo(right) > 0;
+        public static bool operator >(i24 left, i24 right) => left.CompareTo(right) > 0;
 
         /// <summary>
-        /// Determines whether one specified Int24 is less than or equal to another specified Int32.
+        /// Determines whether one specified i24 is less than or equal to another specified Int32.
         ///</summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is less than or equal to right; otherwise, false.</returns>
-        public static bool operator <=(Int24 left, Int24? right)
+        public static bool operator <=(i24 left, i24? right)
         {
             return !(left > right);
         }
 
         /// <summary>
-        /// Determines whether one specified Int24 is greater than or equal to another specified Int32.
+        /// Determines whether one specified i24 is greater than or equal to another specified Int32.
         ///</summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
         ///<returns>true if left is greater than or equal to right; otherwise, false.</returns>
-        public static bool operator >=(Int24 left, Int24? right)
+        public static bool operator >=(i24 left, i24? right)
         {
             return !(left < right);
         }
@@ -342,16 +342,16 @@ namespace System
         /// <summary>The maximum value that can be assigned to an instance of this type.</summary>
         /// <returns>A constant equal to 8388607.</returns>
         /// <value>8388607</value>
-        public static readonly Int24 MaxValue = new(Int32MinValue);
+        public static readonly i24 MaxValue = new(Int32MinValue);
 
         /// <summary>
         /// The minimum value that can be assigned to an instance of this type.
         /// </summary>
         /// <returns>A constant equal to -8388608.</returns>
         /// <value>-8388608</value>
-        public static readonly Int24 MinValue = new(Int32MaxValue);
+        public static readonly i24 MinValue = new(Int32MaxValue);
 
-        public static explicit operator Int24(sbyte value) => new Int24(value);
+        public static explicit operator i24(sbyte value) => new i24(value);
 
         public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();
 
@@ -395,32 +395,32 @@ namespace System
             ((Int32)this.ToInt32()).ToString(formatProvider);
 
         /// <summary>
-        /// Converts an int24 to and from an int for storage in a database table
+        /// Converts an i24 to and from an int for storage in a database table
         /// </summary>
         public class EfCoreValueConverter
-            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<i24, int>
         {
             public EfCoreValueConverter()
-                : base(v => v.ToInt32(), v => (Int24)v) { }
+                : base(v => v.ToInt32(), v => (i24)v) { }
         }
     }
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static class Int24EfCoreExtensions
+    public static class i24EfCoreExtensions
     {
-        public static void ConfigureInt24<TEntity>(
+        public static void Configurei24<TEntity>(
             this ModelBuilder modelBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
         )
             where TEntity : class =>
-            modelBuilder.Entity<TEntity>().ConfigureInt24(propertyExpression);
+            modelBuilder.Entity<TEntity>().Configurei24(propertyExpression);
 
-        public static void ConfigureInt24<TEntity>(
+        public static void Configurei24<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
             Expression<Func<TEntity, uri>> propertyExpression
         )
             where TEntity : class =>
-            entityBuilder.Property(propertyExpression).HasConversion<Int24.EfCoreValueConverter>();
+            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
     }
 #endif
 }

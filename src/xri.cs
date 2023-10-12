@@ -40,18 +40,30 @@ public partial record struct xri
 #endif
 {
     public const string Description = "an eXtensible resource locator (xri)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
     public const string _RegexString =
         @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);
-    public bool IsEmpty => base.ToString() == EmptyStringValue;
+    public readonly bool IsEmpty => base.ToString() == EmptyStringValue;
 
-    public string PathAndQuery =>
+    public readonly string PathAndQuery =>
         $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
     private string _value = null!;
-    public string Value => _value;
+    public readonly string Value => _value;
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<xri>.Description => Description;
     static string IStringWithRegexValueObject<xri>.RegexString => RegexString;
@@ -61,7 +73,7 @@ public partial record struct xri
     readonly xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
     readonly string IStringWithRegexValueObject<xri>.RegexString => RegexString;
 
-    readonly REx IStringWithRegexValueObject<xri>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<xri>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;
@@ -87,14 +99,14 @@ public partial record struct xri
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out xri xri)
     {
-        if (string.IsNullOrEmpty(urlString))
+        if (IsNullOrEmpty(urlString))
         {
             xri = Empty;
             return false;
         }
         if (
             Validate(urlString) == Validation.Ok
-            && Uri.TryCreate(urlString, uriKind ?? UriKind.Absolute, out var surl)
+            && Uri.TryCreate(urlString, uriKind ?? Absolute, out var surl)
         )
         {
             xri = From(surl.ToString());
@@ -152,7 +164,7 @@ public partial record struct xri
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 xri = Empty;
                 return false;
@@ -195,37 +207,23 @@ public partial record struct xri
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<xri>
+    public class JsonConverter : JsonConverter<xri>
     {
-        public override xri Read(
-            ref System.Text.Json.Utf8JsonReader reader,
-            Type typeToConvert,
-            System.Text.Json.JsonSerializerOptions options
-        ) => From(reader.GetString());
+        public override xri Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
+            From(reader.GetString());
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            xri value,
-            System.Text.Json.JsonSerializerOptions options
-        ) => writer.WriteStringValue(value.ToString());
+        public override void Write(Utf8JsonWriter writer, xri value, Jso options) =>
+            writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<xri>
+    public class SystemTextJsonConverter : JsonConverter<xri>
     {
-        public override xri Read(
-            ref global::System.Text.Json.Utf8JsonReader reader,
-            type typeToConvert,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override xri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options)
         {
-            return xri.From(reader.GetString());
+            return From(reader.GetString());
         }
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            xri value,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override void Write(Utf8JsonWriter writer, xri value, Jso options)
         {
             writer.WriteStringValue(value.ToString());
         }
@@ -245,12 +243,9 @@ public partial record struct xri
         )
         {
             var stringValue = value as string;
-            if (stringValue is not null)
-            {
-                return xri.From(stringValue);
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            return stringValue is not null
+                ? xri.From(stringValue)
+                : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
@@ -263,18 +258,10 @@ public partial record struct xri
             Globalization.CultureInfo? culture,
             object? value,
             type? destinationType
-        )
-        {
-            if (value is xri idValue)
-            {
-                if (destinationType == typeof(string))
-                {
-                    return idValue.ToString();
-                }
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+        ) =>
+            value is xri idValue && destinationType == typeof(string)
+                ? idValue.ToString()
+                : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 

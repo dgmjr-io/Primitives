@@ -29,7 +29,7 @@ using Validation = global::Validation;
         | Conversions.TypeConverter
 )]
 // [RegexDto(ObjectId.RegexString)]
-public partial record struct ObjectId
+public readonly partial record struct ObjectId
     : IStringWithRegexValueObject<ObjectId>,
         IComparable<ObjectId>,
         IComparable,
@@ -46,27 +46,27 @@ public partial record struct ObjectId
 
 #if NET7_0_OR_GREATER
     [GeneratedRegex(RegexString, RegexOptions.Compiled | RegexOptions.IgnoreCase)]
-    public static partial REx Regex();
+    public static partial Regex Regex();
 #else
-    private static readonly REx _regex = new REx(
+    private static readonly Regex _regex = new Regex(
         RegexString,
-        RegexOptions.Compiled | RegexOptions.IgnoreCase
+        Rxo.Compiled | Rxo.IgnoreCase
     );
 
-    public static REx Regex() => _regex;
+    public static Regex Regex() => _regex;
 #endif
 
     public const string UrnPrefix = "urn:publicid:objectid:{0}";
 
-    public Uri Uri => IsEmpty ? null : new(Format(UrnPrefix, ToString()));
+    public readonly Uri Uri => IsEmpty ? null : new(Format(UrnPrefix, ToString()));
 
     public static ObjectId NewId() => From(Guid.NewGuid().ToString("N").Substring(0, 24));
 
     public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
 
-    public bool IsNull => Value == EmptyValue;
-    public bool IsEmpty => Value == EmptyValue;
-    public string OriginalString { get; set; }
+    public readonly bool IsNull => Value == EmptyValue;
+    public readonly bool IsEmpty => Value == EmptyValue;
+    public string OriginalString { get; init; }
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
@@ -80,13 +80,13 @@ public partial record struct ObjectId
         };
 
 #if !NET6_0_OR_GREATER
-    REx IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
 
-    string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
 
-    string IStringWithRegexValueObject<ObjectId>.Description => Description;
+    readonly string IStringWithRegexValueObject<ObjectId>.Description => Description;
 
-    ObjectId IStringWithRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
+    readonly ObjectId IStringWithRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
 
     public static ObjectId Parse(string s) =>
@@ -113,7 +113,7 @@ public partial record struct ObjectId
     // public bool Equals(ObjectId other) => _value == other._value;
     // public override int GetHashCode() => _value.GetHashCode();
     // public int CompareTo(ObjectId other) => _value.CompareTo(other._value);
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is ObjectId other
             ? CompareTo(other)
             : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");

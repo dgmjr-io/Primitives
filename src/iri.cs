@@ -26,7 +26,7 @@ using Validation = Vogen.Validation;
 /// Represents an "internationalized resource identifier"
 /// </summary>
 [RegexDto(iri._RegexString, RegexOptions: uri._RegexOptions)]
-[global::System.Text.Json.Serialization.JsonConverter(typeof(iri.JsonConverter))]
+[JsonConverter(typeof(iri.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 #endif
 [DebuggerDisplay("{ToString()}")]
@@ -39,6 +39,10 @@ public partial record struct iri
 #endif
 {
     public const string Description = "a internationalized resource identifier (iri)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
 
 #if NET7_0_OR_GREATER
@@ -91,42 +95,44 @@ public partial record struct iri
     // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public string? DoubleSlashes => "//";
 
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "empty:about:🚫";
     public static iri Empty => From(EmptyStringValue);
-    public bool IsEmpty => BaseToString() == EmptyStringValue;
-    public string PathAndQuery =>
+    public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
+    public readonly string PathAndQuery =>
         $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
-    public string Value => ToString();
+    public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<iri>.RegexString => RegexString;
     static string IStringWithRegexValueObject<iri>.Description => Description;
     static iri IStringWithRegexValueObject<iri>.Empty => EmptyStringValue;
     static iri IStringWithRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
 #else
-    string IStringWithRegexValueObject<iri>.Description => Description;
-    iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
-    string IStringWithRegexValueObject<iri>.RegexString => RegexString;
+    readonly string IStringWithRegexValueObject<iri>.Description => Description;
+    readonly iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<iri>.RegexString => RegexString;
 
-    REx IStringWithRegexValueObject<iri>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<iri>.Regex() => Regex();
 #endif
 
     // public static iri Parse(string iri) => From(iri);
 
     // #if NET70_OR_GREATER
     //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline | Singleline)]
-    //     public static partial REx Regex();
+    //     public static partial Regex Regex();
 
     //     // static iri IUriConvertible<iri>.FromUri(string s) => From(s);
     //     // static iri IUriConvertible<iri>.FromUri(Uri iri) => From(urn.ToString());
     // #else
-    //     public static REx Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
+    //     public static Regex Regex() => new(RegexString, Compiled | IgnoreCase | Multiline | Singleline);
     // #endif
     // public iri(string uriString) : base(uriString) { }
     public iri(Uri iri)
         : this(iri.ToString()) { }
 
-    // public iri() : base(EmptyStringValue) { }
     // public static iri Parse(string s) => From(s) with { OriginalString = s };
     public static iri Parse(string s, IFormatProvider? formatProvider = null) =>
         From(s) with
@@ -152,7 +158,7 @@ public partial record struct iri
     {
         try
         {
-            if (string.IsNullOrEmpty(uriString))
+            if (IsNullOrEmpty(uriString))
             {
                 iri = Empty;
                 return false;
@@ -171,7 +177,7 @@ public partial record struct iri
         return false;
     }
 
-    public Uri Uri => this!;
+    public readonly Uri Uri => this!;
 
     public static iri FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -209,15 +215,14 @@ public partial record struct iri
     public static bool operator >(iri? left, IResourceIdentifier right) =>
         left?.CompareTo(right) > 0;
 
-    public int CompareTo(IResourceIdentifier other) =>
+    public readonly int CompareTo(IResourceIdentifier other) =>
         other is iri iri ? CompareTo(iri) : CompareTo(other.ToString());
 
-    // public override bool Equals(object? obj) => obj is iri iri && iri.ToString() == ToString();
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override readonly int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
 
-    private string BaseToString() => OriginalString;
+    private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) =>
         TryParse(s, out iri);
@@ -226,12 +231,12 @@ public partial record struct iri
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 iri = Empty;
                 return false;
             }
-            if (Uri.TryCreate(s, UriKind.RelativeOrAbsolute, out var suri))
+            if (Uri.TryCreate(s, RelativeOrAbsolute, out var suri))
             {
                 iri = From(suri.ToString());
                 return true;
@@ -245,20 +250,22 @@ public partial record struct iri
         return false;
     }
 
-    public bool Equals(iri? other) => Equals(other.ToString());
+    public readonly bool Equals(iri? other) => Equals(other.ToString());
 
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(object? obj) =>
+    public readonly int CompareTo(object? obj) =>
         obj is iri iri
             ? CompareTo(iri)
             : obj is string str
                 ? CompareTo(str)
                 : throw new ArgumentException("Object is not a iri.");
 
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
 
-    public int CompareTo(iri other) => CompareTo(other.ToString());
+    public readonly int CompareTo(iri other) => CompareTo(other.ToString());
 
     public class EfCoreValueConverter
         : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
@@ -267,60 +274,48 @@ public partial record struct iri
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<iri>
+    public class JsonConverter : JsonConverter<iri>
     {
         public override iri Read(
-            ref System.Text.Json.Utf8JsonReader reader,
+            ref Utf8JsonReader reader,
             Type typeToConvert,
-            System.Text.Json.JsonSerializerOptions options
+            JsonSerializerOptions options
         ) => From(reader.GetString());
 
         public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
+            Utf8JsonWriter writer,
             iri value,
-            System.Text.Json.JsonSerializerOptions options
+            JsonSerializerOptions options
         ) => writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<iri>
+    public class SystemTextJsonConverter : JsonConverter<iri>
     {
-        public override iri Read(
-            ref global::System.Text.Json.Utf8JsonReader reader,
-            global::System.Type typeToConvert,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override iri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options)
         {
             return iri.From(reader.GetString());
         }
 
-        public override void Write(
-            System.Text.Json.Utf8JsonWriter writer,
-            iri value,
-            global::System.Text.Json.JsonSerializerOptions options
-        )
+        public override void Write(Utf8JsonWriter writer, iri value, Jso options)
         {
             writer.WriteStringValue(value.ToString());
         }
     }
 
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
         )
         {
-            var stringValue = value as global::System.String;
+            var stringValue = value as string;
             if (stringValue is not null)
             {
                 return From(stringValue);
@@ -329,25 +324,21 @@ public partial record struct iri
             return base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Type? sourceType
-        )
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String)
-                || base.CanConvertTo(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertTo(context, sourceType);
         }
 
         public override object? ConvertTo(
-            global::System.ComponentModel.ITypeDescriptorContext? context,
-            global::System.Globalization.CultureInfo? culture,
-            global::System.Object? value,
-            global::System.Type? destinationType
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
         )
         {
             if (value is iri idValue)
             {
-                if (destinationType == typeof(global::System.String))
+                if (destinationType == typeof(string))
                 {
                     return idValue.ToString();
                 }

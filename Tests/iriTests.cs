@@ -53,7 +53,7 @@ public partial class iriTests : PrimitivesTests<iri, iriTests>
         )?$";
 
     [GeneratedRegex(RegexString, Compiled | Singleline | IgnoreCase | IgnorePatternWhitespace)]
-    private static partial REx Regex();
+    private static partial Regex Regex();
 
     protected override string[][] InvalidValuesStrings => new[] { new[] { "fcku!!!!!!" } };
 

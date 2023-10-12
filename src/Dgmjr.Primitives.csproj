@@ -37,7 +37,7 @@
   <ItemGroup>
     <SourceCodePackageReference Include="System.Private.CoreLib.Polyfills" />
     <SourceGeneratorPackageReference Include="Dgmjr.RegexDtoGenerator" />
-    <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" />
+    <!-- <SourceGeneratorPackageReference Include="Dgmjr.Enumerations.CodeGenerator" /> -->
     <UsingsPackageReference Include="System.Text.Json.Usings" />
     <UsingsPackageReference Include="System.Text.RegularExpressions.Usings"/>
     <UsingsPackageReference Include="System.Usings"/>
@@ -45,5 +45,6 @@
   <ItemGroup Condition="!$(DefineConstants.Contains('NET7_0_OR_GREATER'))">
     <Compile Remove="./RegexGuardedString.cs" />
     <Compile Remove="./HexString.cs" />
+    <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true" />
   </ItemGroup>
 </Project>

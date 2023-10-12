@@ -20,11 +20,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
+using static System.Text.RegularExpressions.RegexOptions;
+
 using PhoneNumbers;
 
 using Vogen;
-
-using static System.Text.RegularExpressions.RegexOptions;
 
 using Phone = PhoneNumbers.PhoneNumber;
 using Util = PhoneNumbers.PhoneNumberUtil;
@@ -59,13 +59,13 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
         @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
     public const string DefaultRegion = "US";
-    public string? Number { get; private set; }
+    public string? Number { get; private init; }
     public readonly int? CountryCode => ParsedNumber?.CountryCode;
     public readonly ulong? NationalNumber => ParsedNumber?.NationalNumber;
     public readonly string? Extension => ParsedNumber?.Extension;
     public readonly Phone ParsedNumber => _util.Parse(Value, DefaultRegion);
     public readonly bool IsEmpty => this == Empty;
-    public string OriginalString { get; set; }
+    public string OriginalString { get; init; }
 
     public readonly Uri Uri => new(Format(UriPattern, ToString()));
 
@@ -113,19 +113,19 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
         }
     }
 
-    private const RegexOptions RegexOptions =
+    private const Rxo RegexOptions =
         Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
 #if NET7_0_OR_GREATER
     [GeneratedRegex(RegexString, RegexOptions)]
-    public static partial REx Regex();
+    public static partial Regex Regex();
 #elif NET6_0_OR_GREATER
-    public static REx Regex() => new(RegexString, RegexOptions);
-    // REx IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
+    public static Regex Regex() => new(RegexString, RegexOptions);
+    // Regex IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
 #else
-    private static readonly REx _regex = new(RegexString, RegexOptions);
+    private static readonly Regex _regex = new(RegexString, RegexOptions);
 
-    readonly REx IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
+    readonly Regex IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
     public static implicit operator PhoneNumber?(string? s) =>
@@ -135,22 +135,22 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
         n.HasValue ? _util.Format(n.Value.ParsedNumber, PhoneNumberFormat.E164) : default;
 
     public static bool operator <(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) < 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) < 0;
 
     public static bool operator ==(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) == 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) == 0;
 
     public static bool operator !=(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) != 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) != 0;
 
     public static bool operator >(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) > 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) > 0;
 
     public static bool operator <=(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) <= 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) <= 0;
 
     public static bool operator >=(PhoneNumber? a, PhoneNumber? b) =>
-        a.HasValue && b.HasValue && string.CompareOrdinal(a.Value, b.Value) >= 0;
+        a.HasValue && b.HasValue && CompareOrdinal(a.Value, b.Value) >= 0;
 
     public readonly uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
 
@@ -176,7 +176,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static PhoneNumber Parse(string value) => From(value) with { OriginalString = value };
 
     public readonly int CompareTo(object? obj) =>
-        obj is not PhoneNumber n ? -1 : string.CompareOrdinal(Value, n.Value);
+        obj is not PhoneNumber n ? -1 : CompareOrdinal(Value, n.Value);
 
 #if !NETSTANDARD2_0_OR_GREATER
     public string Value { get; private set; }
@@ -190,10 +190,10 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             }
             : throw new ArgumentException("Phone number is not valid.", nameof(s));
 
-    public readonly int CompareTo(PhoneNumber other) => string.CompareOrdinal(Value, other.Value);
+    public readonly int CompareTo(PhoneNumber other) => CompareOrdinal(Value, other.Value);
 #endif
 
-    public sealed class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    public sealed class JConverterAttribute : JsonConverterAttribute
     {
         public JConverterAttribute()
             : base(typeof(PhoneNumberSystemTextJsonConverter)) { }
