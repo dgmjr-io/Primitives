@@ -26,7 +26,7 @@ using Validation = global::Validation;
 // [RegexDto(ObjectId.RegexString)]
 public partial record struct ObjectId : IStringWithRegexValueObject<ObjectId>, IComparable<ObjectId>, IComparable, IEquatable<ObjectId>
 {
-    public const string Description = $"A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
+    public const string Description = "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.Description => Description;
 #endif
