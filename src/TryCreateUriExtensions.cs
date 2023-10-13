@@ -59,7 +59,8 @@ public static partial class TryCreateUriExtensions
 
     /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a string</summary>
     public static uri CreateUri(this string uriString, string defaultFallbackUri) =>
-        uriString.CreateUri(string.Format(defaultFallbackUri, uriString));
+        uriString.TryCreateUri(defaultFallbackUri, out var uri) ? uri :
+        string.Format(defaultFallbackUri, uriString).CreateUri();
 
     /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a Uri object</summary>
     public static uri CreateUri(this string uriString, Uri? defaultFallbackUri) =>
