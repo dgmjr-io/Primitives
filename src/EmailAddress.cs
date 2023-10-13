@@ -4,9 +4,9 @@
  *   Created: 2022-12-19-11:36:46
  *   Modified: 2022-12-19-11:36:46
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 namespace System.Net.Mail;

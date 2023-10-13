@@ -4,9 +4,9 @@
  *   Created: 2022-12-03-12:15:18
  *   Modified: 2022-12-03-12:15:18
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 #pragma warning disable
@@ -48,10 +48,7 @@ public readonly partial record struct ObjectId
     [GeneratedRegex(RegexString, RegexOptions.Compiled | RegexOptions.IgnoreCase)]
     public static partial Regex Regex();
 #else
-    private static readonly Regex _regex = new Regex(
-        RegexString,
-        Rxo.Compiled | Rxo.IgnoreCase
-    );
+    private static readonly Regex _regex = new Regex(RegexString, Rxo.Compiled | Rxo.IgnoreCase);
 
     public static Regex Regex() => _regex;
 #endif

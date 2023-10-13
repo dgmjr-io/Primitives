@@ -4,9 +4,9 @@
  *   Created: 2022-12-20-04:48:32
  *   Modified: 2022-12-20-04:48:32
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
@@ -20,7 +20,7 @@ public static partial class TryCreateUriExtensions
 
     /// <summary>Converts a string to a nullable Uri object, with a default fallback Uri provided as a string</summary>
     public static uri? ToUri(this string uriString, string defaultFallbackUri) =>
-        uri.From(uriString.CreateUri(defaultFallbackUri).ToString());
+        uri.From(string.Format(defaultFallbackUri, uriString));
 
     /// <summary>Converts a string to a nullable Uri object, with a default fallback Uri provided as a Uri object</summary>
     public static uri? ToUri(this string uriString, Uri defaultFallbackUri) =>

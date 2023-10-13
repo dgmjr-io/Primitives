@@ -4,9 +4,9 @@
  *   Created: 2022-12-22-09:00:00
  *   Modified: 2022-12-22-09:00:01
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 namespace Dgmjr.Types.Domain;

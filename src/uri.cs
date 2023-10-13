@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
  *   Created: 2022-12-20-04:48:32
  *   Modified: 2022-12-20-04:48:32
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 using System.Diagnostics;
