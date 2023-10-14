@@ -19,6 +19,9 @@ namespace Dgmjr.Primitives;
 )]
 public partial record struct DayTimeDuration
 {
+    private const int TicksPerMillisecond = 1000;
+    private const int TicksPerSecond = 1000000;
+
     public readonly bool IsNegative => !IsNullOrEmpty(Negative);
     public readonly int Sign => IsNegative ? -1 : 1;
 
@@ -30,15 +33,15 @@ public partial record struct DayTimeDuration
                 dtd.Minutes ?? 0,
                 dtd.Seconds.HasValue ? (int)Math.Floor(dtd.Seconds.Value) : 0,
                 dtd.Seconds.HasValue
-                    ? (int)Math.Floor((dtd.Seconds.Value * 1000) - Math.Floor(dtd.Seconds.Value))
+                    ? (int)Math.Floor((dtd.Seconds.Value * TicksPerMillisecond) - Math.Floor(dtd.Seconds.Value))
                     : 0
 #if NET7_0_OR_GREATER
                 ,
                 dtd.Seconds.HasValue
                     ? (int)
                         Math.Floor(
-                            (dtd.Seconds.Value * 1000000)
-                                - Math.Floor(dtd.Seconds.Value * 1000)
+                            (dtd.Seconds.Value * TicksPerSecond)
+                                - Math.Floor(dtd.Seconds.Value * TicksPerMillisecond)
                                 - Math.Floor(dtd.Seconds.Value)
                         )
                     : 0
