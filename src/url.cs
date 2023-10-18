@@ -29,7 +29,7 @@ using static System.Text.RegularExpressions.RegexOptions;
 using Validation = global::Validation;
 #endif
 /// <summary>
-/// Represents an "internationalized resource locator"
+/// Represents an "uniform resource locator (URL)"
 /// </summary>
 [RegexDto(url._RegexString, RegexOptions: uri._RegexOptions)]
 [url.JConverter]
@@ -43,7 +43,7 @@ public partial record struct url
         IUriConvertible<url>
 #endif
 {
-    public const string Description = "a uniform resource locator (url)";
+    public const string Description = "a uniform resource locator (URL)";
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]

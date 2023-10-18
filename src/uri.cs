@@ -33,7 +33,7 @@ using static System.Text.RegularExpressions.RegexOptions;
 using Validation = global::Validation;
 #endif
 /// <summary>
-/// Represents an "uniform resource identifier"
+/// Represents an "uniform resource identifier (URI)"
 /// </summary>
 [RegexDto(uri._RegexString, RegexOptions: uri._RegexOptions)]
 [uri.JConverter]

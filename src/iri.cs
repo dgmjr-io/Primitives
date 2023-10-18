@@ -23,10 +23,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Validation = Vogen.Validation;
 
 /// <summary>
-/// Represents an "internationalized resource identifier"
+/// Represents an "internationalized resource identifier (IRI)"
 /// </summary>
-[RegexDto(iri._RegexString, RegexOptions: uri._RegexOptions)]
-[JsonConverter(typeof(iri.JsonConverter))]
+[RegexDto(_RegexString, RegexOptions: uri._RegexOptions)]
+[SystemTextJsonConverter]
 [StructLayout(LayoutKind.Auto)]
 #endif
 [DebuggerDisplay("{ToString()}")]
@@ -38,7 +38,7 @@ public partial record struct iri
         IUriConvertible<iri>
 #endif
 {
-    public const string Description = "a internationalized resource identifier (iri)";
+    public const string Description = "an internationalized resource identifier (iri)";
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -50,49 +50,6 @@ public partial record struct iri
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
-
-    // @"^(?<Scheme:string?>
-    // [a-z][a-z0-9+\-.]*
-    // )
-    // :
-    // (?<DoubleSlashes:string?>\/\/)?
-    // (?<Authority:string?>
-    //     (?:
-    //         (?<UserInfo:string?>
-    //             (?:
-    //                 %[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9]
-    //             )*
-    //         )@
-    //     )?
-    //     (?<Host:string?>
-    //         (?:
-    //             \[(?:
-    //                 (?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7}
-    //             )
-    //             (?![0-9a-f])
-    //         )
-    //         |[a-z0-9]+
-    //         (?:[-.][a-z0-9]+)*
-    //     )
-    //     (?:
-    //         \:
-    //         (?<Port:int?>[0-9]+)
-    //     )?
-    // )?
-    // (?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?
-    // (?:
-    //     \?
-    //     (?<Query:string?>
-    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
-    //     )?
-    // )?
-    // (?:
-    //     #
-    //     (?<Fragment:string?>
-    //         (?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*
-    //     )?
-    // )?$";
-    // public const string _RegexString = @"^(?<Scheme:string?>[a-z][a-z0-9+\-.]*):(?<DoubleSlashes:string?>\/\/)?(?:(?<Authority:string?>(?<UserInfo:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:]|[a-z0-9])*))?@)?(?<Host:string?>(?:\[(?:(?:[0-9a-f]{1,4}:){6}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|::(?:[0-9a-f]{1,4}:){5}(?:[0-9a-f]{1,4}:[0-9a-f]{1,4}|(?<=:):(?=:))|(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?(?:[0-9a-f]{1,4}:)?[0-9a-f]{1,4}:(?:[0-9a-f]{1,4}:){0,2}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:|:(?:[0-9a-f]{1,4}:){1,7})(?![0-9a-f]))|[a-z0-9]+(?:[-.][a-z0-9]+)*)(?::(?<Port:int?>[0-9]+))?)?(?<Path:string?>(?:\/(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)*)?(?:\?(?<Query:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?(?:#(?<Fragment:string?>(?:%[0-9a-f]{2}|[-._~!$&'()*+,;=:@\/?]|(?:[a-z0-9]|%[0-9a-f]{2})*)*)?)?$";
     public string? DoubleSlashes => "//";
 
 #if NET7_0_OR_GREATER
@@ -274,19 +231,10 @@ public partial record struct iri
             : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JsonConverter : JsonConverter<iri>
+    public class SystemTextJsonConverterAttribute : JsonConverterAttribute
     {
-        public override iri Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        ) => From(reader.GetString());
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            iri value,
-            JsonSerializerOptions options
-        ) => writer.WriteStringValue(value.ToString());
+        public SystemTextJsonConverterAttribute()
+            : base(typeof(SystemTextJsonConverter)) { }
     }
 
     public class SystemTextJsonConverter : JsonConverter<iri>

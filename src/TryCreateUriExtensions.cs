@@ -13,7 +13,7 @@
 namespace System;
 
 /// <summary>Provides extension methods for working with URIs</summary>
-public static partial class TryCreateUriExtensions
+public static class TryCreateUriExtensions
 {
     /// <summary>Converts a string to a nullable Uri object</summary>
     public static uri? ToUri(this string uriString) => uriString.CreateUri(true);
@@ -59,8 +59,9 @@ public static partial class TryCreateUriExtensions
 
     /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a string</summary>
     public static uri CreateUri(this string uriString, string defaultFallbackUri) =>
-        uriString.TryCreateUri(defaultFallbackUri, out var uri) ? uri :
-        string.Format(defaultFallbackUri, uriString).CreateUri();
+        uriString.TryCreateUri(out var uri) && uri.HasValue
+            ? uri.Value
+            : Format(defaultFallbackUri, uriString).CreateUri()!.Value;
 
     /// <summary>Creates a Uri object from a string, with a default fallback Uri provided as a Uri object</summary>
     public static uri CreateUri(this string uriString, Uri? defaultFallbackUri) =>
