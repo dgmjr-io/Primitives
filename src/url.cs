@@ -37,10 +37,10 @@ using Validation = global::Validation;
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct url
     : IStringWithRegexValueObject<url>,
-        IResourceIdentifierWithQueryAndFragment
+      IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
-        ,
-        IUriConvertible<url>
+    ,
+      IUriConvertible<url>
 #endif
 {
     public const string Description = "a uniform resource locator (URL)";
@@ -64,7 +64,9 @@ public readonly partial record struct url
     public readonly bool IsEmpty => OriginalString == EmptyStringValue;
 
     public readonly string PathAndQuery =>
-        $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+    $"{Path}{(!IsNullOrEmpty(Query) ? $"? {
+        Query
+    })" : "")}{(!IsNullOrEmpty(Fragment) ? $"# {Fragment}" : "")}";
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
@@ -82,10 +84,10 @@ public readonly partial record struct url
     public readonly Uri Uri => this;
 
     public static url FromUri(url url) =>
-        From(url.ToString()) with
-        {
-            OriginalString = url.ToString()
-        };
+    From(url.ToString()) with
+    {
+        OriginalString = url.ToString()
+    };
 
     public static url FromUri(string s) => From(s) with { OriginalString = s };
 
@@ -95,53 +97,53 @@ public readonly partial record struct url
     public static url Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static Validation Validate(string value) =>
-        value is null
-            ? Validation.Invalid("Cannot create a value object with null.")
-            : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
-                ? Validation.Invalid("The value is not a valid URL.")
-                : Validation.Ok;
+    value is null
+    ? Validation.Invalid("Cannot create a value object with null.")
+    : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
+    ? Validation.Invalid("The value is not a valid URL.")
+    : Validation.Ok;
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out url url) =>
-        TryParse(urlString, out url);
+    TryParse(urlString, out url);
 
     public static url From(string s) =>
-        Validate(s) == Validation.Ok ? new url(s) with { OriginalString = s } : Empty;
+    Validate(s) == Validation.Ok ? new url(s) with { OriginalString = s } : Empty;
 
     public static url From(url url) =>
-        new url(url.ToString()) with
-        {
-            OriginalString = url.ToString()
-        };
+    new url(url.ToString()) with
+    {
+        OriginalString = url.ToString()
+    };
 
     public static implicit operator System.Uri(url u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
-            ? uri
-            : new(EmptyStringValue);
+    Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+    ? uri
+    : new(EmptyStringValue);
 
     public static implicit operator url(string s) => From(s) with { OriginalString = s };
 
     public static implicit operator string(url url) => url.ToString();
 
     public static bool operator ==(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) == 0;
+    left?.CompareTo(right) == 0;
 
     public static bool operator !=(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) != 0;
+    left?.CompareTo(right) != 0;
 
     public static bool operator <=(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) <= 0;
+    left?.CompareTo(right) <= 0;
 
     public static bool operator >=(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) >= 0;
+    left?.CompareTo(right) >= 0;
 
     public static bool operator <(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) < 0;
+    left?.CompareTo(right) < 0;
 
     public static bool operator >(url? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) > 0;
+    left?.CompareTo(right) > 0;
 
     public readonly int CompareTo(IResourceIdentifier other) =>
-        other is url url ? CompareTo(url) : CompareTo(other.ToString());
+    other is url url ? CompareTo(url) : CompareTo(other.ToString());
 
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
@@ -150,7 +152,7 @@ public readonly partial record struct url
     private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out url url) =>
-        TryParse(s, out url);
+    TryParse(s, out url);
 
     public static bool TryParse(string? s, out url url)
     {
@@ -178,17 +180,17 @@ public readonly partial record struct url
     public readonly bool Equals(url? other) => Equals(other.ToString());
 
     public readonly int CompareTo(string? other) =>
-        Compare(ToString(), other, InvariantCultureIgnoreCase);
+    Compare(ToString(), other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(object? obj) =>
-        obj is url url
-            ? CompareTo(url)
-            : obj is string str
-                ? CompareTo(str)
-                : throw new ArgumentException("Object is not a url.");
+    obj is url url
+    ? CompareTo(url)
+    : obj is string str
+    ? CompareTo(str)
+    : throw new ArgumentException("Object is not a url.");
 
     public readonly bool Equals(string? other) =>
-        ToString().Equals(other, InvariantCultureIgnoreCase);
+    ToString().Equals(other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(url other) => CompareTo(other.ToString());
 
@@ -248,8 +250,8 @@ public readonly partial record struct url
         {
             var stringValue = value as string;
             return stringValue is not null
-                ? url.From(stringValue)
-                : base.ConvertFrom(context, culture, value);
+                   ? url.From(stringValue)
+                   : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
@@ -263,9 +265,9 @@ public readonly partial record struct url
             object? value,
             type? destinationType
         ) =>
-            value is url idValue && destinationType == typeof(string)
-                ? idValue.ToString()
-                : base.ConvertTo(context, culture, value, destinationType);
+        value is url idValue && destinationType == typeof(string)
+        ? idValue.ToString()
+        : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 
@@ -276,13 +278,13 @@ public static class urlEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, url>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().Configureurl(propertyExpression);
+    where TEntity : class => modelBuilder.Entity<TEntity>().Configureurl(propertyExpression);
 
     public static void Configureurl<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, url>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<url.EfCoreValueConverter>();
+    where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<url.EfCoreValueConverter>();
 }
 #endif

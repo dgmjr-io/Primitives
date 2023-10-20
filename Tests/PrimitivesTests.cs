@@ -10,7 +10,9 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
     where TPrimitive : IStringWithRegexValueObject<TPrimitive>
     where TSelf : PrimitivesTests<TPrimitive, TSelf>
 {
-    public ILogger Logger { get; }
+    public ILogger Logger {
+        get;
+    }
     private static ITestOutputHelper _output;
 
     protected PrimitivesTests(ITestOutputHelper output)
@@ -48,10 +50,10 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
         Logger.LogOriginalValue(typeof(TPrimitive), primitive.OriginalString);
         primitive.IsEmpty.Should().BeFalse();
         primitive.Value
-            .Trim()
-            .ToLowerInvariant()
-            .Should()
-            .Contain(validValue.Trim().ToLowerInvariant());
+        .Trim()
+        .ToLowerInvariant()
+        .Should()
+        .Contain(validValue.Trim().ToLowerInvariant());
     }
 
     // [Theory]
@@ -75,10 +77,14 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
     }
 
     public static object[][] ValidValues =>
-        (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).ValidValuesStrings;
-    protected abstract string[][] ValidValuesStrings { get; }
+    (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).ValidValuesStrings;
+    protected abstract string[][] ValidValuesStrings {
+        get;
+    }
 
     public static object[][] InvalidValues =>
-        (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).InvalidValuesStrings;
-    protected abstract string[][] InvalidValuesStrings { get; }
+    (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).InvalidValuesStrings;
+    protected abstract string[][] InvalidValuesStrings {
+        get;
+    }
 }

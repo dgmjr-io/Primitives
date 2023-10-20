@@ -24,19 +24,21 @@ public partial record struct YearMonthDuration
     public readonly int Sign => IsNegative ? -1 : 1;
 
     public static implicit operator duration(YearMonthDuration ymd) =>
-        duration.FromMilliseconds(
-            new duration(
-                (int)
-                    Math.Floor(
-                        (ymd.Years.HasValue ? ymd.Years.Value * DaysPerYear : 0)
-                            + (ymd.Months.HasValue ? ymd.Months.Value * DaysPerMonth : 0)
-                    ),
-                0,
-                0,
-                0
-            ).TotalMilliseconds * ymd.Sign
-        );
+    duration.FromMilliseconds(
+        new duration(
+            (int)
+            Math.Floor(
+                (ymd.Years.HasValue ? ymd.Years.Value * DaysPerYear : 0)
+                + (ymd.Months.HasValue ? ymd.Months.Value * DaysPerMonth : 0)
+            ),
+            0,
+            0,
+            0
+        ).TotalMilliseconds * ymd.Sign
+    );
 
     public static implicit operator string(YearMonthDuration ymd) =>
-        $"{(ymd.IsNegative ? "-" : "")}P{(ymd.Years.HasValue ? $"{ymd.Years.Value}Y" : "")}{(ymd.Months.HasValue ? $"{ymd.Months.Value}M" : "")}";
+    $"{(ymd.IsNegative ? "-" : "")}P{(ymd.Years.HasValue ? $" {
+        ymd.Years.Value
+    } Y" : "")}{(ymd.Months.HasValue ? $" {ymd.Months.Value} M" : "")}";
 }

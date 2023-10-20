@@ -34,8 +34,8 @@ using static System.Text.RegularExpressions.RegexOptions;
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IResourceIdentifier
 #if NET7_0_OR_GREATER
-        ,
-        IUriConvertible<urn>
+    ,
+    IUriConvertible<urn>
 #endif
 {
     public const string Description = "a uniform resource name (urn)";
@@ -91,11 +91,11 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
 
     // public urn() : this(EmptyStringValue) { }
     public static urn Parse(string s, IFormatProvider? formatProvider = null) =>
-        TryParse(s, out var urn)
-            ? urn
-            : throw new FormatException(
-                $"The input string {s} was not in the correct format for a {nameof(urn)}."
-            );
+    TryParse(s, out var urn)
+    ? urn
+    : throw new FormatException(
+        $"The input string {s} was not in the correct format for a {nameof(urn)}."
+    );
 
     public static Validation Validate(string value)
     {
@@ -135,14 +135,14 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     public static urn FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
     public static urn From(string s) =>
-        Validate(s) == Validation.Ok ? new urn(s) with { OriginalString = s } : Empty;
+    Validate(s) == Validation.Ok ? new urn(s) with { OriginalString = s } : Empty;
 
     public static urn From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
 
     public static implicit operator System.Uri(urn u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
-            ? uri
-            : new(EmptyStringValue);
+    Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+    ? uri
+    : new(EmptyStringValue);
 
     public static implicit operator urn(string s) => From(s) with { OriginalString = s };
 
@@ -151,25 +151,25 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     // public static implicit operator urn(urn? urn) => urn.HasValue ? urn.Value : Empty;
 
     public static bool operator ==(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) == 0;
+    left?.CompareTo(right) == 0;
 
     public static bool operator !=(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) != 0;
+    left?.CompareTo(right) != 0;
 
     public static bool operator <=(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) <= 0;
+    left?.CompareTo(right) <= 0;
 
     public static bool operator >=(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) >= 0;
+    left?.CompareTo(right) >= 0;
 
     public static bool operator <(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) < 0;
+    left?.CompareTo(right) < 0;
 
     public static bool operator >(urn? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) > 0;
+    left?.CompareTo(right) > 0;
 
     public readonly int CompareTo(IResourceIdentifier other) =>
-        other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
+    other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
 
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
@@ -178,7 +178,7 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out urn urn) =>
-        TryParse(s, out urn);
+    TryParse(s, out urn);
 
     public static bool TryParse(string? s, out urn urn)
     {
@@ -206,17 +206,17 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     public readonly bool Equals(urn? other) => Equals(other.ToString());
 
     public readonly int CompareTo(string? other) =>
-        Compare(ToString(), other, InvariantCultureIgnoreCase);
+    Compare(ToString(), other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(object? obj) =>
-        obj is urn urn
-            ? CompareTo(urn)
-            : obj is string str
-                ? CompareTo(str)
-                : throw new ArgumentException("Object is not a urn.");
+    obj is urn urn
+    ? CompareTo(urn)
+    : obj is string str
+    ? CompareTo(str)
+    : throw new ArgumentException("Object is not a urn.");
 
     public readonly bool Equals(string? other) =>
-        ToString().Equals(other, InvariantCultureIgnoreCase);
+    ToString().Equals(other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(urn other) => CompareTo(other.ToString());
 
@@ -231,10 +231,10 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     public class JsonConverter : JsonConverter<urn>
     {
         public override urn Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
-            From(reader.GetString());
+        From(reader.GetString());
 
         public override void Write(Utf8JsonWriter writer, urn value, Jso options) =>
-            writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(value.ToString());
     }
 
     public class SystemTextJsonConverter : JsonConverter<urn>
@@ -279,8 +279,8 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
             return sourceType == typeof(string)
-                || base.CanConvertTo(context, sourceType)
-                || base.CanConvertTo(context, sourceType);
+                   || base.CanConvertTo(context, sourceType)
+                   || base.CanConvertTo(context, sourceType);
         }
 
         public override object? ConvertTo(
@@ -311,13 +311,13 @@ public static class UrnEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUrn(propertyExpression);
+    where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUrn(propertyExpression);
 
     public static void ConfigureUrn<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<urn.EfCoreValueConverter>();
+    where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<urn.EfCoreValueConverter>();
 }
 #endif

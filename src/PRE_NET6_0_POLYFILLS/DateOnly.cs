@@ -24,7 +24,10 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
 //IUtf8SpanFormattable
 {
     private readonly int _dayNumber => DayNumberFromDateTime(dt);
-    private readonly DateTime dt { get; init; }
+    private readonly DateTime dt {
+        get;
+        init;
+    }
 
     // Maps to Jan 1st year 1
     private const int MinDayNumber = 0;
@@ -33,7 +36,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     private const int MaxDayNumber = 3_652_058;
 
     private static int DayNumberFromDateTime(DateTime dt) =>
-        (int)((ulong)dt.Ticks / TimeSpan.TicksPerDay);
+    (int)((ulong)dt.Ticks / TimeSpan.TicksPerDay);
 
     public DateTime GetEquivalentDateTime() => dt;
 
@@ -75,7 +78,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="day">The day (1 through the number of days in <paramref name="month"/>).</param>
     /// <param name="calendar">The calendar that is used to interpret year, month, and day.<paramref name="month"/>.</param>
     public DateOnly(int year, int month, int day, Calendar calendar) =>
-        dt = new DateTime(year, month, day, calendar);
+    dt = new DateTime(year, month, day, calendar);
 
     /// <summary>
     /// Creates a new instance of the DateOnly structure to the specified number of days.
@@ -152,7 +155,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left and right represent the same date; otherwise, false.</returns>
     public static bool operator ==(DateOnly left, DateOnly right) =>
-        left._dayNumber == right._dayNumber;
+    left._dayNumber == right._dayNumber;
 
     /// <summary>
     /// Determines whether two specified instances of DateOnly are not equal.
@@ -161,7 +164,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left and right do not represent the same date; otherwise, false.</returns>
     public static bool operator !=(DateOnly left, DateOnly right) =>
-        left._dayNumber != right._dayNumber;
+    left._dayNumber != right._dayNumber;
 
     /// <summary>
     /// Determines whether one specified DateOnly is later than another specified DateTime.
@@ -170,7 +173,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left is later than right; otherwise, false.</returns>
     public static bool operator >(DateOnly left, DateOnly right) =>
-        left._dayNumber > right._dayNumber;
+    left._dayNumber > right._dayNumber;
 
     /// <summary>
     /// Determines whether one specified DateOnly represents a date that is the same as or later than another specified DateOnly.
@@ -179,7 +182,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left is the same as or later than right; otherwise, false.</returns>
     public static bool operator >=(DateOnly left, DateOnly right) =>
-        left._dayNumber >= right._dayNumber;
+    left._dayNumber >= right._dayNumber;
 
     /// <summary>
     /// Determines whether one specified DateOnly is earlier than another specified DateOnly.
@@ -188,7 +191,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left is earlier than right; otherwise, false.</returns>
     public static bool operator <(DateOnly left, DateOnly right) =>
-        left._dayNumber < right._dayNumber;
+    left._dayNumber < right._dayNumber;
 
     /// <summary>
     /// Determines whether one specified DateOnly represents a date that is the same as or earlier than another specified DateOnly.
@@ -197,7 +200,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="right">The second object to compare.</param>
     /// <returns>true if left is the same as or earlier than right; otherwise, false.</returns>
     public static bool operator <=(DateOnly left, DateOnly right) =>
-        left._dayNumber <= right._dayNumber;
+    left._dayNumber <= right._dayNumber;
 
     /// <summary>
     /// Deconstructs <see cref="DateOnly"/> by <see cref="Year"/>, <see cref="Month"/> and <see cref="Day"/>.
@@ -219,7 +222,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public DayMonthYearTuple Deconstruct() =>
-        (GetEquivalentDateTime().Day, GetEquivalentDateTime().Month, GetEquivalentDateTime().Year);
+    (GetEquivalentDateTime().Day, GetEquivalentDateTime().Month, GetEquivalentDateTime().Year);
 
     /// <summary>
     /// Returns a DateTime that is set to the date of this DateOnly instance and the time of specified input time.
@@ -227,11 +230,11 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="time">The time of the day.</param>
     /// <returns>The DateTime instance composed of the date of the current DateOnly instance and the time specified by the input time.</returns>
     public DateTime ToDateTime(TimeOnly time) =>
-        dt.AddHours(time.Hour)
-            .AddMinutes(time.Minute)
-            .AddSeconds(time.Second)
-            .AddMilliseconds(time.Millisecond)
-            .AddMicroseconds(time.Microsecond);
+    dt.AddHours(time.Hour)
+    .AddMinutes(time.Minute)
+    .AddSeconds(time.Second)
+    .AddMilliseconds(time.Millisecond)
+    .AddMicroseconds(time.Microsecond);
 
     /// <summary>
     /// Returns a DateTime instance with the specified input kind that is set to the date of this DateOnly instance and the time of specified input time.
@@ -240,12 +243,12 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="kind">One of the enumeration values that indicates whether ticks specifies a local time, Coordinated Universal Time (UTC), or neither.</param>
     /// <returns>The DateTime instance composed of the date of the current DateOnly instance and the time specified by the input time.</returns>
     public DateTime ToDateTime(TimeOnly time, DateTimeKind kind) =>
-        dt.AddHours(time.Hour)
-            .AddMinutes(time.Minute)
-            .AddSeconds(time.Second)
-            .AddMilliseconds(time.Millisecond)
-            .AddMicroseconds(time.Microsecond)
-            .OfKind(kind);
+    dt.AddHours(time.Hour)
+    .AddMinutes(time.Minute)
+    .AddSeconds(time.Second)
+    .AddMilliseconds(time.Millisecond)
+    .AddMicroseconds(time.Microsecond)
+    .OfKind(kind);
 
     /// <summary>
     /// Returns a DateOnly instance that is set to the date part of the specified dateTime.
@@ -294,7 +297,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="value">The object to compare to this instance.</param>
     /// <returns>true if value is an instance of DateOnly and equals the value of this instance; otherwise, false.</returns>
     public override bool Equals(object? value) =>
-        value is DateOnly dateOnly && _dayNumber == dateOnly._dayNumber;
+    value is DateOnly dateOnly && _dayNumber == dateOnly._dayNumber;
 
     /// <summary>
     /// Returns the hash code for this instance.
@@ -331,7 +334,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     /// <param name="provider">An object that supplies culture-specific formatting information.</param>
     /// <returns>A string representation of value of the current DateOnly object as specified by format.</returns>
     public string ToString(string? format, IFormatProvider? provider = null) =>
-        ToString(format, provider);
+    ToString(format, provider);
 
     /// <summary>
     /// Converts the value of the current DateOnly object to its equivalent string representation using the specified culture-specific format information.
@@ -350,7 +353,7 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
     }
 
     public static DateOnly Parse(string s, string format) =>
-        DateTime.ParseExact(s, format, null).Date;
+    DateTime.ParseExact(s, format, null).Date;
 }
 
 public static class DateTimeExtensions
@@ -361,12 +364,12 @@ public static class DateTimeExtensions
     }
 
     public static DateTime OfKind(this DateTime dateTime, DateTimeKind kind) =>
-        kind switch
-        {
-            DateTimeKind.Unspecified => DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified),
-            DateTimeKind.Utc => dateTime.ToUniversalTime(),
-            DateTimeKind.Local => dateTime.ToLocalTime(),
-            _ => dateTime
-        };
+    kind switch
+{
+    DateTimeKind.Unspecified => DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified),
+        DateTimeKind.Utc => dateTime.ToUniversalTime(),
+        DateTimeKind.Local => dateTime.ToLocalTime(),
+        _ => dateTime
+    };
 }
 #endif

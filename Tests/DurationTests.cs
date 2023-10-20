@@ -33,45 +33,45 @@ public class DurationTests : BaseTest
     }
 
     public static IEnumerable<object[]> DayTimeDurationTestData =>
-        new[]
+    new[]
+    {
+        new object[]
         {
-            new object[]
-            {
-                "-P12DT13H27M12S",
-                duration.FromMilliseconds(new duration(12, 13, 27, 12).TotalMilliseconds * -1)
-            },
-            new object[] { "-PT525600M", duration.FromMinutes(-525600) },
-            new object[] { "PT525600M", duration.FromMinutes(525600) }
-        };
+            "-P12DT13H27M12S",
+            duration.FromMilliseconds(new duration(12, 13, 27, 12).TotalMilliseconds * -1)
+        },
+        new object[] { "-PT525600M", duration.FromMinutes(-525600) },
+        new object[] { "PT525600M", duration.FromMinutes(525600) }
+    };
 
     public static IEnumerable<object[]> YearMonthDurationTestData =>
-        new[]
+    new[]
+    {
+        new object[]
         {
-            new object[]
-            {
-                "-P6500Y1M",
-                duration.FromDays(
-                    duration
-                        .FromDays(
-                            (6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth
-                        )
-                        .TotalDays * -1
+            "-P6500Y1M",
+            duration.FromDays(
+                duration
+                .FromDays(
+                    (6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth
                 )
-            },
-            new object[]
-            {
-                "P1Y3M",
-                duration.FromDays(
-                    YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth)
-                )
-            },
-            new object[]
-            {
-                "-P1Y3M",
-                duration.FromDays(
-                    -(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth))
-                )
-            },
-            new object[] { "P3M", duration.FromDays(90) }
-        };
+                .TotalDays * -1
+            )
+        },
+        new object[]
+        {
+            "P1Y3M",
+            duration.FromDays(
+                YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth)
+            )
+        },
+        new object[]
+        {
+            "-P1Y3M",
+            duration.FromDays(
+                -(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth))
+            )
+        },
+        new object[] { "P3M", duration.FromDays(90) }
+    };
 }

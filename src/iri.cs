@@ -32,10 +32,10 @@ using Validation = Vogen.Validation;
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct iri
     : IStringWithRegexValueObject<iri>,
-        IResourceIdentifierWithAuthorityHostPortQueryAndFragment
+      IResourceIdentifierWithAuthorityHostPortQueryAndFragment
 #if NET7_0_OR_GREATER
-        ,
-        IUriConvertible<iri>
+    ,
+      IUriConvertible<iri>
 #endif
 {
     public const string Description = "an internationalized resource identifier (iri)";
@@ -59,7 +59,9 @@ public readonly partial record struct iri
     public static iri Empty => From(EmptyStringValue);
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
     public readonly string PathAndQuery =>
-        $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+    $"{Path}{(!IsNullOrEmpty(Query) ? $"? {
+        Query
+    })" : "")}{(!IsNullOrEmpty(Fragment) ? $"# {Fragment}" : "")}";
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
@@ -92,10 +94,10 @@ public readonly partial record struct iri
 
     // public static iri Parse(string s) => From(s) with { OriginalString = s };
     public static iri Parse(string s, IFormatProvider? formatProvider = null) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    From(s) with
+    {
+        OriginalString = s
+    };
 
     public static Validation Validate(string value)
     {
@@ -141,39 +143,39 @@ public readonly partial record struct iri
     public static iri FromUri(Uri iri) => From(iri) with { OriginalString = iri.ToString() };
 
     public static iri From(string s) =>
-        Validate(s) == Validation.Ok ? new iri(s) with { OriginalString = s } : Empty;
+    Validate(s) == Validation.Ok ? new iri(s) with { OriginalString = s } : Empty;
 
     public static iri From(Uri iri) => new(iri);
 
     public static implicit operator System.Uri(iri i) =>
-        Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri)
-            ? uri
-            : new(EmptyStringValue);
+    Uri.TryCreate(i.BaseToString(), RelativeOrAbsolute, out var uri)
+    ? uri
+    : new(EmptyStringValue);
 
     public static implicit operator iri(string s) => From(s) with { OriginalString = s };
 
     public static implicit operator string(iri iri) => iri.ToString();
 
     public static bool operator ==(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) == 0;
+    left?.CompareTo(right) == 0;
 
     public static bool operator !=(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) != 0;
+    left?.CompareTo(right) != 0;
 
     public static bool operator <=(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) <= 0;
+    left?.CompareTo(right) <= 0;
 
     public static bool operator >=(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) >= 0;
+    left?.CompareTo(right) >= 0;
 
     public static bool operator <(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) < 0;
+    left?.CompareTo(right) < 0;
 
     public static bool operator >(iri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) > 0;
+    left?.CompareTo(right) > 0;
 
     public readonly int CompareTo(IResourceIdentifier other) =>
-        other is iri iri ? CompareTo(iri) : CompareTo(other.ToString());
+    other is iri iri ? CompareTo(iri) : CompareTo(other.ToString());
 
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
@@ -182,7 +184,7 @@ public readonly partial record struct iri
     private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out iri iri) =>
-        TryParse(s, out iri);
+    TryParse(s, out iri);
 
     public static bool TryParse(string? s, out iri iri)
     {
@@ -210,17 +212,17 @@ public readonly partial record struct iri
     public readonly bool Equals(iri? other) => Equals(other.ToString());
 
     public readonly int CompareTo(string? other) =>
-        Compare(ToString(), other, InvariantCultureIgnoreCase);
+    Compare(ToString(), other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(object? obj) =>
-        obj is iri iri
-            ? CompareTo(iri)
-            : obj is string str
-                ? CompareTo(str)
-                : throw new ArgumentException("Object is not a iri.");
+    obj is iri iri
+    ? CompareTo(iri)
+    : obj is string str
+    ? CompareTo(str)
+    : throw new ArgumentException("Object is not a iri.");
 
     public readonly bool Equals(string? other) =>
-        ToString().Equals(other, InvariantCultureIgnoreCase);
+    ToString().Equals(other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(iri other) => CompareTo(other.ToString());
 
@@ -304,13 +306,13 @@ public static class IriEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureIri(propertyExpression);
+    where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureIri(propertyExpression);
 
     public static void ConfigureIri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<iri.EfCoreValueConverter>();
+    where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<iri.EfCoreValueConverter>();
 }
 #endif

@@ -5,25 +5,29 @@ using Validation = global::Validation;
 #endif
 public interface IStringWithRegexValueObject<TSelf>
     : IComparable<TSelf>,
-        IComparable,
-        IEquatable<TSelf>,
-        IHaveAUri
+      IComparable,
+      IEquatable<TSelf>,
+      IHaveAUri
 #if NET7_0_OR_GREATER
-        ,
-        IParsable<TSelf>,
-        IUriConvertible<TSelf>
+    ,
+      IParsable<TSelf>,
+      IUriConvertible<TSelf>
 #endif
-    where TSelf : IStringWithRegexValueObject<TSelf>
+      where TSelf : IStringWithRegexValueObject<TSelf>
 {
     /// <summary>
     /// The value of the value object as a string.  Will be <see langword="null" /> or <see cref="string.Empty" /> iff <see cref="IsEmpty" /> == <see langword="true" />
     /// </summary>
-    string Value { get; }
+    string Value {
+        get;
+    }
 
     /// <summary>
     /// <see langword="true" /> if the value object is empty, <see langword="false" /> otherwise
     /// </summary>
-    bool IsEmpty { get; }
+    bool IsEmpty {
+        get;
+    }
 
 #if NET6_0_OR_GREATER
     /// <summary>
@@ -36,13 +40,17 @@ public interface IStringWithRegexValueObject<TSelf>
     /// Returns <inheritdoc cref="RegexString" path="/returns" />
     /// </summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
-    public abstract static string RegexString { get; }
+    public abstract static string RegexString {
+        get;
+    }
 
     /// <summary>
     /// Returns <inheritdoc cref="Description" path="/returns" />
     /// </summary>
     /// <returns>a description of the value object type</returns>
-    public abstract static string Description { get; }
+    public abstract static string Description {
+        get;
+    }
 
     /// <summary>
     /// Returns <inheritdoc cref="Parse" path="/returns" />
@@ -64,27 +72,37 @@ public interface IStringWithRegexValueObject<TSelf>
     /// Returns <inheritdoc cref="ExampleValue" path="/returns" />
     /// </summary>
     /// <returns>an example (archetypal) value for the value object</returns>
-    public abstract static TSelf ExampleValue { get; }
-    public static abstract TSelf Empty { get; }
+    public abstract static TSelf ExampleValue {
+        get;
+    }
+    public static abstract TSelf Empty {
+        get;
+    }
     // public abstract static Validation Validate(string value);
 #else
     /// <summary>
     /// Returns <inheritdoc cref="RegexString" path="/returns" />
     /// </summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
-    string RegexString { get; }
+    string RegexString {
+        get;
+    }
 
     /// <summary>
     /// Returns <inheritdoc cref="Description" path="/returns" />
     /// </summary>
     /// <returns>a description of the value object type</returns>
-    string Description { get; }
+    string Description {
+        get;
+    }
 
     /// <summary>
     /// Returns <inheritdoc cref="ExampleValue" path="/returns" />
     /// </summary>
     /// <returns>an example (archetypal) value for the value object</returns>
-    TSelf ExampleValue { get; }
+    TSelf ExampleValue {
+        get;
+    }
 
     /// <summary>
     /// Returns <inheritdoc cref="Regex" path="/returns" />
@@ -93,5 +111,7 @@ public interface IStringWithRegexValueObject<TSelf>
     Regex Regex();
 #endif
 
-    string OriginalString { get; }
+    string OriginalString {
+        get;
+    }
 }

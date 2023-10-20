@@ -112,8 +112,8 @@ internal sealed class RuntimeResourceSet : ResourceSet, IEnumerable
                 }
                 dataPosition = value.DataPosition;
                 return isString
-                    ? defaultReader.LoadString(dataPosition)
-                    : defaultReader.LoadObject(dataPosition);
+                       ? defaultReader.LoadString(dataPosition)
+                       : defaultReader.LoadObject(dataPosition);
             }
             dataPosition = defaultReader.FindPosForResource(key);
             if (dataPosition >= 0)

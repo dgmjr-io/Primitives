@@ -8,14 +8,14 @@ public class EmailAddressTests : PrimitivesTests<EmailAddress, EmailAddressTests
         : base(output) { }
 
     protected override string[][] InvalidValuesStrings =>
-        new[] { new[] { "not an email" }, new[] { "missing@" }, new[] { "@missing-domain" } };
+    new[] { new[] { "not an email" }, new[] { "missing@" }, new[] { "@missing-domain" } };
 
     protected override string[][] ValidValuesStrings =>
-        new[]
-        {
-            new[] { "test@example.com" },
-            new[] { "test123@subdomain.example.com" },
-            new[] { "david@dgmjr.io" },
-            new[] { "david.moore@dgmoore.com" }
-        };
+    new[]
+    {
+        new[] { "test@example.com" },
+        new[] { "test123@subdomain.example.com" },
+        new[] { "david@dgmjr.io" },
+        new[] { "david.moore@dgmoore.com" }
+    };
 }

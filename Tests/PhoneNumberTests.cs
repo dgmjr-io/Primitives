@@ -20,14 +20,14 @@ public class PhoneNumberTests : PrimitivesTests<PhoneNumber, PhoneNumberTests>
         : base(output) { }
 
     protected override string[][] InvalidValuesStrings =>
-        new[] { new[] { "not-a-phone-number" }, new[] { "+1+9172125869" } };
+    new[] { new[] { "not-a-phone-number" }, new[] { "+1+9172125869" } };
 
     protected override string[][] ValidValuesStrings =>
-        new[]
-        {
-            new[] { "+1 202-503-4657" },
-            new[] { "+12025034657" },
-            new[] { "+1 202.503.4657" },
-            new[] { "+1 202 503 4657" }
-        };
+    new[]
+    {
+        new[] { "+1 202-503-4657" },
+        new[] { "+12025034657" },
+        new[] { "+1 202.503.4657" },
+        new[] { "+1 202 503 4657" }
+    };
 }

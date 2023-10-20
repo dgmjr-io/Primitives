@@ -23,17 +23,17 @@ using Validation = global::Validation;
 #endif
 
 [ValueObject(
-    typeof(string),
-    conversions: Conversions.EfCoreValueConverter
-        | Conversions.SystemTextJson
-        | Conversions.TypeConverter
-)]
+     typeof(string),
+     conversions: Conversions.EfCoreValueConverter
+     | Conversions.SystemTextJson
+     | Conversions.TypeConverter
+ )]
 // [RegexDto(ObjectId.RegexString)]
 public readonly partial record struct ObjectId
     : IStringWithRegexValueObject<ObjectId>,
-        IComparable<ObjectId>,
-        IComparable,
-        IEquatable<ObjectId>
+      IComparable<ObjectId>,
+      IComparable,
+      IEquatable<ObjectId>
 {
     public const string Description =
         "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
@@ -63,7 +63,10 @@ public readonly partial record struct ObjectId
 
     public readonly bool IsNull => Value == EmptyValue;
     public readonly bool IsEmpty => Value == EmptyValue;
-    public string OriginalString { get; init; }
+    public string OriginalString {
+        get;
+        init;
+    }
 
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
@@ -71,10 +74,10 @@ public readonly partial record struct ObjectId
 
     public const string ExampleValueString = "abcdef0123456789abcdef01";
     public static ObjectId ExampleValue =>
-        From(ExampleValueString) with
-        {
-            OriginalString = ExampleValueString
-        };
+    From(ExampleValueString) with
+    {
+        OriginalString = ExampleValueString
+    };
 
 #if !NET6_0_OR_GREATER
     readonly Regex IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
@@ -87,12 +90,12 @@ public readonly partial record struct ObjectId
 #endif
 
     public static ObjectId Parse(string s) =>
-        TryParse(s, out var result)
-            ? result with
-            {
-                OriginalString = s
-            }
-            : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
+    TryParse(s, out var result)
+    ? result with
+    {
+        OriginalString = s
+    }
+    : throw new FormatException($"The string '{s}' is not a valid {nameof(ObjectId)}");
 
     public static bool TryParse(string s, out ObjectId result)
     {
@@ -111,9 +114,9 @@ public readonly partial record struct ObjectId
     // public override int GetHashCode() => _value.GetHashCode();
     // public int CompareTo(ObjectId other) => _value.CompareTo(other._value);
     public readonly int CompareTo(object? obj) =>
-        obj is ObjectId other
-            ? CompareTo(other)
-            : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
+    obj is ObjectId other
+    ? CompareTo(other)
+    : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
 
     // public override string ToString() => _value.ToString();
 
@@ -123,25 +126,25 @@ public readonly partial record struct ObjectId
             return Validation.Invalid($"The {nameof(ObjectId)} cannot be null.");
         else if (value?.Length != Length)
             return Validation.Invalid(
-                $"The length of the {nameof(ObjectId)} must be {Length} characters."
-            );
+                       $"The length of the {nameof(ObjectId)} must be {Length} characters."
+                   );
         else if (!Regex().IsMatch(value))
             return Validation.Invalid(
-                $"The {nameof(ObjectId)} must match the regular expression {RegexString}."
-            );
+                       $"The {nameof(ObjectId)} must match the regular expression {RegexString}."
+                   );
 
         return Validation.Ok;
     }
 
     public static ObjectId Parse(string s, IFormatProvider? provider) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    From(s) with
+    {
+        OriginalString = s
+    };
 
     public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result) =>
-        (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default)
-        != default;
+    (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default)
+    != default;
 }
 
 #if NETSTANDARD2_0_OR_GREATER

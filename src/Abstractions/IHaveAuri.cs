@@ -4,10 +4,15 @@ using System;
 
 public interface IHaveAuri
 {
-    uri Uri { get; }
+    uri Uri {
+        get;
+    }
 }
 
 public interface IHaveAWritableuri : IHaveAuri
 {
-    new uri Uri { get; set; }
+    new uri Uri {
+        get;
+        set;
+    }
 }

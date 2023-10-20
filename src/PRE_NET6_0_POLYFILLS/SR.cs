@@ -20,7 +20,7 @@ public static class SR
     private static ResourceManager s_resourceManager;
 
     public static ResourceManager ResourceManager =>
-        s_resourceManager ?? (s_resourceManager = new ResourceManager(typeof(SR)));
+    s_resourceManager ?? (s_resourceManager = new ResourceManager(typeof(SR)));
 
     private static bool UsingResourceKeys() => true;
 

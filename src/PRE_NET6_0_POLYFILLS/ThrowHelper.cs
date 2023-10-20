@@ -664,9 +664,9 @@ internal static class ThrowHelper
     )
     {
         return new ArgumentOutOfRangeException(
-            GetArgumentName(argument),
-            GetResourceString(resource)
-        );
+                   GetArgumentName(argument),
+                   GetResourceString(resource)
+               );
     }
 
     private static ArgumentException GetArgumentException(
@@ -684,16 +684,16 @@ internal static class ThrowHelper
     )
     {
         return new ArgumentOutOfRangeException(
-            GetArgumentName(argument) + "[" + paramNumber + "]",
-            GetResourceString(resource)
-        );
+                   GetArgumentName(argument) + "[" + paramNumber + "]",
+                   GetResourceString(resource)
+               );
     }
 
     private static InvalidOperationException GetInvalidOperationException_EnumCurrent(int index)
     {
         return new InvalidOperationException(
-            (index < 0) ? SR.InvalidOperation_EnumNotStarted : SR.InvalidOperation_EnumEnded
-        );
+                   (index < 0) ? SR.InvalidOperation_EnumNotStarted : SR.InvalidOperation_EnumEnded
+               );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -711,225 +711,225 @@ internal static class ThrowHelper
     private static string GetArgumentName(ExceptionArgument argument)
     {
         return argument switch
-        {
-            ExceptionArgument.obj => "obj",
-            ExceptionArgument.dictionary => "dictionary",
-            ExceptionArgument.array => "array",
-            ExceptionArgument.info => "info",
-            ExceptionArgument.key => "key",
-            ExceptionArgument.text => "text",
-            ExceptionArgument.values => "values",
-            ExceptionArgument.value => "value",
-            ExceptionArgument.startIndex => "startIndex",
-            ExceptionArgument.task => "task",
-            ExceptionArgument.bytes => "bytes",
-            ExceptionArgument.byteIndex => "byteIndex",
-            ExceptionArgument.byteCount => "byteCount",
-            ExceptionArgument.ch => "ch",
-            ExceptionArgument.chars => "chars",
-            ExceptionArgument.charIndex => "charIndex",
-            ExceptionArgument.charCount => "charCount",
-            ExceptionArgument.s => "s",
-            ExceptionArgument.input => "input",
-            ExceptionArgument.ownedMemory => "ownedMemory",
-            ExceptionArgument.list => "list",
-            ExceptionArgument.index => "index",
-            ExceptionArgument.capacity => "capacity",
-            ExceptionArgument.collection => "collection",
-            ExceptionArgument.item => "item",
-            ExceptionArgument.converter => "converter",
-            ExceptionArgument.match => "match",
-            ExceptionArgument.count => "count",
-            ExceptionArgument.action => "action",
-            ExceptionArgument.comparison => "comparison",
-            ExceptionArgument.exceptions => "exceptions",
-            ExceptionArgument.exception => "exception",
-            ExceptionArgument.pointer => "pointer",
-            ExceptionArgument.start => "start",
-            ExceptionArgument.format => "format",
-            ExceptionArgument.formats => "formats",
-            ExceptionArgument.culture => "culture",
-            ExceptionArgument.comparer => "comparer",
-            ExceptionArgument.comparable => "comparable",
-            ExceptionArgument.source => "source",
-            ExceptionArgument.length => "length",
-            ExceptionArgument.comparisonType => "comparisonType",
-            ExceptionArgument.manager => "manager",
-            ExceptionArgument.sourceBytesToCopy => "sourceBytesToCopy",
-            ExceptionArgument.callBack => "callBack",
-            ExceptionArgument.creationOptions => "creationOptions",
-            ExceptionArgument.function => "function",
-            ExceptionArgument.scheduler => "scheduler",
-            ExceptionArgument.continuation => "continuation",
-            ExceptionArgument.continuationAction => "continuationAction",
-            ExceptionArgument.continuationFunction => "continuationFunction",
-            ExceptionArgument.tasks => "tasks",
-            ExceptionArgument.asyncResult => "asyncResult",
-            ExceptionArgument.beginMethod => "beginMethod",
-            ExceptionArgument.endMethod => "endMethod",
-            ExceptionArgument.endFunction => "endFunction",
-            ExceptionArgument.cancellationToken => "cancellationToken",
-            ExceptionArgument.continuationOptions => "continuationOptions",
-            ExceptionArgument.delay => "delay",
-            ExceptionArgument.millisecondsDelay => "millisecondsDelay",
-            ExceptionArgument.millisecondsTimeout => "millisecondsTimeout",
-            ExceptionArgument.stateMachine => "stateMachine",
-            ExceptionArgument.timeout => "timeout",
-            ExceptionArgument.type => "type",
-            ExceptionArgument.sourceIndex => "sourceIndex",
-            ExceptionArgument.sourceArray => "sourceArray",
-            ExceptionArgument.destinationIndex => "destinationIndex",
-            ExceptionArgument.destinationArray => "destinationArray",
-            ExceptionArgument.pHandle => "pHandle",
-            ExceptionArgument.handle => "handle",
-            ExceptionArgument.other => "other",
-            ExceptionArgument.newSize => "newSize",
-            ExceptionArgument.lowerBounds => "lowerBounds",
-            ExceptionArgument.lengths => "lengths",
-            ExceptionArgument.len => "len",
-            ExceptionArgument.keys => "keys",
-            ExceptionArgument.indices => "indices",
-            ExceptionArgument.index1 => "index1",
-            ExceptionArgument.index2 => "index2",
-            ExceptionArgument.index3 => "index3",
-            ExceptionArgument.length1 => "length1",
-            ExceptionArgument.length2 => "length2",
-            ExceptionArgument.length3 => "length3",
-            ExceptionArgument.endIndex => "endIndex",
-            ExceptionArgument.elementType => "elementType",
-            ExceptionArgument.arrayIndex => "arrayIndex",
-            ExceptionArgument.year => "year",
-            ExceptionArgument.codePoint => "codePoint",
-            ExceptionArgument.str => "str",
-            ExceptionArgument.options => "options",
-            ExceptionArgument.prefix => "prefix",
-            ExceptionArgument.suffix => "suffix",
-            ExceptionArgument.buffer => "buffer",
-            ExceptionArgument.buffers => "buffers",
-            ExceptionArgument.offset => "offset",
-            ExceptionArgument.stream => "stream",
-            ExceptionArgument.anyOf => "anyOf",
-            ExceptionArgument.overlapped => "overlapped",
-            ExceptionArgument.minimumBytes => "minimumBytes",
-            _ => "",
-        };
-    }
+    {
+        ExceptionArgument.obj => "obj",
+        ExceptionArgument.dictionary => "dictionary",
+        ExceptionArgument.array => "array",
+        ExceptionArgument.info => "info",
+        ExceptionArgument.key => "key",
+        ExceptionArgument.text => "text",
+        ExceptionArgument.values => "values",
+        ExceptionArgument.value => "value",
+        ExceptionArgument.startIndex => "startIndex",
+        ExceptionArgument.task => "task",
+        ExceptionArgument.bytes => "bytes",
+        ExceptionArgument.byteIndex => "byteIndex",
+        ExceptionArgument.byteCount => "byteCount",
+        ExceptionArgument.ch => "ch",
+        ExceptionArgument.chars => "chars",
+        ExceptionArgument.charIndex => "charIndex",
+        ExceptionArgument.charCount => "charCount",
+        ExceptionArgument.s => "s",
+        ExceptionArgument.input => "input",
+        ExceptionArgument.ownedMemory => "ownedMemory",
+        ExceptionArgument.list => "list",
+        ExceptionArgument.index => "index",
+        ExceptionArgument.capacity => "capacity",
+        ExceptionArgument.collection => "collection",
+        ExceptionArgument.item => "item",
+        ExceptionArgument.converter => "converter",
+        ExceptionArgument.match => "match",
+        ExceptionArgument.count => "count",
+        ExceptionArgument.action => "action",
+        ExceptionArgument.comparison => "comparison",
+        ExceptionArgument.exceptions => "exceptions",
+        ExceptionArgument.exception => "exception",
+        ExceptionArgument.pointer => "pointer",
+        ExceptionArgument.start => "start",
+        ExceptionArgument.format => "format",
+        ExceptionArgument.formats => "formats",
+        ExceptionArgument.culture => "culture",
+        ExceptionArgument.comparer => "comparer",
+        ExceptionArgument.comparable => "comparable",
+        ExceptionArgument.source => "source",
+        ExceptionArgument.length => "length",
+        ExceptionArgument.comparisonType => "comparisonType",
+        ExceptionArgument.manager => "manager",
+        ExceptionArgument.sourceBytesToCopy => "sourceBytesToCopy",
+        ExceptionArgument.callBack => "callBack",
+        ExceptionArgument.creationOptions => "creationOptions",
+        ExceptionArgument.function => "function",
+        ExceptionArgument.scheduler => "scheduler",
+        ExceptionArgument.continuation => "continuation",
+        ExceptionArgument.continuationAction => "continuationAction",
+        ExceptionArgument.continuationFunction => "continuationFunction",
+        ExceptionArgument.tasks => "tasks",
+        ExceptionArgument.asyncResult => "asyncResult",
+        ExceptionArgument.beginMethod => "beginMethod",
+        ExceptionArgument.endMethod => "endMethod",
+        ExceptionArgument.endFunction => "endFunction",
+        ExceptionArgument.cancellationToken => "cancellationToken",
+        ExceptionArgument.continuationOptions => "continuationOptions",
+        ExceptionArgument.delay => "delay",
+        ExceptionArgument.millisecondsDelay => "millisecondsDelay",
+        ExceptionArgument.millisecondsTimeout => "millisecondsTimeout",
+        ExceptionArgument.stateMachine => "stateMachine",
+        ExceptionArgument.timeout => "timeout",
+        ExceptionArgument.type => "type",
+        ExceptionArgument.sourceIndex => "sourceIndex",
+        ExceptionArgument.sourceArray => "sourceArray",
+        ExceptionArgument.destinationIndex => "destinationIndex",
+        ExceptionArgument.destinationArray => "destinationArray",
+        ExceptionArgument.pHandle => "pHandle",
+        ExceptionArgument.handle => "handle",
+        ExceptionArgument.other => "other",
+        ExceptionArgument.newSize => "newSize",
+        ExceptionArgument.lowerBounds => "lowerBounds",
+        ExceptionArgument.lengths => "lengths",
+        ExceptionArgument.len => "len",
+        ExceptionArgument.keys => "keys",
+        ExceptionArgument.indices => "indices",
+        ExceptionArgument.index1 => "index1",
+        ExceptionArgument.index2 => "index2",
+        ExceptionArgument.index3 => "index3",
+        ExceptionArgument.length1 => "length1",
+        ExceptionArgument.length2 => "length2",
+        ExceptionArgument.length3 => "length3",
+        ExceptionArgument.endIndex => "endIndex",
+        ExceptionArgument.elementType => "elementType",
+        ExceptionArgument.arrayIndex => "arrayIndex",
+        ExceptionArgument.year => "year",
+        ExceptionArgument.codePoint => "codePoint",
+        ExceptionArgument.str => "str",
+        ExceptionArgument.options => "options",
+        ExceptionArgument.prefix => "prefix",
+        ExceptionArgument.suffix => "suffix",
+        ExceptionArgument.buffer => "buffer",
+        ExceptionArgument.buffers => "buffers",
+        ExceptionArgument.offset => "offset",
+        ExceptionArgument.stream => "stream",
+        ExceptionArgument.anyOf => "anyOf",
+        ExceptionArgument.overlapped => "overlapped",
+        ExceptionArgument.minimumBytes => "minimumBytes",
+        _ => "",
+    };
+}
 
-    private static string GetResourceString(ExceptionResource resource)
+private static string GetResourceString(ExceptionResource resource)
     {
         return resource switch
-        {
-            ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual
-                => SR.ArgumentOutOfRange_IndexMustBeLessOrEqual,
-            ExceptionResource.ArgumentOutOfRange_IndexMustBeLess
-                => SR.ArgumentOutOfRange_IndexMustBeLess,
-            ExceptionResource.ArgumentOutOfRange_IndexCount => SR.ArgumentOutOfRange_IndexCount,
-            ExceptionResource.ArgumentOutOfRange_IndexCountBuffer
-                => SR.ArgumentOutOfRange_IndexCountBuffer,
-            ExceptionResource.ArgumentOutOfRange_Count => SR.ArgumentOutOfRange_Count,
-            ExceptionResource.ArgumentOutOfRange_Year => SR.ArgumentOutOfRange_Year,
-            ExceptionResource.Arg_ArrayPlusOffTooSmall => SR.Arg_ArrayPlusOffTooSmall,
-            ExceptionResource.Arg_ByteArrayTooSmallForValue => SR.Arg_ByteArrayTooSmallForValue,
-            ExceptionResource.NotSupported_ReadOnlyCollection => SR.NotSupported_ReadOnlyCollection,
-            ExceptionResource.Arg_RankMultiDimNotSupported => SR.Arg_RankMultiDimNotSupported,
-            ExceptionResource.Arg_NonZeroLowerBound => SR.Arg_NonZeroLowerBound,
-            ExceptionResource.ArgumentOutOfRange_GetCharCountOverflow
-                => SR.ArgumentOutOfRange_GetCharCountOverflow,
-            ExceptionResource.ArgumentOutOfRange_ListInsert => SR.ArgumentOutOfRange_ListInsert,
-            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
-                => SR.ArgumentOutOfRange_NeedNonNegNum,
-            ExceptionResource.ArgumentOutOfRange_SmallCapacity
-                => SR.ArgumentOutOfRange_SmallCapacity,
-            ExceptionResource.Argument_InvalidOffLen => SR.Argument_InvalidOffLen,
-            ExceptionResource.Argument_CannotExtractScalar => SR.Argument_CannotExtractScalar,
-            ExceptionResource.ArgumentOutOfRange_BiggerThanCollection
-                => SR.ArgumentOutOfRange_BiggerThanCollection,
-            ExceptionResource.Serialization_MissingKeys => SR.Serialization_MissingKeys,
-            ExceptionResource.Serialization_NullKey => SR.Serialization_NullKey,
-            ExceptionResource.NotSupported_KeyCollectionSet => SR.NotSupported_KeyCollectionSet,
-            ExceptionResource.NotSupported_ValueCollectionSet => SR.NotSupported_ValueCollectionSet,
-            ExceptionResource.InvalidOperation_NullArray => SR.InvalidOperation_NullArray,
-            ExceptionResource.TaskT_TransitionToFinal_AlreadyCompleted
-                => SR.TaskT_TransitionToFinal_AlreadyCompleted,
-            ExceptionResource.TaskCompletionSourceT_TrySetException_NullException
-                => SR.TaskCompletionSourceT_TrySetException_NullException,
-            ExceptionResource.TaskCompletionSourceT_TrySetException_NoExceptions
-                => SR.TaskCompletionSourceT_TrySetException_NoExceptions,
-            ExceptionResource.NotSupported_StringComparison => SR.NotSupported_StringComparison,
-            ExceptionResource.ConcurrentCollection_SyncRoot_NotSupported
-                => SR.ConcurrentCollection_SyncRoot_NotSupported,
-            ExceptionResource.Task_MultiTaskContinuation_NullTask
-                => SR.Task_MultiTaskContinuation_NullTask,
-            ExceptionResource.InvalidOperation_WrongAsyncResultOrEndCalledMultiple
-                => SR.InvalidOperation_WrongAsyncResultOrEndCalledMultiple,
-            ExceptionResource.Task_MultiTaskContinuation_EmptyTaskList
-                => SR.Task_MultiTaskContinuation_EmptyTaskList,
-            ExceptionResource.Task_Start_TaskCompleted => SR.Task_Start_TaskCompleted,
-            ExceptionResource.Task_Start_Promise => SR.Task_Start_Promise,
-            ExceptionResource.Task_Start_ContinuationTask => SR.Task_Start_ContinuationTask,
-            ExceptionResource.Task_Start_AlreadyStarted => SR.Task_Start_AlreadyStarted,
-            ExceptionResource.Task_RunSynchronously_Continuation
-                => SR.Task_RunSynchronously_Continuation,
-            ExceptionResource.Task_RunSynchronously_Promise => SR.Task_RunSynchronously_Promise,
-            ExceptionResource.Task_RunSynchronously_TaskCompleted
-                => SR.Task_RunSynchronously_TaskCompleted,
-            ExceptionResource.Task_RunSynchronously_AlreadyStarted
-                => SR.Task_RunSynchronously_AlreadyStarted,
-            ExceptionResource.AsyncMethodBuilder_InstanceNotInitialized
-                => SR.AsyncMethodBuilder_InstanceNotInitialized,
-            ExceptionResource.Task_ContinueWith_ESandLR => SR.Task_ContinueWith_ESandLR,
-            ExceptionResource.Task_ContinueWith_NotOnAnything => SR.Task_ContinueWith_NotOnAnything,
-            ExceptionResource.Task_InvalidTimerTimeSpan => SR.Task_InvalidTimerTimeSpan,
-            ExceptionResource.Task_Delay_InvalidMillisecondsDelay
-                => SR.Task_Delay_InvalidMillisecondsDelay,
-            ExceptionResource.Task_Dispose_NotCompleted => SR.Task_Dispose_NotCompleted,
-            ExceptionResource.Task_ThrowIfDisposed => SR.Task_ThrowIfDisposed,
-            ExceptionResource.Task_WaitMulti_NullTask => SR.Task_WaitMulti_NullTask,
-            ExceptionResource.ArgumentException_OtherNotArrayOfCorrectLength
-                => SR.ArgumentException_OtherNotArrayOfCorrectLength,
-            ExceptionResource.ArgumentNull_Array => SR.ArgumentNull_Array,
-            ExceptionResource.ArgumentNull_SafeHandle => SR.ArgumentNull_SafeHandle,
-            ExceptionResource.ArgumentOutOfRange_EndIndexStartIndex
-                => SR.ArgumentOutOfRange_EndIndexStartIndex,
-            ExceptionResource.ArgumentOutOfRange_Enum => SR.ArgumentOutOfRange_Enum,
-            ExceptionResource.ArgumentOutOfRange_HugeArrayNotSupported
-                => SR.ArgumentOutOfRange_HugeArrayNotSupported,
-            ExceptionResource.Argument_AddingDuplicate => SR.Argument_AddingDuplicate,
-            ExceptionResource.Argument_InvalidArgumentForComparison
-                => SR.Argument_InvalidArgumentForComparison,
-            ExceptionResource.Arg_LowerBoundsMustMatch => SR.Arg_LowerBoundsMustMatch,
-            ExceptionResource.Arg_MustBeType => SR.Arg_MustBeType,
-            ExceptionResource.Arg_Need1DArray => SR.Arg_Need1DArray,
-            ExceptionResource.Arg_Need2DArray => SR.Arg_Need2DArray,
-            ExceptionResource.Arg_Need3DArray => SR.Arg_Need3DArray,
-            ExceptionResource.Arg_NeedAtLeast1Rank => SR.Arg_NeedAtLeast1Rank,
-            ExceptionResource.Arg_RankIndices => SR.Arg_RankIndices,
-            ExceptionResource.Arg_RanksAndBounds => SR.Arg_RanksAndBounds,
-            ExceptionResource.InvalidOperation_IComparerFailed
-                => SR.InvalidOperation_IComparerFailed,
-            ExceptionResource.NotSupported_FixedSizeCollection
-                => SR.NotSupported_FixedSizeCollection,
-            ExceptionResource.Rank_MultiDimNotSupported => SR.Rank_MultiDimNotSupported,
-            ExceptionResource.Arg_TypeNotSupported => SR.Arg_TypeNotSupported,
-            ExceptionResource.Argument_SpansMustHaveSameLength
-                => SR.Argument_SpansMustHaveSameLength,
-            ExceptionResource.Argument_InvalidFlag => SR.Argument_InvalidFlag,
-            ExceptionResource.CancellationTokenSource_Disposed
-                => SR.CancellationTokenSource_Disposed,
-            ExceptionResource.Argument_AlignmentMustBePow2 => SR.Argument_AlignmentMustBePow2,
-            ExceptionResource.ArgumentOutOfRange_NotGreaterThanBufferLength
-                => SR.ArgumentOutOfRange_NotGreaterThanBufferLength,
-            ExceptionResource.InvalidOperation_SpanOverlappedOperation
-                => SR.InvalidOperation_SpanOverlappedOperation,
-            ExceptionResource.InvalidOperation_TimeProviderNullLocalTimeZone
-                => SR.InvalidOperation_TimeProviderNullLocalTimeZone,
-            ExceptionResource.InvalidOperation_TimeProviderInvalidTimestampFrequency
-                => SR.InvalidOperation_TimeProviderInvalidTimestampFrequency,
-            ExceptionResource.Format_UnexpectedClosingBrace => SR.Format_UnexpectedClosingBrace,
-            ExceptionResource.Format_UnclosedFormatItem => SR.Format_UnclosedFormatItem,
-            ExceptionResource.Format_ExpectedAsciiDigit => SR.Format_ExpectedAsciiDigit,
-            _ => "",
-        };
-    }
+    {
+        ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual
+        => SR.ArgumentOutOfRange_IndexMustBeLessOrEqual,
+        ExceptionResource.ArgumentOutOfRange_IndexMustBeLess
+        => SR.ArgumentOutOfRange_IndexMustBeLess,
+        ExceptionResource.ArgumentOutOfRange_IndexCount => SR.ArgumentOutOfRange_IndexCount,
+        ExceptionResource.ArgumentOutOfRange_IndexCountBuffer
+        => SR.ArgumentOutOfRange_IndexCountBuffer,
+        ExceptionResource.ArgumentOutOfRange_Count => SR.ArgumentOutOfRange_Count,
+        ExceptionResource.ArgumentOutOfRange_Year => SR.ArgumentOutOfRange_Year,
+        ExceptionResource.Arg_ArrayPlusOffTooSmall => SR.Arg_ArrayPlusOffTooSmall,
+        ExceptionResource.Arg_ByteArrayTooSmallForValue => SR.Arg_ByteArrayTooSmallForValue,
+        ExceptionResource.NotSupported_ReadOnlyCollection => SR.NotSupported_ReadOnlyCollection,
+        ExceptionResource.Arg_RankMultiDimNotSupported => SR.Arg_RankMultiDimNotSupported,
+        ExceptionResource.Arg_NonZeroLowerBound => SR.Arg_NonZeroLowerBound,
+        ExceptionResource.ArgumentOutOfRange_GetCharCountOverflow
+        => SR.ArgumentOutOfRange_GetCharCountOverflow,
+        ExceptionResource.ArgumentOutOfRange_ListInsert => SR.ArgumentOutOfRange_ListInsert,
+        ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
+        => SR.ArgumentOutOfRange_NeedNonNegNum,
+        ExceptionResource.ArgumentOutOfRange_SmallCapacity
+        => SR.ArgumentOutOfRange_SmallCapacity,
+        ExceptionResource.Argument_InvalidOffLen => SR.Argument_InvalidOffLen,
+        ExceptionResource.Argument_CannotExtractScalar => SR.Argument_CannotExtractScalar,
+        ExceptionResource.ArgumentOutOfRange_BiggerThanCollection
+        => SR.ArgumentOutOfRange_BiggerThanCollection,
+        ExceptionResource.Serialization_MissingKeys => SR.Serialization_MissingKeys,
+        ExceptionResource.Serialization_NullKey => SR.Serialization_NullKey,
+        ExceptionResource.NotSupported_KeyCollectionSet => SR.NotSupported_KeyCollectionSet,
+        ExceptionResource.NotSupported_ValueCollectionSet => SR.NotSupported_ValueCollectionSet,
+        ExceptionResource.InvalidOperation_NullArray => SR.InvalidOperation_NullArray,
+        ExceptionResource.TaskT_TransitionToFinal_AlreadyCompleted
+        => SR.TaskT_TransitionToFinal_AlreadyCompleted,
+        ExceptionResource.TaskCompletionSourceT_TrySetException_NullException
+        => SR.TaskCompletionSourceT_TrySetException_NullException,
+        ExceptionResource.TaskCompletionSourceT_TrySetException_NoExceptions
+        => SR.TaskCompletionSourceT_TrySetException_NoExceptions,
+        ExceptionResource.NotSupported_StringComparison => SR.NotSupported_StringComparison,
+        ExceptionResource.ConcurrentCollection_SyncRoot_NotSupported
+        => SR.ConcurrentCollection_SyncRoot_NotSupported,
+        ExceptionResource.Task_MultiTaskContinuation_NullTask
+        => SR.Task_MultiTaskContinuation_NullTask,
+        ExceptionResource.InvalidOperation_WrongAsyncResultOrEndCalledMultiple
+        => SR.InvalidOperation_WrongAsyncResultOrEndCalledMultiple,
+        ExceptionResource.Task_MultiTaskContinuation_EmptyTaskList
+        => SR.Task_MultiTaskContinuation_EmptyTaskList,
+        ExceptionResource.Task_Start_TaskCompleted => SR.Task_Start_TaskCompleted,
+        ExceptionResource.Task_Start_Promise => SR.Task_Start_Promise,
+        ExceptionResource.Task_Start_ContinuationTask => SR.Task_Start_ContinuationTask,
+        ExceptionResource.Task_Start_AlreadyStarted => SR.Task_Start_AlreadyStarted,
+        ExceptionResource.Task_RunSynchronously_Continuation
+        => SR.Task_RunSynchronously_Continuation,
+        ExceptionResource.Task_RunSynchronously_Promise => SR.Task_RunSynchronously_Promise,
+        ExceptionResource.Task_RunSynchronously_TaskCompleted
+        => SR.Task_RunSynchronously_TaskCompleted,
+        ExceptionResource.Task_RunSynchronously_AlreadyStarted
+        => SR.Task_RunSynchronously_AlreadyStarted,
+        ExceptionResource.AsyncMethodBuilder_InstanceNotInitialized
+        => SR.AsyncMethodBuilder_InstanceNotInitialized,
+        ExceptionResource.Task_ContinueWith_ESandLR => SR.Task_ContinueWith_ESandLR,
+        ExceptionResource.Task_ContinueWith_NotOnAnything => SR.Task_ContinueWith_NotOnAnything,
+        ExceptionResource.Task_InvalidTimerTimeSpan => SR.Task_InvalidTimerTimeSpan,
+        ExceptionResource.Task_Delay_InvalidMillisecondsDelay
+        => SR.Task_Delay_InvalidMillisecondsDelay,
+        ExceptionResource.Task_Dispose_NotCompleted => SR.Task_Dispose_NotCompleted,
+        ExceptionResource.Task_ThrowIfDisposed => SR.Task_ThrowIfDisposed,
+        ExceptionResource.Task_WaitMulti_NullTask => SR.Task_WaitMulti_NullTask,
+        ExceptionResource.ArgumentException_OtherNotArrayOfCorrectLength
+        => SR.ArgumentException_OtherNotArrayOfCorrectLength,
+        ExceptionResource.ArgumentNull_Array => SR.ArgumentNull_Array,
+        ExceptionResource.ArgumentNull_SafeHandle => SR.ArgumentNull_SafeHandle,
+        ExceptionResource.ArgumentOutOfRange_EndIndexStartIndex
+        => SR.ArgumentOutOfRange_EndIndexStartIndex,
+        ExceptionResource.ArgumentOutOfRange_Enum => SR.ArgumentOutOfRange_Enum,
+        ExceptionResource.ArgumentOutOfRange_HugeArrayNotSupported
+        => SR.ArgumentOutOfRange_HugeArrayNotSupported,
+        ExceptionResource.Argument_AddingDuplicate => SR.Argument_AddingDuplicate,
+        ExceptionResource.Argument_InvalidArgumentForComparison
+        => SR.Argument_InvalidArgumentForComparison,
+        ExceptionResource.Arg_LowerBoundsMustMatch => SR.Arg_LowerBoundsMustMatch,
+        ExceptionResource.Arg_MustBeType => SR.Arg_MustBeType,
+        ExceptionResource.Arg_Need1DArray => SR.Arg_Need1DArray,
+        ExceptionResource.Arg_Need2DArray => SR.Arg_Need2DArray,
+        ExceptionResource.Arg_Need3DArray => SR.Arg_Need3DArray,
+        ExceptionResource.Arg_NeedAtLeast1Rank => SR.Arg_NeedAtLeast1Rank,
+        ExceptionResource.Arg_RankIndices => SR.Arg_RankIndices,
+        ExceptionResource.Arg_RanksAndBounds => SR.Arg_RanksAndBounds,
+        ExceptionResource.InvalidOperation_IComparerFailed
+        => SR.InvalidOperation_IComparerFailed,
+        ExceptionResource.NotSupported_FixedSizeCollection
+        => SR.NotSupported_FixedSizeCollection,
+        ExceptionResource.Rank_MultiDimNotSupported => SR.Rank_MultiDimNotSupported,
+        ExceptionResource.Arg_TypeNotSupported => SR.Arg_TypeNotSupported,
+        ExceptionResource.Argument_SpansMustHaveSameLength
+        => SR.Argument_SpansMustHaveSameLength,
+        ExceptionResource.Argument_InvalidFlag => SR.Argument_InvalidFlag,
+        ExceptionResource.CancellationTokenSource_Disposed
+        => SR.CancellationTokenSource_Disposed,
+        ExceptionResource.Argument_AlignmentMustBePow2 => SR.Argument_AlignmentMustBePow2,
+        ExceptionResource.ArgumentOutOfRange_NotGreaterThanBufferLength
+        => SR.ArgumentOutOfRange_NotGreaterThanBufferLength,
+        ExceptionResource.InvalidOperation_SpanOverlappedOperation
+        => SR.InvalidOperation_SpanOverlappedOperation,
+        ExceptionResource.InvalidOperation_TimeProviderNullLocalTimeZone
+        => SR.InvalidOperation_TimeProviderNullLocalTimeZone,
+        ExceptionResource.InvalidOperation_TimeProviderInvalidTimestampFrequency
+        => SR.InvalidOperation_TimeProviderInvalidTimestampFrequency,
+        ExceptionResource.Format_UnexpectedClosingBrace => SR.Format_UnexpectedClosingBrace,
+        ExceptionResource.Format_UnclosedFormatItem => SR.Format_UnclosedFormatItem,
+        ExceptionResource.Format_ExpectedAsciiDigit => SR.Format_ExpectedAsciiDigit,
+        _ => "",
+    };
+}
 }
 #endif

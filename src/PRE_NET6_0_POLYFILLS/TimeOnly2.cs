@@ -180,12 +180,12 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
     public string ToLongTimeString() => Format("HH:MM:ss.ffff");
 
     public static implicit operator TimeOnly(TimeSpan time) =>
-        new TimeOnly(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+    new TimeOnly(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
 
     public static TimeOnly Parse(string s, string format = "HH:MM:ss.ffff") =>
-        DateTime.ParseExact(s, format, null, Globalization.DateTimeStyles.None).TimeOfDay;
+    DateTime.ParseExact(s, format, null, Globalization.DateTimeStyles.None).TimeOfDay;
 
     public static TimeOnly Parse(string s, IFormatProvider provider) =>
-        DateTime.Parse(s, provider).TimeOfDay;
+    DateTime.Parse(s, provider).TimeOfDay;
 }
 #endif

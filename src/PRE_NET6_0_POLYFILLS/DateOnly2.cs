@@ -89,20 +89,20 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
         if (format.SequenceEqual("D".AsSpan()))
         {
             return dt.ToString("D", formatProvider)
-                .AsSpan()
-                .TryCopyTo(destination, out charsWritten);
+                   .AsSpan()
+                   .TryCopyTo(destination, out charsWritten);
         }
         if (format.SequenceEqual("O".AsSpan()))
         {
             return dt.ToString("yyyy-MM-dd", formatProvider)
-                .AsSpan()
-                .TryCopyTo(destination, out charsWritten);
+                   .AsSpan()
+                   .TryCopyTo(destination, out charsWritten);
         }
         if (format.SequenceEqual("R".AsSpan()))
         {
             return dt.ToString("ddd, dd MMM yyyy", formatProvider)
-                .AsSpan()
-                .TryCopyTo(destination, out charsWritten);
+                   .AsSpan()
+                   .TryCopyTo(destination, out charsWritten);
         }
 
         charsWritten = 0;
@@ -132,23 +132,23 @@ public readonly partial struct DateOnly : IComparable, IComparable<DateOnly>, IE
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("D")))
         {
             return Encoding.UTF8
-                .GetBytes(dt.ToString("D", formatProvider))
-                .AsSpan()
-                .TryCopyTo(destination, out bytesWritten);
+                   .GetBytes(dt.ToString("D", formatProvider))
+                   .AsSpan()
+                   .TryCopyTo(destination, out bytesWritten);
         }
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("O")))
         {
             return Encoding.UTF8
-                .GetBytes(dt.ToString("yyyy-MM-dd", formatProvider))
-                .AsSpan()
-                .TryCopyTo(destination, out bytesWritten);
+                   .GetBytes(dt.ToString("yyyy-MM-dd", formatProvider))
+                   .AsSpan()
+                   .TryCopyTo(destination, out bytesWritten);
         }
         else if (format.SequenceEqual(Encoding.UTF8.GetBytes("R")))
         {
             return Encoding.UTF8
-                .GetBytes(dt.ToString("ddd, dd MMM yyyy", formatProvider))
-                .AsSpan()
-                .TryCopyTo(destination, out bytesWritten);
+                   .GetBytes(dt.ToString("ddd, dd MMM yyyy", formatProvider))
+                   .AsSpan()
+                   .TryCopyTo(destination, out bytesWritten);
         }
 
         bytesWritten = 0;
@@ -210,14 +210,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (char* pFrom = @from)
-            fixed (byte* pDest = destination)
-            {
-                var pFromByte = (byte*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (byte* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (byte*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -235,14 +235,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (byte* pFrom = @from)
-            fixed (char* pDest = destination)
-            {
-                var pFromByte = (char*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (char* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (char*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -260,14 +260,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (char* pFrom = @from)
-            fixed (char* pDest = destination)
-            {
-                var pFromByte = (char*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (char* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (char*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -285,14 +285,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (byte* pFrom = @from)
-            fixed (byte* pDest = destination)
-            {
-                var pFromByte = (byte*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (byte* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (byte*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -310,14 +310,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (char* pFrom = @from)
-            fixed (byte* pDest = destination)
-            {
-                var pFromByte = (byte*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (byte* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (byte*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -335,14 +335,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (byte* pFrom = @from)
-            fixed (char* pDest = destination)
-            {
-                var pFromByte = (char*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (char* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (char*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -360,14 +360,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (char* pFrom = @from)
-            fixed (char* pDest = destination)
-            {
-                var pFromByte = (char*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (char* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (char*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 
@@ -385,14 +385,14 @@ public static class SpanHelpers
         {
             bytesWritten = from.Length;
             fixed (byte* pFrom = @from)
-            fixed (byte* pDest = destination)
-            {
-                var pFromByte = (byte*)pFrom;
-                for (int i = 0; i < bytesWritten; i++)
+                fixed (byte* pDest = destination)
                 {
-                    pDest[i] = pFromByte[i];
+                    var pFromByte = (byte*)pFrom;
+                    for (int i = 0; i < bytesWritten; i++)
+                    {
+                        pDest[i] = pFromByte[i];
+                    }
                 }
-            }
             return true;
         }
 

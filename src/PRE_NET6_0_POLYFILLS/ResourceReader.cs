@@ -79,10 +79,10 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
                 if (obj == null)
                 {
                     obj = (
-                        (_dataPosition != -1)
-                            ? _reader.LoadObject(_dataPosition)
-                            : _reader.GetValueForNameIndex(_currentName)
-                    );
+                              (_dataPosition != -1)
+                              ? _reader.LoadObject(_dataPosition)
+                              : _reader.GetValueForNameIndex(_currentName)
+                          );
                 }
                 return new DictionaryEntry(key, obj);
             }
@@ -174,7 +174,9 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
 
     private int _version;
 
-    internal static bool AllowCustomResourceTypes { get; } =
+    internal static bool AllowCustomResourceTypes {
+        get;
+    } =
         !AppContext.TryGetSwitch(
             "System.Resources.ResourceManager.AllowCustomResourceTypes",
             out var isEnabled
@@ -223,11 +225,11 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
     }
 
     [RequiresDynamicCode(
-        "The native code for this instantiation might not be available at runtime."
-    )]
+         "The native code for this instantiation might not be available at runtime."
+     )]
     [RequiresUnreferencedCode(
-        "The CustomResourceTypesSupport feature switch has been enabled for this app which is being trimmed. Custom readers as well as custom objects on the resources file are not observable by the trimmer and so required assemblies, types and members may be removed."
-    )]
+         "The CustomResourceTypesSupport feature switch has been enabled for this app which is being trimmed. Custom readers as well as custom objects on the resources file are not observable by the trimmer and so required assemblies, types and members may be removed."
+     )]
     private bool InitializeBinaryFormatter()
     {
         if (
@@ -236,14 +238,14 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
         )
         {
             Type? type = Type.GetType(
-                "System.Runtime.Serialization.Formatters.Binary.BinaryFormatter, System.Runtime.Serialization.Formatters",
-                throwOnError: true
-            );
+                             "System.Runtime.Serialization.Formatters.Binary.BinaryFormatter, System.Runtime.Serialization.Formatters",
+                             throwOnError: true
+                         );
             MethodInfo? method = type.GetMethod("Deserialize", new Type[1] { typeof(Stream) });
             MethodInfo? method2 = typeof(_ResourceReader)!.GetMethod(
-                "CreateUntypedDelegate",
-                BindingFlags.Static | BindingFlags.NonPublic
-            );
+                                      "CreateUntypedDelegate",
+                                      BindingFlags.Static | BindingFlags.NonPublic
+                                  );
             object? obj;
             if ((object)method2 == null)
             {
@@ -267,7 +269,7 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
     {
         Func<TInstance, Stream, object> typedDelegate =
             (Func<TInstance, Stream, object>)
-                Delegate.CreateDelegate(typeof(Func<TInstance, Stream, object>), null, method);
+            Delegate.CreateDelegate(typeof(Func<TInstance, Stream, object>), null, method);
         return (object obj, Stream stream) => typedDelegate((TInstance)obj, stream);
     }
 
@@ -322,10 +324,10 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
             Array.Sort(array);
             int num4 = Array.BinarySearch(array, num);
             long num5 = (
-                (num4 < _numResources - 1)
-                    ? (array[num4 + 1] + _dataSectionOffset)
-                    : _store.BaseStream.Length
-            );
+                            (num4 < _numResources - 1)
+                            ? (array[num4 + 1] + _dataSectionOffset)
+                            : _store.BaseStream.Length
+                        );
             int num6 = (int)(num5 - (num + _dataSectionOffset));
             _store.BaseStream.Position = _dataSectionOffset + num;
             ResourceTypeCode resourceTypeCode = (ResourceTypeCode)_store.Read7BitEncodedInt();
@@ -445,8 +447,8 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
     private unsafe int GetNamePosition(int index)
     {
         int num = (
-            (_ums != null) ? ReadUnalignedI4(_namePositionsPtr + index) : _namePositions[index]
-        );
+                      (_ums != null) ? ReadUnalignedI4(_namePositionsPtr + index) : _namePositions[index]
+                  );
         if (num < 0 || num > _dataSectionOffset - _nameSectionOffset)
         {
             throw new FormatException(SR.Format(SR.BadImageFormat_ResourcesNameInvalidOffset, num));
@@ -681,8 +683,8 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
                     throw new InvalidOperationException(
                         SR.Format(
                             p1: (resourceTypeCode >= ResourceTypeCode.StartOfUserTypes)
-                                ? FindType((int)(resourceTypeCode - 64)).FullName
-                                : resourceTypeCode.ToString(),
+                            ? FindType((int)(resourceTypeCode - 64)).FullName
+                            : resourceTypeCode.ToString(),
                             resourceFormat: SR.InvalidOperation_ResourceNotString_Type
                         )
                     );
@@ -713,8 +715,8 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
             {
                 object? obj = LoadObjectV1(pos);
                 typeCode = (
-                    (obj is string) ? ResourceTypeCode.String : ResourceTypeCode.StartOfUserTypes
-                );
+                               (obj is string) ? ResourceTypeCode.String : ResourceTypeCode.StartOfUserTypes
+                           );
                 return obj;
             }
             return LoadObjectV2(pos, out typeCode);
@@ -832,106 +834,106 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
         typeCode = (ResourceTypeCode)_store.Read7BitEncodedInt();
         switch (typeCode)
         {
-            case ResourceTypeCode.Null:
-                return null;
-            case ResourceTypeCode.String:
-                return _store.ReadString();
-            case ResourceTypeCode.Boolean:
-                return _store.ReadBoolean();
-            case ResourceTypeCode.Char:
-                return (char)_store.ReadUInt16();
-            case ResourceTypeCode.Byte:
-                return _store.ReadByte();
-            case ResourceTypeCode.SByte:
-                return _store.ReadSByte();
-            case ResourceTypeCode.Int16:
-                return _store.ReadInt16();
-            case ResourceTypeCode.UInt16:
-                return _store.ReadUInt16();
-            case ResourceTypeCode.Int32:
-                return _store.ReadInt32();
-            case ResourceTypeCode.UInt32:
-                return _store.ReadUInt32();
-            case ResourceTypeCode.Int64:
-                return _store.ReadInt64();
-            case ResourceTypeCode.UInt64:
-                return _store.ReadUInt64();
-            case ResourceTypeCode.Single:
-                return _store.ReadSingle();
-            case ResourceTypeCode.Double:
-                return _store.ReadDouble();
-            case ResourceTypeCode.Decimal:
-                return _store.ReadDecimal();
-            case ResourceTypeCode.DateTime:
+        case ResourceTypeCode.Null:
+            return null;
+        case ResourceTypeCode.String:
+            return _store.ReadString();
+        case ResourceTypeCode.Boolean:
+            return _store.ReadBoolean();
+        case ResourceTypeCode.Char:
+            return (char)_store.ReadUInt16();
+        case ResourceTypeCode.Byte:
+            return _store.ReadByte();
+        case ResourceTypeCode.SByte:
+            return _store.ReadSByte();
+        case ResourceTypeCode.Int16:
+            return _store.ReadInt16();
+        case ResourceTypeCode.UInt16:
+            return _store.ReadUInt16();
+        case ResourceTypeCode.Int32:
+            return _store.ReadInt32();
+        case ResourceTypeCode.UInt32:
+            return _store.ReadUInt32();
+        case ResourceTypeCode.Int64:
+            return _store.ReadInt64();
+        case ResourceTypeCode.UInt64:
+            return _store.ReadUInt64();
+        case ResourceTypeCode.Single:
+            return _store.ReadSingle();
+        case ResourceTypeCode.Double:
+            return _store.ReadDouble();
+        case ResourceTypeCode.Decimal:
+            return _store.ReadDecimal();
+        case ResourceTypeCode.DateTime:
+        {
+            long dateData = _store.ReadInt64();
+            return DateTime.FromBinary(dateData);
+        }
+        case ResourceTypeCode.TimeSpan:
+        {
+            long ticks = _store.ReadInt64();
+            return new TimeSpan(ticks);
+        }
+        case ResourceTypeCode.ByteArray:
+        {
+            int num2 = _store.ReadInt32();
+            if (num2 < 0)
+            {
+                throw new BadImageFormatException(
+                    SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
+                );
+            }
+            if (_ums == null)
+            {
+                if (num2 > _store.BaseStream.Length)
                 {
-                    long dateData = _store.ReadInt64();
-                    return DateTime.FromBinary(dateData);
+                    throw new BadImageFormatException(
+                        SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
+                    );
                 }
-            case ResourceTypeCode.TimeSpan:
-                {
-                    long ticks = _store.ReadInt64();
-                    return new TimeSpan(ticks);
-                }
-            case ResourceTypeCode.ByteArray:
-                {
-                    int num2 = _store.ReadInt32();
-                    if (num2 < 0)
-                    {
-                        throw new BadImageFormatException(
-                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
-                        );
-                    }
-                    if (_ums == null)
-                    {
-                        if (num2 > _store.BaseStream.Length)
-                        {
-                            throw new BadImageFormatException(
-                                SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
-                            );
-                        }
-                        return _store.ReadBytes(num2);
-                    }
-                    if (num2 > _ums.Length - _ums.Position)
-                    {
-                        throw new BadImageFormatException(
-                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
-                        );
-                    }
-                    byte[] array2 = new byte[num2];
-                    int num3 = _ums.Read(array2, 0, num2);
-                    return array2;
-                }
-            case ResourceTypeCode.Stream:
-                {
-                    int num = _store.ReadInt32();
-                    if (num < 0)
-                    {
-                        throw new BadImageFormatException(
-                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
-                        );
-                    }
-                    if (_ums == null)
-                    {
-                        byte[] array = _store.ReadBytes(num);
-                        return new MemoryStream(array);
-                    }
-                    if (num > _ums.Length - _ums.Position)
-                    {
-                        throw new BadImageFormatException(
-                            SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
-                        );
-                    }
-                    return new UnmanagedMemoryStream(_ums.PositionPointer, num, num, FileAccess.Read);
-                }
-            default:
-                {
-                    if (typeCode < ResourceTypeCode.StartOfUserTypes)
-                    {
-                        throw new BadImageFormatException(SR.BadImageFormat_TypeMismatch);
-                    }
-                    int typeIndex = (int)(typeCode - 64);
-                    return DeserializeObject(typeIndex);
-                }
+                return _store.ReadBytes(num2);
+            }
+            if (num2 > _ums.Length - _ums.Position)
+            {
+                throw new BadImageFormatException(
+                    SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num2)
+                );
+            }
+            byte[] array2 = new byte[num2];
+            int num3 = _ums.Read(array2, 0, num2);
+            return array2;
+        }
+        case ResourceTypeCode.Stream:
+        {
+            int num = _store.ReadInt32();
+            if (num < 0)
+            {
+                throw new BadImageFormatException(
+                    SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
+                );
+            }
+            if (_ums == null)
+            {
+                byte[] array = _store.ReadBytes(num);
+                return new MemoryStream(array);
+            }
+            if (num > _ums.Length - _ums.Position)
+            {
+                throw new BadImageFormatException(
+                    SR.Format(SR.BadImageFormat_ResourceDataLengthInvalid, num)
+                );
+            }
+            return new UnmanagedMemoryStream(_ums.PositionPointer, num, num, FileAccess.Read);
+        }
+        default:
+        {
+            if (typeCode < ResourceTypeCode.StartOfUserTypes)
+            {
+                throw new BadImageFormatException(SR.BadImageFormat_TypeMismatch);
+            }
+            int typeIndex = (int)(typeCode - 64);
+            return DeserializeObject(typeIndex);
+        }
         }
     }
 
@@ -1084,8 +1086,8 @@ internal sealed class _ResourceReader : IResourceReader, IEnumerable, IDisposabl
     }
 
     [RequiresUnreferencedCode(
-        "The CustomResourceTypesSupport feature switch has been enabled for this app which is being trimmed. Custom readers as well as custom objects on the resources file are not observable by the trimmer and so required assemblies, types and members may be removed."
-    )]
+         "The CustomResourceTypesSupport feature switch has been enabled for this app which is being trimmed. Custom readers as well as custom objects on the resources file are not observable by the trimmer and so required assemblies, types and members may be removed."
+     )]
     private Type UseReflectionToGetType(int typeIndex)
     {
         long position = _store.BaseStream.Position;

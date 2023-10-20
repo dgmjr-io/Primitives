@@ -23,7 +23,9 @@ public delegate Regex RegexProvider();
 
 public interface IRegexProvider
 {
-    public static abstract RegexProvider Regex { get; }
+    public static abstract RegexProvider Regex {
+        get;
+    }
     public const RegexOptions DefaultRegexOptions =
         Compiled | IgnoreCase | Multiline | IgnorePatternWhitespace;
 }
@@ -32,7 +34,9 @@ public interface IRegexGuardedString<TSelf>
 {
     public static abstract Regex Regex();
 
-    string Value { get; }
+    string Value {
+        get;
+    }
 }
 
 public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedString<TRegexProvider>
@@ -45,9 +49,9 @@ public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedStrin
 // [RegexGuardedString.JConverter]
 public class RegexGuardedString<TSelf, TRegexProvider>
     : RegexGuardedString<TSelf>,
-        IRegexGuardedString<TSelf, TRegexProvider>
-    where TSelf : RegexGuardedString<TSelf, TRegexProvider>
-    where TRegexProvider : IRegexProvider
+      IRegexGuardedString<TSelf, TRegexProvider>
+      where TSelf : RegexGuardedString<TSelf, TRegexProvider>
+      where TRegexProvider : IRegexProvider
 {
     public static new Regex Regex() => TRegexProvider.Regex();
 

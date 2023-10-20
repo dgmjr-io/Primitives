@@ -43,8 +43,8 @@ using Validation = global::Validation;
 #endif
 public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
 #if NET7_0_OR_GREATER
-        ,
-        IUriConvertible<uri>
+    ,
+    IUriConvertible<uri>
 #endif
 {
 #if NET7_0_OR_GREATER
@@ -76,7 +76,9 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     public static uri Empty => From(EmptyStringValue);
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
     public readonly string PathAndQuery =>
-        $"{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+    $"{Path}{Query.FormatIfNotNullOrEmpty("? {
+        0
+    }")}{Fragment.FormatIfNotNullOrEmpty("# {0}")}";
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
@@ -86,10 +88,10 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     static uri IStringWithRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
 
     static uri IStringWithRegexValueObject<uri>.Parse(string s) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    From(s) with
+    {
+        OriginalString = s
+    };
 #else
     readonly string IStringWithRegexValueObject<uri>.Description => Description;
     readonly uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
@@ -104,17 +106,17 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
         : this(uri.ToString()) { }
 
     public static uri Parse(string s, IFormatProvider? formatProvider) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    From(s) with
+    {
+        OriginalString = s
+    };
 
     public static Validation Validate(string value) =>
-        value is null
-            ? Validation.Invalid("Cannot create a value object with null.")
-            : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
-                ? Validation.Invalid("The value is not a valid URI.")
-                : Validation.Ok;
+    value is null
+    ? Validation.Invalid("Cannot create a value object with null.")
+    : !Uri.TryCreate(value, RelativeOrAbsolute, out _)
+    ? Validation.Invalid("The value is not a valid URI.")
+    : Validation.Ok;
 
     public static bool TryCreate(string? uriString, UriKind uriKind, out uri uri)
     {
@@ -133,39 +135,39 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     }
 
     public static uri From(string s) =>
-        Validate(s) == Validation.Ok ? new uri(s) with { OriginalString = s } : Empty;
+    Validate(s) == Validation.Ok ? new uri(s) with { OriginalString = s } : Empty;
 
     public static uri From(Uri uri) => new uri(uri) with { OriginalString = uri.ToString() };
 
     public static implicit operator Uri(uri u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
-            ? uri
-            : new(EmptyStringValue);
+    Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+    ? uri
+    : new(EmptyStringValue);
 
     public static implicit operator uri(string s) => From(s) with { OriginalString = s };
 
     public static implicit operator string(uri uri) => uri.ToString();
 
     public static bool operator ==(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) == 0;
+    left?.CompareTo(right) == 0;
 
     public static bool operator !=(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) != 0;
+    left?.CompareTo(right) != 0;
 
     public static bool operator <=(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) <= 0;
+    left?.CompareTo(right) <= 0;
 
     public static bool operator >=(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) >= 0;
+    left?.CompareTo(right) >= 0;
 
     public static bool operator <(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) < 0;
+    left?.CompareTo(right) < 0;
 
     public static bool operator >(uri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) > 0;
+    left?.CompareTo(right) > 0;
 
     public readonly int CompareTo(IResourceIdentifier other) =>
-        other is uri uri ? CompareTo(uri) : CompareTo(other.ToString());
+    other is uri uri ? CompareTo(uri) : CompareTo(other.ToString());
 
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
@@ -174,7 +176,7 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out uri uri) =>
-        TryParse(s, out uri);
+    TryParse(s, out uri);
 
     public static bool TryParse(string? s, out uri uri)
     {
@@ -202,17 +204,17 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     public readonly bool Equals(uri? other) => Equals(other.ToString());
 
     public readonly int CompareTo(string? other) =>
-        Compare(ToString(), other, InvariantCultureIgnoreCase);
+    Compare(ToString(), other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(object? obj) =>
-        obj is uri uri
-            ? CompareTo(uri)
-            : obj is string str
-                ? CompareTo(str)
-                : throw new ArgumentException("Object is not a uri.");
+    obj is uri uri
+    ? CompareTo(uri)
+    : obj is string str
+    ? CompareTo(str)
+    : throw new ArgumentException("Object is not a uri.");
 
     public readonly bool Equals(string? other) =>
-        ToString().Equals(other, InvariantCultureIgnoreCase);
+    ToString().Equals(other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(uri other) => CompareTo(other.ToString());
 
@@ -233,10 +235,10 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     public class JsonConverter : JsonConverter<uri>
     {
         public override uri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options) =>
-            From(reader.GetString());
+        From(reader.GetString());
 
         public override void Write(Utf8JsonWriter writer, uri value, Jso options) =>
-            writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(value.ToString());
     }
 
     public class SystemTextJsonConverter : JsonConverter<uri>
@@ -267,8 +269,8 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
         {
             var stringValue = value as string;
             return stringValue is not null
-                ? From(stringValue)
-                : base.ConvertFrom(context, culture, value);
+                   ? From(stringValue)
+                   : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? destinationType)
@@ -282,9 +284,9 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
             object? value,
             type? destinationType
         ) =>
-            value is uri idValue && destinationType == typeof(string)
-                ? idValue.ToString()
-                : base.ConvertTo(context, culture, value, destinationType);
+        value is uri idValue && destinationType == typeof(string)
+        ? idValue.ToString()
+        : base.ConvertTo(context, culture, value, destinationType);
     }
 #endif
 }
@@ -296,13 +298,13 @@ public static class UriEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUri(propertyExpression);
+    where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUri(propertyExpression);
 
     public static void ConfigureUri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<uri.EfCoreValueConverter>();
+    where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<uri.EfCoreValueConverter>();
 }
 #endif

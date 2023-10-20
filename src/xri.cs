@@ -33,10 +33,10 @@ using Validation = global::Validation;
 [StructLayout(LayoutKind.Auto)]
 public readonly partial record struct xri
     : IStringWithRegexValueObject<xri>,
-        IResourceIdentifierWithQueryAndFragment
+      IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
-        ,
-        IUriConvertible<xri>
+    ,
+      IUriConvertible<xri>
 #endif
 {
     public const string Description = "an eXtensible resource locator (xri)";
@@ -60,9 +60,14 @@ public readonly partial record struct xri
     public readonly bool IsEmpty => base.ToString() == EmptyStringValue;
 
     public readonly string PathAndQuery =>
-        $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+    $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ? {
+        Query
+    })" : "")}{(!IsNullOrEmpty(Fragment) ? $"# {Fragment}" : "")}";
 
-    public readonly string Value { get; init; }
+    public readonly string Value {
+        get;
+        init;
+    }
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<xri>.Description => Description;
     static string IStringWithRegexValueObject<xri>.RegexString => RegexString;
@@ -90,11 +95,11 @@ public readonly partial record struct xri
     public static xri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
     public static Validation Validate(string value) =>
-        value is null
-            ? Validation.Invalid("Cannot create a value object with null.")
-            : !xri.TryCreate(value, default, out _)
-                ? Validation.Invalid("The value is not a valid xri.")
-                : Validation.Ok;
+    value is null
+    ? Validation.Invalid("Cannot create a value object with null.")
+    : !xri.TryCreate(value, default, out _)
+    ? Validation.Invalid("The value is not a valid xri.")
+    : Validation.Ok;
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out xri xri)
     {
@@ -116,39 +121,39 @@ public readonly partial record struct xri
     }
 
     public static xri From(string s) =>
-        Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+    Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
 
     public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
     public static implicit operator System.Uri(xri u) =>
-        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
-            ? uri
-            : new(EmptyStringValue);
+    Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+    ? uri
+    : new(EmptyStringValue);
 
     public static implicit operator xri(string s) => From(s) with { OriginalString = s };
 
     public static implicit operator string(xri xri) => xri.ToString();
 
     public static bool operator ==(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) == 0;
+    left?.CompareTo(right) == 0;
 
     public static bool operator !=(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) != 0;
+    left?.CompareTo(right) != 0;
 
     public static bool operator <=(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) <= 0;
+    left?.CompareTo(right) <= 0;
 
     public static bool operator >=(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) >= 0;
+    left?.CompareTo(right) >= 0;
 
     public static bool operator <(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) < 0;
+    left?.CompareTo(right) < 0;
 
     public static bool operator >(xri? left, IResourceIdentifier right) =>
-        left?.CompareTo(right) > 0;
+    left?.CompareTo(right) > 0;
 
     public readonly int CompareTo(IResourceIdentifier other) =>
-        other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
+    other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
 
     public override readonly int GetHashCode() => ToString().GetHashCode();
 
@@ -157,7 +162,7 @@ public readonly partial record struct xri
     private readonly string BaseToString() => OriginalString;
 
     public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) =>
-        TryParse(s, out xri);
+    TryParse(s, out xri);
 
     public static bool TryParse(string? s, out xri xri)
     {
@@ -185,17 +190,17 @@ public readonly partial record struct xri
     public readonly bool Equals(xri? other) => Equals(other.ToString());
 
     public readonly int CompareTo(string? other) =>
-        Compare(ToString(), other, InvariantCultureIgnoreCase);
+    Compare(ToString(), other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(object? obj) =>
-        obj is xri xri
-            ? CompareTo(xri)
-            : obj is string str
-                ? CompareTo(str)
-                : throw new ArgumentException("Object is not a xri.");
+    obj is xri xri
+    ? CompareTo(xri)
+    : obj is string str
+    ? CompareTo(str)
+    : throw new ArgumentException("Object is not a xri.");
 
     public readonly bool Equals(string? other) =>
-        ToString().Equals(other, InvariantCultureIgnoreCase);
+    ToString().Equals(other, InvariantCultureIgnoreCase);
 
     public readonly int CompareTo(xri other) => CompareTo(other.ToString());
 
@@ -209,10 +214,10 @@ public readonly partial record struct xri
     public class JsonConverter : JsonConverter<xri>
     {
         public override xri Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
-            From(reader.GetString());
+        From(reader.GetString());
 
         public override void Write(Utf8JsonWriter writer, xri value, Jso options) =>
-            writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(value.ToString());
     }
 
     public class SystemTextJsonConverter : JsonConverter<xri>
@@ -243,8 +248,8 @@ public readonly partial record struct xri
         {
             var stringValue = value as string;
             return stringValue is not null
-                ? xri.From(stringValue)
-                : base.ConvertFrom(context, culture, value);
+                   ? xri.From(stringValue)
+                   : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
@@ -258,9 +263,9 @@ public readonly partial record struct xri
             object? value,
             type? destinationType
         ) =>
-            value is xri idValue && destinationType == typeof(string)
-                ? idValue.ToString()
-                : base.ConvertTo(context, culture, value, destinationType);
+        value is xri idValue && destinationType == typeof(string)
+        ? idValue.ToString()
+        : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 
@@ -270,12 +275,12 @@ public static class xriEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
+    where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
 
     public static void ConfigureXri<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
+    where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
 }

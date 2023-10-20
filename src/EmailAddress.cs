@@ -26,11 +26,11 @@ using Validation = global::Validation;
 #endif
 
 [ValueObject(
-    typeof(string),
-    conversions: Conversions.EfCoreValueConverter
-        | Conversions.SystemTextJson
-        | Conversions.TypeConverter
-)]
+     typeof(string),
+     conversions: Conversions.EfCoreValueConverter
+     | Conversions.SystemTextJson
+     | Conversions.TypeConverter
+ )]
 [StructLayout(LayoutKind.Auto)]
 [EmailAddress.JConverter]
 public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAddress>, IFormattable
@@ -54,7 +54,10 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
 
     public readonly Uri Uri => IsEmpty ? null! : new(Format(UriPattern, ToString()));
 
-    public string OriginalString { get; init; }
+    public string OriginalString {
+        get;
+        init;
+    }
 
 #if NET6_0_OR_GREATER
     /// <summary>
@@ -66,7 +69,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// Gets the example value.
     /// </summary>
     static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue =>
-        From(ExampleValueString);
+    From(ExampleValueString);
 
     /// <summary>
     /// Gets the regex string.
@@ -78,7 +81,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
     readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
     readonly EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue =>
-        From(ExampleValueString);
+    From(ExampleValueString);
 #endif
 
     /// <summary>
@@ -90,10 +93,10 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// Gets the empty.
     /// </summary>
     public static EmailAddress Empty =>
-        From(EmptyValueString) with
-        {
-            OriginalString = EmptyValueString
-        };
+    From(EmptyValueString) with
+    {
+        OriginalString = EmptyValueString
+    };
 
     /// <summary>
     /// The regex string.
@@ -113,15 +116,15 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
 #endif
 
     public static EmailAddress FromUri(string s) =>
-        s.IsNullOrEmpty()
-            ? throw new ArgumentNullException(
-                nameof(s),
-                "Cannot convert a null or empty string to an email address"
-            )
-            : From(s.Remove(0, UriPrefix.Length)) with
-            {
-                OriginalString = s.Remove(0, UriPrefix.Length)
-            };
+    s.IsNullOrEmpty()
+    ? throw new ArgumentNullException(
+        nameof(s),
+        "Cannot convert a null or empty string to an email address"
+    )
+    : From(s.Remove(0, UriPrefix.Length)) with
+    {
+        OriginalString = s.Remove(0, UriPrefix.Length)
+    };
 
     public static EmailAddress FromUri(Uri u) => FromUri(u.ToString());
 
@@ -133,31 +136,31 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <returns><see cref="Validation.Ok"/> if the validation was successful,
     ///     <see cref="Validation.Invalid(string)"/> otherwise.</returns>
     public static Validation Validate(string? s) =>
-        s is null
-            ? Validation.Invalid("Email address cannot be null.")
-            : s.Length == 0
-                ? Validation.Invalid("Email address cannot be empty.")
-                : !Regex().IsMatch(s)
-                    ? Validation.Invalid("Email address is not valid.")
-                    : Validation.Ok;
+    s is null
+    ? Validation.Invalid("Email address cannot be null.")
+    : s.Length == 0
+    ? Validation.Invalid("Email address cannot be empty.")
+    : !Regex().IsMatch(s)
+    ? Validation.Invalid("Email address is not valid.")
+    : Validation.Ok;
 
     public static bool operator !=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) == 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) == 0;
 
     public static bool operator ==(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) != 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) != 0;
 
     public static bool operator <(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) < 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) < 0;
 
     public static bool operator >(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) > 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) > 0;
 
     public static bool operator <=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) <= 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) <= 0;
 
     public static bool operator >=(EmailAddress? a, EmailAddress? b) =>
-        a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) >= 0;
+    a.HasValue && b.HasValue && CompareOrdinal(a.Value.Value, b.Value.Value) >= 0;
 
     /// <summary>
     /// Returns <inheritdoc cref="ToString()" path="/returns"/>
@@ -183,7 +186,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     ///     <paramref name="obj"/>, 0 if they're equal, and a positive value if
     ///     it's greater than <paramref name="obj"/>..</returns>
     public readonly int CompareTo(object? obj) =>
-        CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
+    CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
 
     /// <summary>
     /// Parses the <see cref="EmailAddress"/>.
@@ -192,10 +195,10 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <param name="formatProvider">The format provider.</param>
     /// <returns>An EmailAddress.</returns>
     public static EmailAddress Parse(string? s, IFormatProvider? formatProvider = null) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    From(s) with
+    {
+        OriginalString = s
+    };
 
     /// <summary>
     /// Try parse.
@@ -252,7 +255,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     }
 
     public static implicit operator string?(EmailAddress? addr) =>
-        addr.HasValue ? addr.Value.Value : string.Empty;
+    addr.HasValue ? addr.Value.Value : string.Empty;
 
     public readonly int CompareTo(EmailAddress? other) => CompareTo(other?.Value ?? string.Empty);
 
@@ -278,8 +281,8 @@ public static class EmailAddressEfCoreExtensions
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, EmailAddress>> propertyExpression
     )
-        where TEntity : class =>
-        modelBuilder.Entity<TEntity>().ConfigureEmailAddress(propertyExpression);
+    where TEntity : class =>
+            modelBuilder.Entity<TEntity>().ConfigureEmailAddress(propertyExpression);
 
     /// <summary>
     /// Configures the email address.
@@ -291,8 +294,8 @@ public static class EmailAddressEfCoreExtensions
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, EmailAddress>> propertyExpression
     )
-        where TEntity : class =>
-        entityBuilder
+    where TEntity : class =>
+            entityBuilder
             .Property(propertyExpression)
             .HasConversion<EmailAddress.EfCoreValueConverter>();
 }
