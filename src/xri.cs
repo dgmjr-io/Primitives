@@ -31,7 +31,7 @@ using Validation = global::Validation;
 /// </summary>
 [RegexDto(xri._RegexString, RegexOptions: uri._RegexOptions)]
 [StructLayout(LayoutKind.Auto)]
-public partial record struct xri
+public readonly partial record struct xri
     : IStringWithRegexValueObject<xri>,
         IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
@@ -62,8 +62,7 @@ public partial record struct xri
     public readonly string PathAndQuery =>
         $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
-    private string _value = null!;
-    public readonly string Value => _value;
+    public readonly string Value { get; init; }
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<xri>.Description => Description;
     static string IStringWithRegexValueObject<xri>.RegexString => RegexString;

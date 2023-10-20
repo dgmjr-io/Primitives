@@ -28,6 +28,10 @@
     <AllowUnsafeBlocks Condition="!$(DefineConstants.Contains('NET6_0_OR_GREATER'))">true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))">
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
     <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />

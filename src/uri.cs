@@ -41,7 +41,7 @@ using Validation = global::Validation;
 [StructLayout(LayoutKind.Auto)]
 #if NET6_0_OR_GREATER
 #endif
-public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
+public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<uri>
@@ -67,7 +67,7 @@ public partial record struct uri : IStringWithRegexValueObject<uri>, IResourceId
     [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
     public const string _RegexString =
-        @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+        @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]

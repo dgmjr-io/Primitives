@@ -32,7 +32,7 @@ using static System.Text.RegularExpressions.RegexOptions;
 [JsonConverter(typeof(urn.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
-public partial record struct urn : IStringWithRegexValueObject<urn>, IResourceIdentifier
+public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<urn>

@@ -35,7 +35,7 @@ using Validation = global::Validation;
 [url.JConverter]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
-public partial record struct url
+public readonly partial record struct url
     : IStringWithRegexValueObject<url>,
         IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
@@ -54,7 +54,7 @@ public partial record struct url
     [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
     public const string _RegexString =
-        @"^(?<Scheme:string?>[^:]+):(?:(?<Authority:string?>(?<DoubleSlashes:string?>\/\/)?(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+        @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -222,20 +222,12 @@ public partial record struct url
 
     public class SystemTextJsonConverter : JsonConverter<url>
     {
-        public override url Read(
-            ref Utf8JsonReader reader,
-            type typeToConvert,
-            Jso options
-        )
+        public override url Read(ref Utf8JsonReader reader, type typeToConvert, Jso options)
         {
             return From(reader.GetString());
         }
 
-        public override void Write(
-            Utf8JsonWriter writer,
-            url value,
-            Jso options
-        )
+        public override void Write(Utf8JsonWriter writer, url value, Jso options)
         {
             writer.WriteStringValue(value.ToString());
         }
@@ -255,7 +247,9 @@ public partial record struct url
         )
         {
             var stringValue = value as string;
-            return stringValue is not null ? url.From(stringValue) : base.ConvertFrom(context, culture, value);
+            return stringValue is not null
+                ? url.From(stringValue)
+                : base.ConvertFrom(context, culture, value);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
@@ -268,10 +262,10 @@ public partial record struct url
             Globalization.CultureInfo? culture,
             object? value,
             type? destinationType
-        )
-            => value is url idValue && destinationType == typeof(string)
-            ? idValue.ToString()
-            : base.ConvertTo(context, culture, value, destinationType);
+        ) =>
+            value is url idValue && destinationType == typeof(string)
+                ? idValue.ToString()
+                : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 
