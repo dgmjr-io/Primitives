@@ -19,55 +19,54 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 
-public static class OpenApiRegistrations
-{
+public static class OpenApiRegistrations {
 #if NET6_0_OR_GREATER
-    public static WebApplicationBuilder Describe<T>(this WebApplicationBuilder builder)
-    where T : IStringWithRegexValueObject<T>
-    {
-        builder.Services.Describe<T>();
-        return builder;
-    }
+  public static WebApplicationBuilder
+  Describe<T>(this WebApplicationBuilder builder)
+      where T : IStringWithRegexValueObject<T> {
+    builder.Services.Describe<T>();
+    return builder;
+  }
 #endif
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static IServiceCollection Describe<T>(this IServiceCollection services)
-    where T : IStringWithRegexValueObject<T>
-    {
-        services.ConfigureSwaggerGen(options =>
-        {
+  public static IServiceCollection Describe<T>(this IServiceCollection services)
+      where T : IStringWithRegexValueObject<T> {
+    services.ConfigureSwaggerGen(options => {
 #if NET7_0_OR_GREATER
-            options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
-            new OpenApiSchema
-            {
-                Type = "string",
-                Pattern = typeof(T).GetRuntimeProperty("RegexString").GetValue(null) as string,
-                Format = typeof(T).Name,
-                Description = T.Description,
-                Example = new OpenApiString(T.ExampleValue.ToString())
-            };
+      options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
+          new OpenApiSchema {
+            Type = "string",
+            Pattern = typeof(T)
+                          .GetRuntimeProperty("RegexString")
+                          .GetValue(null) as string,
+            Format = typeof(T).Name, Description = T.Description,
+            Example = new OpenApiString(T.ExampleValue.ToString())
+          };
 #else
-            throw new PlatformNotSupportedException(
-                "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it."
-            );
-            // options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () => new OpenApiSchema
-            // {
-            //     Type = "string",
-            //     Pattern = typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.RegexString)).GetValue(null) as string,
-            //     Format = typeof(T).Name,
-            //     Description = typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.Description)).GetValue(null) as string,
-            //     Example = new OpenApiString(typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.ExampleValue)).GetValue(null).ToString())
-            // };
+      throw new PlatformNotSupportedException(
+          "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it.");
+      // options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
+      // new OpenApiSchema
+      // {
+      //     Type = "string",
+      //     Pattern =
+      //     typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.RegexString)).GetValue(null)
+      //     as string, Format = typeof(T).Name, Description =
+      //     typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.Description)).GetValue(null)
+      //     as string, Example = new
+      //     OpenApiString(typeof(T).GetRuntimeProperty(nameof(IStringWithRegexValueObject<ObjectId>.ExampleValue)).GetValue(null).ToString())
+      // };
 #endif
-        });
-        return services;
-    }
+    });
+    return services;
+  }
 #else
-    public static IServiceCollection Describe<T>(this IServiceCollection services)
-    where T : IStringWithRegexValueObject<T>
-    {
-        throw new PlatformNotSupportedException("This feature is not supported by this framework.  Upgrade to .NET Standard 2.0 or higher to use it.");
-    }
+  public static IServiceCollection Describe<T>(this IServiceCollection services)
+      where T : IStringWithRegexValueObject<T> {
+    throw new PlatformNotSupportedException(
+        "This feature is not supported by this framework.  Upgrade to .NET Standard 2.0 or higher to use it.");
+  }
 #endif
 }
 #endif

@@ -38,10 +38,10 @@
 // public enum YesNo : sbyte
 // {
 //     /// <summary>No, negative, nope, fuck no, negatory, false, etc.</summary>
-//     [Display(Name = "No", ShortName = "No", Description = "Negative", Prompt = "Yes or no?")]
-//     No = 0,
+//     [Display(Name = "No", ShortName = "No", Description = "Negative", Prompt
+//     = "Yes or no?")] No = 0,
 
 //     /// <summary>Yes, affirmative, yep, uh-huh, mmhmm, true, etc.</summary>
-//     [Display(Name = "Yes", ShortName = "Yes", Description = "Affirmative", Prompt = "Yes or no?")]
-//     Yes = 1,
+//     [Display(Name = "Yes", ShortName = "Yes", Description = "Affirmative",
+//     Prompt = "Yes or no?")] Yes = 1,
 // }

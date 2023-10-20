@@ -12,37 +12,32 @@
 
 namespace Dgmjr.Primitives.Tests;
 
-public static class HexStringTests
-{
-    [Theory]
-    [InlineData("0123456789abcdef")]
-    [InlineData("ffffaabb")]
-    [InlineData("FFffAAbb")]
-    public static void Valid_Hex_String_Is_Valid(string validHexString)
-    {
-        var hexString = new HexString(validHexString);
-        hexString.Value.Should().Be(validHexString);
-    }
+public static class HexStringTests {
+  [Theory]
+  [InlineData("0123456789abcdef")]
+  [InlineData("ffffaabb")]
+  [InlineData("FFffAAbb")]
+  public static void Valid_Hex_String_Is_Valid(string validHexString) {
+    var hexString = new HexString(validHexString);
+    hexString.Value.Should().Be(validHexString);
+  }
 
-    [Theory]
-    [InlineData("fcku!!!")]
-    [InlineData("go the fuck away!")]
-    [InlineData("NOW")]
-    public static void Invalid_Hex_String_Is_Invalid(string invalidHexString)
-    {
-        var hexStringCtor = () => new HexString(invalidHexString);
-        hexStringCtor.Should().Throw<ArgumentException>();
-    }
+  [Theory]
+  [InlineData("fcku!!!")]
+  [InlineData("go the fuck away!")]
+  [InlineData("NOW")]
+  public static void Invalid_Hex_String_Is_Invalid(string invalidHexString) {
+    var hexStringCtor = () => new HexString(invalidHexString);
+    hexStringCtor.Should().Throw<ArgumentException>();
+  }
 
-    [Theory]
-    [InlineData("abcDEF09", "DEFab678")]
-    public static void Hex_String_Can_Be_Changed_To_Another_Valid_Hex_String(
-        string original,
-        string @new
-    )
-    {
-        var hexString = new HexString(original);
-        hexString = @new;
-        hexString.Value.Should().Be(@new);
-    }
+  [Theory]
+  [InlineData("abcDEF09", "DEFab678")]
+  public static void
+  Hex_String_Can_Be_Changed_To_Another_Valid_Hex_String(string original,
+                                                        string @new) {
+    var hexString = new HexString(original);
+    hexString = @new;
+    hexString.Value.Should().Be(@new);
+  }
 }

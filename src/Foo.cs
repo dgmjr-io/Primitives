@@ -11,7 +11,6 @@
  */
 namespace Dgmjr.Types.Domain;
 
-internal sealed class Foo
-{
-    public static string Bar() => "Hello, World!";
+internal sealed class Foo {
+  public static string Bar() => "Hello, World!";
 }

@@ -21,18 +21,21 @@
 //     public static readonly Validation Ok = new(string.Empty);
 
 //     /// <summary>
-//     /// Initializes a new instance of the <see cref="Validation"/> class with the given error message.
+//     /// Initializes a new instance of the <see cref="Validation"/> class with
+//     the given error message.
 //     /// </summary>
 //     /// <param name="reason">The reason for failed validation.</param>
 //     private Validation(string reason) => ErrorMessage = reason;
 
 //     /// <summary>
-//     /// Returns an invalid <see cref="Validation"/> with the given error message.
+//     /// Returns an invalid <see cref="Validation"/> with the given error
+//     message.
 //     /// </summary>
 //     /// <param name="reason">The reason for failed validation.</param>
-//     /// <returns>An invalid <see cref="Validation"/> with the given error message.</returns>
-//     public static Validation Invalid(string reason = "")
-//         => IsNullOrEmpty(reason) ? new Validation("[none provided]") : new Validation(reason);
+//     /// <returns>An invalid <see cref="Validation"/> with the given error
+//     message.</returns> public static Validation Invalid(string reason = "")
+//         => IsNullOrEmpty(reason) ? new Validation("[none provided]") : new
+//         Validation(reason);
 
 //     /// <summary>
 //     /// Adds the specified data to the validation result.

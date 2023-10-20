@@ -22,9 +22,10 @@
 //     Argument_BadFormatSpecifier,
 //     Format_BadDateOnly,
 //     Format_BadTimeOnly,
-//     Format_DateTimeOnlyContainsNoneDateParts,  // DateOnly and TimeOnly specific value. Unrelated date parts when parsing DateOnly or Unrelated time parts when parsing TimeOnly
+//     Format_DateTimeOnlyContainsNoneDateParts,  // DateOnly and TimeOnly
+//     specific value. Unrelated date parts when parsing DateOnly or Unrelated
+//     time parts when parsing TimeOnly
 // }
-
 
 // [Flags]
 // internal enum ParseFlags
