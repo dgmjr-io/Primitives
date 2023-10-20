@@ -1,4 +1,4 @@
-/*
+﻿/*
  * HexStringTests.cs
  *
  *   Created: 2023-09-03-12:33:55
@@ -23,6 +23,7 @@ public static class HexStringTests
         var hexString = new HexString(validHexString);
         hexString.Value.Should().Be(validHexString);
     }
+
     [Theory]
     [InlineData("fcku!!!")]
     [InlineData("go the fuck away!")]
@@ -31,5 +32,17 @@ public static class HexStringTests
     {
         var hexStringCtor = () => new HexString(invalidHexString);
         hexStringCtor.Should().Throw<ArgumentException>();
+    }
+
+    [Theory]
+    [InlineData("abcDEF09", "DEFab678")]
+    public static void Hex_String_Can_Be_Changed_To_Another_Valid_Hex_String(
+        string original,
+        string @new
+    )
+    {
+        var hexString = new HexString(original);
+        hexString = @new;
+        hexString.Value.Should().Be(@new);
     }
 }

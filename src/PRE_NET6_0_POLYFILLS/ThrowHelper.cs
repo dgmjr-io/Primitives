@@ -33,7 +33,9 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowInvalidTypeWithPointersNotSupported(Type targetType)
     {
-        throw new ArgumentException(SR.Format(SR.Argument_InvalidTypeWithPointersNotSupported, targetType));
+        throw new ArgumentException(
+            SR.Format(SR.Argument_InvalidTypeWithPointersNotSupported, targetType)
+        );
     }
 
     [DoesNotReturn]
@@ -75,19 +77,28 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentException_TupleIncorrectType(object obj)
     {
-        throw new ArgumentException(SR.Format(SR.ArgumentException_ValueTupleIncorrectType, obj.GetType()), "other");
+        throw new ArgumentException(
+            SR.Format(SR.ArgumentException_ValueTupleIncorrectType, obj.GetType()),
+            "other"
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_IndexMustBeLessException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.index,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLess
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.index,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual
+        );
     }
 
     [DoesNotReturn]
@@ -99,43 +110,64 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.index,
+            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.value, ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.value,
+            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowLengthArgumentOutOfRange_ArgumentOutOfRange_NeedNonNegNum()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.length, ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.length,
+            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_IndexMustBeLessOrEqual()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.startIndex, ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.startIndex,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_IndexMustBeLess()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.startIndex, ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.startIndex,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLess
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowCountArgumentOutOfRange_ArgumentOutOfRange_Count()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.count, ExceptionResource.ArgumentOutOfRange_Count);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.count,
+            ExceptionResource.ArgumentOutOfRange_Count
+        );
     }
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_Year()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.year, ExceptionResource.ArgumentOutOfRange_Year);
+        throw GetArgumentOutOfRangeException(
+            ExceptionArgument.year,
+            ExceptionResource.ArgumentOutOfRange_Year
+        );
     }
 
     [DoesNotReturn]
@@ -147,7 +179,11 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_DayNumber(int dayNumber)
     {
-        throw new ArgumentOutOfRangeException("dayNumber", dayNumber, SR.ArgumentOutOfRange_DayNumber);
+        throw new ArgumentOutOfRangeException(
+            "dayNumber",
+            dayNumber,
+            SR.ArgumentOutOfRange_DayNumber
+        );
     }
 
     [DoesNotReturn]
@@ -169,9 +205,18 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentOutOfRange_Range<T>(string parameterName, T value, T minInclusive, T maxInclusive)
+    internal static void ThrowArgumentOutOfRange_Range<T>(
+        string parameterName,
+        T value,
+        T minInclusive,
+        T maxInclusive
+    )
     {
-        throw new ArgumentOutOfRangeException(parameterName, value, SR.Format(SR.ArgumentOutOfRange_Range, minInclusive, maxInclusive));
+        throw new ArgumentOutOfRangeException(
+            parameterName,
+            value,
+            SR.Format(SR.ArgumentOutOfRange_Range, minInclusive, maxInclusive)
+        );
     }
 
     [DoesNotReturn]
@@ -228,7 +273,10 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentException(ExceptionResource resource, ExceptionArgument argument)
+    internal static void ThrowArgumentException(
+        ExceptionResource resource,
+        ExceptionArgument argument
+    )
     {
         throw GetArgumentException(resource, argument);
     }
@@ -252,7 +300,10 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentNullException(ExceptionArgument argument, ExceptionResource resource)
+    internal static void ThrowArgumentNullException(
+        ExceptionArgument argument,
+        ExceptionResource resource
+    )
     {
         throw new ArgumentNullException(GetArgumentName(argument), GetResourceString(resource));
     }
@@ -264,13 +315,20 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+    internal static void ThrowArgumentOutOfRangeException(
+        ExceptionArgument argument,
+        ExceptionResource resource
+    )
     {
         throw GetArgumentOutOfRangeException(argument, resource);
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, int paramNumber, ExceptionResource resource)
+    internal static void ThrowArgumentOutOfRangeException(
+        ExceptionArgument argument,
+        int paramNumber,
+        ExceptionResource resource
+    )
     {
         throw GetArgumentOutOfRangeException(argument, paramNumber, resource);
     }
@@ -409,7 +467,11 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowUnexpectedStateForKnownCallback(object state)
     {
-        throw new ArgumentOutOfRangeException("state", state, SR.Argument_UnexpectedStateForKnownCallback);
+        throw new ArgumentOutOfRangeException(
+            "state",
+            state,
+            SR.Argument_UnexpectedStateForKnownCallback
+        );
     }
 
     [DoesNotReturn]
@@ -467,7 +529,11 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArraySegmentCtorValidationFailedExceptions(Array array, int offset, int count)
+    internal static void ThrowArraySegmentCtorValidationFailedExceptions(
+        Array array,
+        int offset,
+        int count
+    )
     {
         throw GetArraySegmentCtorValidationFailedException(array, offset, count);
     }
@@ -493,7 +559,10 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRangeException_PrecisionTooLarge()
     {
-        throw new ArgumentOutOfRangeException("precision", SR.Format(SR.Argument_PrecisionTooLarge, (byte)99));
+        throw new ArgumentOutOfRangeException(
+            "precision",
+            SR.Format(SR.Argument_PrecisionTooLarge, (byte)99)
+        );
     }
 
     [DoesNotReturn]
@@ -523,7 +592,13 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowFormatInvalidString(int offset, ExceptionResource resource)
     {
-        throw new FormatException(SR.Format(SR.Format_InvalidStringWithOffsetAndReason, offset, GetResourceString(resource)));
+        throw new FormatException(
+            SR.Format(
+                SR.Format_InvalidStringWithOffsetAndReason,
+                offset,
+                GetResourceString(resource)
+            )
+        );
     }
 
     [DoesNotReturn]
@@ -532,7 +607,11 @@ internal static class ThrowHelper
         throw new FormatException(SR.Format_IndexOutOfRange);
     }
 
-    private static Exception GetArraySegmentCtorValidationFailedException(Array array, int offset, int count)
+    private static Exception GetArraySegmentCtorValidationFailedException(
+        Array array,
+        int offset,
+        int count
+    )
     {
         if (array == null)
         {
@@ -554,7 +633,9 @@ internal static class ThrowHelper
         return new ArgumentException(GetResourceString(resource));
     }
 
-    private static InvalidOperationException GetInvalidOperationException(ExceptionResource resource)
+    private static InvalidOperationException GetInvalidOperationException(
+        ExceptionResource resource
+    )
     {
         return new InvalidOperationException(GetResourceString(resource));
     }
@@ -564,7 +645,10 @@ internal static class ThrowHelper
         return new ArgumentException(SR.Format(SR.Arg_WrongType, key, targetType), "key");
     }
 
-    private static ArgumentException GetWrongValueTypeArgumentException(object value, Type targetType)
+    private static ArgumentException GetWrongValueTypeArgumentException(
+        object value,
+        Type targetType
+    )
     {
         return new ArgumentException(SR.Format(SR.Arg_WrongType, value, targetType), "value");
     }
@@ -574,35 +658,55 @@ internal static class ThrowHelper
         return new KeyNotFoundException(SR.Format(SR.Arg_KeyNotFoundWithKey, key));
     }
 
-    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(
+        ExceptionArgument argument,
+        ExceptionResource resource
+    )
     {
-        return new ArgumentOutOfRangeException(GetArgumentName(argument), GetResourceString(resource));
+        return new ArgumentOutOfRangeException(
+            GetArgumentName(argument),
+            GetResourceString(resource)
+        );
     }
 
-    private static ArgumentException GetArgumentException(ExceptionResource resource, ExceptionArgument argument)
+    private static ArgumentException GetArgumentException(
+        ExceptionResource resource,
+        ExceptionArgument argument
+    )
     {
         return new ArgumentException(GetResourceString(resource), GetArgumentName(argument));
     }
 
-    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(ExceptionArgument argument, int paramNumber, ExceptionResource resource)
+    private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(
+        ExceptionArgument argument,
+        int paramNumber,
+        ExceptionResource resource
+    )
     {
-        return new ArgumentOutOfRangeException(GetArgumentName(argument) + "[" + paramNumber + "]", GetResourceString(resource));
+        return new ArgumentOutOfRangeException(
+            GetArgumentName(argument) + "[" + paramNumber + "]",
+            GetResourceString(resource)
+        );
     }
 
     private static InvalidOperationException GetInvalidOperationException_EnumCurrent(int index)
     {
-        return new InvalidOperationException((index < 0) ? SR.InvalidOperation_EnumNotStarted : SR.InvalidOperation_EnumEnded);
+        return new InvalidOperationException(
+            (index < 0) ? SR.InvalidOperation_EnumNotStarted : SR.InvalidOperation_EnumEnded
+        );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void IfNullAndNullsAreIllegalThenThrow<T>(object value, ExceptionArgument argName)
+    internal static void IfNullAndNullsAreIllegalThenThrow<T>(
+        object value,
+        ExceptionArgument argName
+    )
     {
         if (default(T) != null && value == null)
         {
             ThrowArgumentNullException(argName);
         }
     }
-
 
     private static string GetArgumentName(ExceptionArgument argument)
     {
@@ -715,10 +819,13 @@ internal static class ThrowHelper
     {
         return resource switch
         {
-            ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual => SR.ArgumentOutOfRange_IndexMustBeLessOrEqual,
-            ExceptionResource.ArgumentOutOfRange_IndexMustBeLess => SR.ArgumentOutOfRange_IndexMustBeLess,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual
+                => SR.ArgumentOutOfRange_IndexMustBeLessOrEqual,
+            ExceptionResource.ArgumentOutOfRange_IndexMustBeLess
+                => SR.ArgumentOutOfRange_IndexMustBeLess,
             ExceptionResource.ArgumentOutOfRange_IndexCount => SR.ArgumentOutOfRange_IndexCount,
-            ExceptionResource.ArgumentOutOfRange_IndexCountBuffer => SR.ArgumentOutOfRange_IndexCountBuffer,
+            ExceptionResource.ArgumentOutOfRange_IndexCountBuffer
+                => SR.ArgumentOutOfRange_IndexCountBuffer,
             ExceptionResource.ArgumentOutOfRange_Count => SR.ArgumentOutOfRange_Count,
             ExceptionResource.ArgumentOutOfRange_Year => SR.ArgumentOutOfRange_Year,
             ExceptionResource.Arg_ArrayPlusOffTooSmall => SR.Arg_ArrayPlusOffTooSmall,
@@ -726,50 +833,70 @@ internal static class ThrowHelper
             ExceptionResource.NotSupported_ReadOnlyCollection => SR.NotSupported_ReadOnlyCollection,
             ExceptionResource.Arg_RankMultiDimNotSupported => SR.Arg_RankMultiDimNotSupported,
             ExceptionResource.Arg_NonZeroLowerBound => SR.Arg_NonZeroLowerBound,
-            ExceptionResource.ArgumentOutOfRange_GetCharCountOverflow => SR.ArgumentOutOfRange_GetCharCountOverflow,
+            ExceptionResource.ArgumentOutOfRange_GetCharCountOverflow
+                => SR.ArgumentOutOfRange_GetCharCountOverflow,
             ExceptionResource.ArgumentOutOfRange_ListInsert => SR.ArgumentOutOfRange_ListInsert,
-            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum => SR.ArgumentOutOfRange_NeedNonNegNum,
-            ExceptionResource.ArgumentOutOfRange_SmallCapacity => SR.ArgumentOutOfRange_SmallCapacity,
+            ExceptionResource.ArgumentOutOfRange_NeedNonNegNum
+                => SR.ArgumentOutOfRange_NeedNonNegNum,
+            ExceptionResource.ArgumentOutOfRange_SmallCapacity
+                => SR.ArgumentOutOfRange_SmallCapacity,
             ExceptionResource.Argument_InvalidOffLen => SR.Argument_InvalidOffLen,
             ExceptionResource.Argument_CannotExtractScalar => SR.Argument_CannotExtractScalar,
-            ExceptionResource.ArgumentOutOfRange_BiggerThanCollection => SR.ArgumentOutOfRange_BiggerThanCollection,
+            ExceptionResource.ArgumentOutOfRange_BiggerThanCollection
+                => SR.ArgumentOutOfRange_BiggerThanCollection,
             ExceptionResource.Serialization_MissingKeys => SR.Serialization_MissingKeys,
             ExceptionResource.Serialization_NullKey => SR.Serialization_NullKey,
             ExceptionResource.NotSupported_KeyCollectionSet => SR.NotSupported_KeyCollectionSet,
             ExceptionResource.NotSupported_ValueCollectionSet => SR.NotSupported_ValueCollectionSet,
             ExceptionResource.InvalidOperation_NullArray => SR.InvalidOperation_NullArray,
-            ExceptionResource.TaskT_TransitionToFinal_AlreadyCompleted => SR.TaskT_TransitionToFinal_AlreadyCompleted,
-            ExceptionResource.TaskCompletionSourceT_TrySetException_NullException => SR.TaskCompletionSourceT_TrySetException_NullException,
-            ExceptionResource.TaskCompletionSourceT_TrySetException_NoExceptions => SR.TaskCompletionSourceT_TrySetException_NoExceptions,
+            ExceptionResource.TaskT_TransitionToFinal_AlreadyCompleted
+                => SR.TaskT_TransitionToFinal_AlreadyCompleted,
+            ExceptionResource.TaskCompletionSourceT_TrySetException_NullException
+                => SR.TaskCompletionSourceT_TrySetException_NullException,
+            ExceptionResource.TaskCompletionSourceT_TrySetException_NoExceptions
+                => SR.TaskCompletionSourceT_TrySetException_NoExceptions,
             ExceptionResource.NotSupported_StringComparison => SR.NotSupported_StringComparison,
-            ExceptionResource.ConcurrentCollection_SyncRoot_NotSupported => SR.ConcurrentCollection_SyncRoot_NotSupported,
-            ExceptionResource.Task_MultiTaskContinuation_NullTask => SR.Task_MultiTaskContinuation_NullTask,
-            ExceptionResource.InvalidOperation_WrongAsyncResultOrEndCalledMultiple => SR.InvalidOperation_WrongAsyncResultOrEndCalledMultiple,
-            ExceptionResource.Task_MultiTaskContinuation_EmptyTaskList => SR.Task_MultiTaskContinuation_EmptyTaskList,
+            ExceptionResource.ConcurrentCollection_SyncRoot_NotSupported
+                => SR.ConcurrentCollection_SyncRoot_NotSupported,
+            ExceptionResource.Task_MultiTaskContinuation_NullTask
+                => SR.Task_MultiTaskContinuation_NullTask,
+            ExceptionResource.InvalidOperation_WrongAsyncResultOrEndCalledMultiple
+                => SR.InvalidOperation_WrongAsyncResultOrEndCalledMultiple,
+            ExceptionResource.Task_MultiTaskContinuation_EmptyTaskList
+                => SR.Task_MultiTaskContinuation_EmptyTaskList,
             ExceptionResource.Task_Start_TaskCompleted => SR.Task_Start_TaskCompleted,
             ExceptionResource.Task_Start_Promise => SR.Task_Start_Promise,
             ExceptionResource.Task_Start_ContinuationTask => SR.Task_Start_ContinuationTask,
             ExceptionResource.Task_Start_AlreadyStarted => SR.Task_Start_AlreadyStarted,
-            ExceptionResource.Task_RunSynchronously_Continuation => SR.Task_RunSynchronously_Continuation,
+            ExceptionResource.Task_RunSynchronously_Continuation
+                => SR.Task_RunSynchronously_Continuation,
             ExceptionResource.Task_RunSynchronously_Promise => SR.Task_RunSynchronously_Promise,
-            ExceptionResource.Task_RunSynchronously_TaskCompleted => SR.Task_RunSynchronously_TaskCompleted,
-            ExceptionResource.Task_RunSynchronously_AlreadyStarted => SR.Task_RunSynchronously_AlreadyStarted,
-            ExceptionResource.AsyncMethodBuilder_InstanceNotInitialized => SR.AsyncMethodBuilder_InstanceNotInitialized,
+            ExceptionResource.Task_RunSynchronously_TaskCompleted
+                => SR.Task_RunSynchronously_TaskCompleted,
+            ExceptionResource.Task_RunSynchronously_AlreadyStarted
+                => SR.Task_RunSynchronously_AlreadyStarted,
+            ExceptionResource.AsyncMethodBuilder_InstanceNotInitialized
+                => SR.AsyncMethodBuilder_InstanceNotInitialized,
             ExceptionResource.Task_ContinueWith_ESandLR => SR.Task_ContinueWith_ESandLR,
             ExceptionResource.Task_ContinueWith_NotOnAnything => SR.Task_ContinueWith_NotOnAnything,
             ExceptionResource.Task_InvalidTimerTimeSpan => SR.Task_InvalidTimerTimeSpan,
-            ExceptionResource.Task_Delay_InvalidMillisecondsDelay => SR.Task_Delay_InvalidMillisecondsDelay,
+            ExceptionResource.Task_Delay_InvalidMillisecondsDelay
+                => SR.Task_Delay_InvalidMillisecondsDelay,
             ExceptionResource.Task_Dispose_NotCompleted => SR.Task_Dispose_NotCompleted,
             ExceptionResource.Task_ThrowIfDisposed => SR.Task_ThrowIfDisposed,
             ExceptionResource.Task_WaitMulti_NullTask => SR.Task_WaitMulti_NullTask,
-            ExceptionResource.ArgumentException_OtherNotArrayOfCorrectLength => SR.ArgumentException_OtherNotArrayOfCorrectLength,
+            ExceptionResource.ArgumentException_OtherNotArrayOfCorrectLength
+                => SR.ArgumentException_OtherNotArrayOfCorrectLength,
             ExceptionResource.ArgumentNull_Array => SR.ArgumentNull_Array,
             ExceptionResource.ArgumentNull_SafeHandle => SR.ArgumentNull_SafeHandle,
-            ExceptionResource.ArgumentOutOfRange_EndIndexStartIndex => SR.ArgumentOutOfRange_EndIndexStartIndex,
+            ExceptionResource.ArgumentOutOfRange_EndIndexStartIndex
+                => SR.ArgumentOutOfRange_EndIndexStartIndex,
             ExceptionResource.ArgumentOutOfRange_Enum => SR.ArgumentOutOfRange_Enum,
-            ExceptionResource.ArgumentOutOfRange_HugeArrayNotSupported => SR.ArgumentOutOfRange_HugeArrayNotSupported,
+            ExceptionResource.ArgumentOutOfRange_HugeArrayNotSupported
+                => SR.ArgumentOutOfRange_HugeArrayNotSupported,
             ExceptionResource.Argument_AddingDuplicate => SR.Argument_AddingDuplicate,
-            ExceptionResource.Argument_InvalidArgumentForComparison => SR.Argument_InvalidArgumentForComparison,
+            ExceptionResource.Argument_InvalidArgumentForComparison
+                => SR.Argument_InvalidArgumentForComparison,
             ExceptionResource.Arg_LowerBoundsMustMatch => SR.Arg_LowerBoundsMustMatch,
             ExceptionResource.Arg_MustBeType => SR.Arg_MustBeType,
             ExceptionResource.Arg_Need1DArray => SR.Arg_Need1DArray,
@@ -778,18 +905,26 @@ internal static class ThrowHelper
             ExceptionResource.Arg_NeedAtLeast1Rank => SR.Arg_NeedAtLeast1Rank,
             ExceptionResource.Arg_RankIndices => SR.Arg_RankIndices,
             ExceptionResource.Arg_RanksAndBounds => SR.Arg_RanksAndBounds,
-            ExceptionResource.InvalidOperation_IComparerFailed => SR.InvalidOperation_IComparerFailed,
-            ExceptionResource.NotSupported_FixedSizeCollection => SR.NotSupported_FixedSizeCollection,
+            ExceptionResource.InvalidOperation_IComparerFailed
+                => SR.InvalidOperation_IComparerFailed,
+            ExceptionResource.NotSupported_FixedSizeCollection
+                => SR.NotSupported_FixedSizeCollection,
             ExceptionResource.Rank_MultiDimNotSupported => SR.Rank_MultiDimNotSupported,
             ExceptionResource.Arg_TypeNotSupported => SR.Arg_TypeNotSupported,
-            ExceptionResource.Argument_SpansMustHaveSameLength => SR.Argument_SpansMustHaveSameLength,
+            ExceptionResource.Argument_SpansMustHaveSameLength
+                => SR.Argument_SpansMustHaveSameLength,
             ExceptionResource.Argument_InvalidFlag => SR.Argument_InvalidFlag,
-            ExceptionResource.CancellationTokenSource_Disposed => SR.CancellationTokenSource_Disposed,
+            ExceptionResource.CancellationTokenSource_Disposed
+                => SR.CancellationTokenSource_Disposed,
             ExceptionResource.Argument_AlignmentMustBePow2 => SR.Argument_AlignmentMustBePow2,
-            ExceptionResource.ArgumentOutOfRange_NotGreaterThanBufferLength => SR.ArgumentOutOfRange_NotGreaterThanBufferLength,
-            ExceptionResource.InvalidOperation_SpanOverlappedOperation => SR.InvalidOperation_SpanOverlappedOperation,
-            ExceptionResource.InvalidOperation_TimeProviderNullLocalTimeZone => SR.InvalidOperation_TimeProviderNullLocalTimeZone,
-            ExceptionResource.InvalidOperation_TimeProviderInvalidTimestampFrequency => SR.InvalidOperation_TimeProviderInvalidTimestampFrequency,
+            ExceptionResource.ArgumentOutOfRange_NotGreaterThanBufferLength
+                => SR.ArgumentOutOfRange_NotGreaterThanBufferLength,
+            ExceptionResource.InvalidOperation_SpanOverlappedOperation
+                => SR.InvalidOperation_SpanOverlappedOperation,
+            ExceptionResource.InvalidOperation_TimeProviderNullLocalTimeZone
+                => SR.InvalidOperation_TimeProviderNullLocalTimeZone,
+            ExceptionResource.InvalidOperation_TimeProviderInvalidTimestampFrequency
+                => SR.InvalidOperation_TimeProviderInvalidTimestampFrequency,
             ExceptionResource.Format_UnexpectedClosingBrace => SR.Format_UnexpectedClosingBrace,
             ExceptionResource.Format_UnclosedFormatItem => SR.Format_UnclosedFormatItem,
             ExceptionResource.Format_ExpectedAsciiDigit => SR.Format_ExpectedAsciiDigit,

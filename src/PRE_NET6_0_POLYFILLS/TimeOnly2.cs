@@ -4,9 +4,7 @@ using System.Security;
 
 namespace System;
 
-
-
-public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IEquatable<TimeOnly>//, ISpanFormattable//, IUtf8SpanFormattable
+public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IEquatable<TimeOnly> //, ISpanFormattable//, IUtf8SpanFormattable
 {
     // ...
 
@@ -23,7 +21,6 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
     /// <exception cref="ArgumentException">Thrown when <paramref name="obj"/> is not of type <see cref="TimeOnly"/>.</exception>
     public int CompareTo(object obj)
     {
-
         if (obj is null)
         {
             return 1;
@@ -36,8 +33,6 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
 
         throw new ArgumentException("Object must be of type TimeOnly.");
     }
-
-
 
     /// <summary>
     /// Compares this <see cref="TimeOnly"/> to another object.
@@ -66,13 +61,11 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
         return Ticks == other.Ticks;
     }
 
-    public TimeOnly(long ticks) : this(new TimeSpan(ticks))
-    {
-    }
+    public TimeOnly(long ticks)
+        : this(new TimeSpan(ticks)) { }
 
-    public TimeOnly(TimeSpan timespan) : this(timespan.Hours, timespan.Minutes, timespan.Seconds, timespan.Milliseconds)
-    {
-    }
+    public TimeOnly(TimeSpan timespan)
+        : this(timespan.Hours, timespan.Minutes, timespan.Seconds, timespan.Milliseconds) { }
 
     /// <summary>
     /// Tries to format the current <see cref="TimeOnly"/> object into a span of characters.
@@ -87,7 +80,12 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
     /// <c>true</c> if the formatting was successful and <paramref name="destination"/> contains the formatted output;
     /// otherwise, <c>false</c>.
     /// </returns>
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format = default, IFormatProvider? formatProvider = null)
+    public bool TryFormat(
+        Span<char> destination,
+        out int charsWritten,
+        ReadOnlySpan<char> format = default,
+        IFormatProvider? formatProvider = null
+    )
     {
         if (destination.Length < 8)
         {
@@ -137,7 +135,12 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
     /// <c>true</c> if the formatting was successful and <paramref name="destination"/> contains the formatted output;
     /// otherwise, <c>false</c>.
     /// </returns>
-    public bool TryFormatUtf8(Span<byte> destination, out int bytesWritten, ReadOnlySpan<byte> format = default, IFormatProvider? formatProvider = null)
+    public bool TryFormatUtf8(
+        Span<byte> destination,
+        out int bytesWritten,
+        ReadOnlySpan<byte> format = default,
+        IFormatProvider? formatProvider = null
+    )
     {
         if (destination.Length < 8)
         {
@@ -176,9 +179,13 @@ public readonly partial struct TimeOnly : IComparable, IComparable<TimeOnly>, IE
 
     public string ToLongTimeString() => Format("HH:MM:ss.ffff");
 
-    public static implicit operator TimeOnly(TimeSpan time) => new TimeOnly(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+    public static implicit operator TimeOnly(TimeSpan time) =>
+        new TimeOnly(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
 
-    public static TimeOnly Parse(string s, string format = "HH:MM:ss.ffff") => DateTime.ParseExact(s, format, null, Globalization.DateTimeStyles.None).TimeOfDay;
-    public static TimeOnly Parse(string s, IFormatProvider provider) => DateTime.Parse(s, provider).TimeOfDay;
+    public static TimeOnly Parse(string s, string format = "HH:MM:ss.ffff") =>
+        DateTime.ParseExact(s, format, null, Globalization.DateTimeStyles.None).TimeOfDay;
+
+    public static TimeOnly Parse(string s, IFormatProvider provider) =>
+        DateTime.Parse(s, provider).TimeOfDay;
 }
 #endif

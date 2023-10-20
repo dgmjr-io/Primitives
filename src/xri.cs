@@ -1,4 +1,4 @@
-/*
+﻿/*
  * xri.cs
  *
  *   Created: 2023-07-20-11:53:36
@@ -11,6 +11,7 @@
  */
 
 namespace System;
+
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
@@ -25,75 +26,87 @@ using static System.Text.RegularExpressions.RegexOptions;
 using Validation = global::Validation;
 #endif
 
-[RegexDto(xri._RegexString, regexOptions: uri._RegexOptions)]
+/// <summary>
+/// Represents an "extensible resource identifier"
+/// </summary>
+[RegexDto(xri._RegexString, RegexOptions: uri._RegexOptions)]
 [StructLayout(LayoutKind.Auto)]
-public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceIdentifierWithQueryAndFragment
+public readonly partial record struct xri
+    : IStringWithRegexValueObject<xri>,
+        IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
-, IUriConvertible<xri>
+        ,
+        IUriConvertible<xri>
 #endif
 {
     public const string Description = "an eXtensible resource locator (xri)";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
-    public const string _RegexString = @"^(?<Scheme>xri):(?<DoubleSlashes>\/\/)?(?<Path>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query>(?:[^#]*)))?(?:#(?<Fragment>(?:.*)))?$";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+#endif
+    public const string _RegexString =
+        @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
+
+#if NET7_0_OR_GREATER
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);
-    public bool IsEmpty => base.ToString() == EmptyStringValue;
+    public readonly bool IsEmpty => base.ToString() == EmptyStringValue;
 
-    public string PathAndQuery => $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
+    public readonly string PathAndQuery =>
+        $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
-    private string _value = null!;
-    public string Value => _value;
+    public readonly string Value { get; init; }
 #if NET6_0_OR_GREATER
     static string IStringWithRegexValueObject<xri>.Description => Description;
     static string IStringWithRegexValueObject<xri>.RegexString => RegexString;
     static xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
 #else
-    string IStringWithRegexValueObject<xri>.Description => Description;
-    xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
-    string IStringWithRegexValueObject<xri>.RegexString => RegexString;
-    REx IStringWithRegexValueObject<xri>.Regex() => Regex();
-#endif
-    // public static xri Parse(string xri) => From(xri);
+    readonly string IStringWithRegexValueObject<xri>.Description => Description;
+    readonly xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    readonly string IStringWithRegexValueObject<xri>.RegexString => RegexString;
 
-    public Uri? Uri => this;
+    readonly Regex IStringWithRegexValueObject<xri>.Regex() => Regex();
+#endif
+
+    public readonly Uri Uri => this;
+
     public static xri FromUri(string s) => From(s) with { OriginalString = s };
+
     public static xri FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
-    //     private const RegexOptions RegexOptions = Compiled | IgnoreCase | Singleline;
-    // #if NET70_OR_GREATER
-    //     [GeneratedRegex(RegexString, RegexOptions)]
-    //     public static partial REx Regex();
-    // #else
-    //     public static REx Regex() => new(RegexString, RegexOptions);
-    // #endif
-    // public xri(string urlString) : base(urlString) { }
-    public xri(Uri xri) : this(xri.ToString()) { }
-    public xri(xri xri) : this(xri.ToString()) { }
-    // public xri() : this(EmptyStringValue) { }
+    public xri(Uri xri)
+        : this(xri.ToString()) { }
+
+    public xri(xri xri)
+        : this(xri.ToString()) { }
+
     public static xri Parse(string s, IFormatProvider? formatProvider = null) => From(s);
 
-    public static Validation Validate(string value)
-    {
-        if (value is null)
-        {
-            return Validation.Invalid("Cannot create a value object with null.");
-        }
-        else if (!xri.TryCreate(value, default, out _))
-        {
-            return Validation.Invalid("The value is not a valid xri.");
-        }
-
-        return Validation.Ok;
-    }
+    public static Validation Validate(string value) =>
+        value is null
+            ? Validation.Invalid("Cannot create a value object with null.")
+            : !xri.TryCreate(value, default, out _)
+                ? Validation.Invalid("The value is not a valid xri.")
+                : Validation.Ok;
 
     public static bool TryCreate(string? urlString, UriKind? uriKind, out xri xri)
     {
-        if (string.IsNullOrEmpty(urlString))
+        if (IsNullOrEmpty(urlString))
         {
             xri = Empty;
             return false;
         }
-        if (Validate(urlString) == Validation.Ok && Uri.TryCreate(urlString, uriKind ?? UriKind.Absolute, out var surl))
+        if (
+            Validate(urlString) == Validation.Ok
+            && Uri.TryCreate(urlString, uriKind ?? Absolute, out var surl)
+        )
         {
             xri = From(surl.ToString());
             return true;
@@ -102,37 +115,55 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
         return false;
     }
 
-    public static xri From(string s) => Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+    public static xri From(string s) =>
+        Validate(s) == Validation.Ok ? new xri(s) with { OriginalString = s } : Empty;
+
     public static xri From(Uri xri) => new xri(xri) with { OriginalString = xri.ToString() };
 
-    public static implicit operator System.Uri?(xri u) => Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri) ? uri : null;
+    public static implicit operator System.Uri(xri u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
+
     public static implicit operator xri(string s) => From(s) with { OriginalString = s };
+
     public static implicit operator string(xri xri) => xri.ToString();
 
-    // public static implicit operator xri(xri? xri) => xri.HasValue ? xri.Value : Empty;
+    public static bool operator ==(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) == 0;
 
-    public static bool operator ==(xri? left, IResourceIdentifier right) => left?.CompareTo(right) == 0;
-    public static bool operator !=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) != 0;
-    public static bool operator <=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) <= 0;
-    public static bool operator >=(xri? left, IResourceIdentifier right) => left?.CompareTo(right) >= 0;
-    public static bool operator <(xri? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
-    public static bool operator >(xri? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
+    public static bool operator !=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) != 0;
 
-    public int CompareTo(IResourceIdentifier other) => other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
+    public static bool operator <=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) <= 0;
 
-    // public override bool Equals(object? obj) => obj is xri xri && string.Equals(xri.Value, Value);
-    public override int GetHashCode() => ToString().GetHashCode();
+    public static bool operator >=(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) >= 0;
 
+    public static bool operator <(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) < 0;
 
-    public override string ToString() => IsEmpty ? string.Empty : Uri.ToString();
-    private string BaseToString() => OriginalString;
+    public static bool operator >(xri? left, IResourceIdentifier right) =>
+        left?.CompareTo(right) > 0;
 
-    public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) => TryParse(s, out xri);
+    public readonly int CompareTo(IResourceIdentifier other) =>
+        other is xri xri ? CompareTo(xri) : CompareTo(other.ToString());
+
+    public override readonly int GetHashCode() => ToString().GetHashCode();
+
+    public override readonly string ToString() => IsEmpty ? string.Empty : Uri.ToString();
+
+    private readonly string BaseToString() => OriginalString;
+
+    public static bool TryParse(string? s, IFormatProvider? formatProvider, out xri xri) =>
+        TryParse(s, out xri);
+
     public static bool TryParse(string? s, out xri xri)
     {
         try
         {
-            if (string.IsNullOrEmpty(s))
+            if (IsNullOrEmpty(s))
             {
                 xri = Empty;
                 return false;
@@ -151,83 +182,100 @@ public partial record struct xri : IStringWithRegexValueObject<xri>, IResourceId
         return false;
     }
 
-    public bool Equals(xri? other) => Equals(other.ToString());
-    public int CompareTo(string? other) => Compare(ToString(), other, InvariantCultureIgnoreCase);
-    public int CompareTo(object? obj) => obj is xri xri ? CompareTo(xri) : obj is string str ? CompareTo(str) : throw new ArgumentException("Object is not a xri.");
-    public bool Equals(string? other) => ToString().Equals(other, InvariantCultureIgnoreCase);
-    public int CompareTo(xri other) => CompareTo(other.ToString());
+    public readonly bool Equals(xri? other) => Equals(other.ToString());
 
-    public class EfCoreValueConverter : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
+
+    public readonly int CompareTo(object? obj) =>
+        obj is xri xri
+            ? CompareTo(xri)
+            : obj is string str
+                ? CompareTo(str)
+                : throw new ArgumentException("Object is not a xri.");
+
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
+
+    public readonly int CompareTo(xri other) => CompareTo(other.ToString());
+
+    public class EfCoreValueConverter
+        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
     {
-        public EfCoreValueConverter() : base(v => v.ToString(), v => From(v)) { }
+        public EfCoreValueConverter()
+            : base(v => v.ToString(), v => From(v)) { }
     }
 
-    public class JsonConverter : System.Text.Json.Serialization.JsonConverter<xri>
+    public class JsonConverter : JsonConverter<xri>
     {
-        public override xri Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options) => From(reader.GetString());
-        public override void Write(System.Text.Json.Utf8JsonWriter writer, xri value, System.Text.Json.JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
+        public override xri Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
+            From(reader.GetString());
+
+        public override void Write(Utf8JsonWriter writer, xri value, Jso options) =>
+            writer.WriteStringValue(value.ToString());
     }
 
-    public class SystemTextJsonConverter : global::System.Text.Json.Serialization.JsonConverter<xri>
+    public class SystemTextJsonConverter : JsonConverter<xri>
     {
-        public override xri Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+        public override xri Read(ref Utf8JsonReader reader, type typeToConvert, Jso options)
         {
-            return xri.From(reader.GetString());
+            return From(reader.GetString());
         }
 
-        public override void Write(System.Text.Json.Utf8JsonWriter writer, xri value, global::System.Text.Json.JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, xri value, Jso options)
         {
             writer.WriteStringValue(value.ToString());
         }
     }
 
-
-    public class TypeConverter : global::System.ComponentModel.TypeConverter
+    public class TypeConverter : System.ComponentModel.TypeConverter
     {
-        public override global::System.Boolean CanConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String) || base.CanConvertFrom(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override global::System.Object? ConvertFrom(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value)
+        public override object? ConvertFrom(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value
+        )
         {
-            var stringValue = value as global::System.String;
-            if (stringValue is not null)
-            {
-                return xri.From(stringValue);
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            var stringValue = value as string;
+            return stringValue is not null
+                ? xri.From(stringValue)
+                : base.ConvertFrom(context, culture, value);
         }
 
-        public override bool CanConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Type? sourceType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, type? sourceType)
         {
-            return sourceType == typeof(global::System.String) || base.CanConvertTo(context, sourceType);
+            return sourceType == typeof(string) || base.CanConvertTo(context, sourceType);
         }
 
-        public override object? ConvertTo(global::System.ComponentModel.ITypeDescriptorContext? context, global::System.Globalization.CultureInfo? culture, global::System.Object? value, global::System.Type? destinationType)
-        {
-            if (value is xri idValue)
-            {
-                if (destinationType == typeof(global::System.String))
-                {
-                    return idValue.ToString();
-                }
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
+        public override object? ConvertTo(
+            ITypeDescriptorContext? context,
+            Globalization.CultureInfo? culture,
+            object? value,
+            type? destinationType
+        ) =>
+            value is xri idValue && destinationType == typeof(string)
+                ? idValue.ToString()
+                : base.ConvertTo(context, culture, value, destinationType);
     }
 }
 
-
 public static class xriEfCoreExtensions
 {
-    public static void ConfigureXri<TEntity>(this ModelBuilder modelBuilder, Expression<Func<TEntity, xri>> propertyExpression)
-        where TEntity : class
-        => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
+    public static void ConfigureXri<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, xri>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
 
-    public static void ConfigureXri<TEntity>(this EntityTypeBuilder<TEntity> entityBuilder, Expression<Func<TEntity, xri>> propertyExpression)
-        where TEntity : class
-        => entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
+    public static void ConfigureXri<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, xri>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
 }

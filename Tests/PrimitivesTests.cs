@@ -31,7 +31,9 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
     public void Empty_Primitive_Value_Is_Null_Or_Empty()
     {
         var emptyPrimitive = TPrimitive.Empty;
-        Logger.LogInformation($"Testing that empty primitive {emptyPrimitive} ToString is NullOrEmpty");
+        Logger.LogInformation(
+            $"Testing that empty primitive {emptyPrimitive} ToString is NullOrEmpty"
+        );
         emptyPrimitive.ToString().Should().BeNullOrEmpty();
     }
 
@@ -40,10 +42,16 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
     public virtual void Valid_Primitive_Is_Valid_And_Not_Empty(string validValue)
     {
         var primitive = TPrimitive.Parse(validValue);
-        Logger.LogInformation($"Testing that valid primitive {validValue} IsEmpty == false && contains {validValue}");
+        Logger.LogInformation(
+            $"Testing that valid primitive {validValue} IsEmpty == false && contains {validValue}"
+        );
         Logger.LogOriginalValue(typeof(TPrimitive), primitive.OriginalString);
         primitive.IsEmpty.Should().BeFalse();
-        primitive.Value.Trim().ToLowerInvariant().Should().Contain(validValue.Trim().ToLowerInvariant());
+        primitive.Value
+            .Trim()
+            .ToLowerInvariant()
+            .Should()
+            .Contain(validValue.Trim().ToLowerInvariant());
     }
 
     // [Theory]
@@ -60,13 +68,17 @@ public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
     public virtual void Invalid_Primitive_Throws_Exception_On_Parse(string invalidValue)
     {
         var parsePrimitive = () => TPrimitive.Parse(invalidValue);
-        Logger.LogInformation($"Testing that invalid primitive {invalidValue} throws exception on parse");
+        Logger.LogInformation(
+            $"Testing that invalid primitive {invalidValue} throws exception on parse"
+        );
         parsePrimitive.Should().Throw<Exception>();
     }
 
-    public static object[][] ValidValues => (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).ValidValuesStrings;
+    public static object[][] ValidValues =>
+        (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).ValidValuesStrings;
     protected abstract string[][] ValidValuesStrings { get; }
 
-    public static object[][] InvalidValues => (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).InvalidValuesStrings;
+    public static object[][] InvalidValues =>
+        (Activator.CreateInstance(typeof(TSelf), _output) as TSelf).InvalidValuesStrings;
     protected abstract string[][] InvalidValuesStrings { get; }
 }

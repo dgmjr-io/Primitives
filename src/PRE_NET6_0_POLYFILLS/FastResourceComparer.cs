@@ -10,7 +10,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System.Resources;
 
-internal sealed class FastResourceComparer : IComparer, IEqualityComparer, IComparer<string>, IEqualityComparer<string>
+internal sealed class FastResourceComparer
+    : IComparer,
+        IEqualityComparer,
+        IComparer<string>,
+        IEqualityComparer<string>
 {
     internal static readonly FastResourceComparer Default = new FastResourceComparer();
 
@@ -67,7 +71,7 @@ internal sealed class FastResourceComparer : IComparer, IEqualityComparer, IComp
         return string.Equals(a2, b2);
     }
 
-    public unsafe static int CompareOrdinal(string a, byte[] bytes, int bCharLength)
+    public static unsafe int CompareOrdinal(string a, byte[] bytes, int bCharLength)
     {
         int num = 0;
         int num2 = 0;
@@ -106,7 +110,7 @@ internal sealed class FastResourceComparer : IComparer, IEqualityComparer, IComp
         return -CompareOrdinal(b, bytes, aCharLength);
     }
 
-    internal unsafe static int CompareOrdinal(byte* a, int byteLen, string b)
+    internal static unsafe int CompareOrdinal(byte* a, int byteLen, string b)
     {
         int num = 0;
         int num2 = 0;

@@ -1,12 +1,12 @@
-/*
+﻿/*
  * DI.cs
  *
  *   Created: 2022-12-14-02:03:20
  *   Modified: 2022-12-14-02:03:20
  *
- *   Author: David G. Mooore, Jr. <david@dgmjr.io>
+ *   Author: David G. Moore, Jr. <david@dgmjr.io>
  *
- *   Copyright © 2022 David G. Mooore, Jr., All Rights Reserved
+ *   Copyright © 2022 David G. Moore, Jr., All Rights Reserved
  *      License: MIT (https://opensource.org/licenses/MIT)
  */
 
@@ -23,26 +23,25 @@ using Microsoft.AspNetCore.Builder;
 
 public static class ObjectIdDIExtensions
 {
-
     //public static readonly Action<SwaggerGenOptions> ConfigureSwaggerGen = options
     //    => options
-        //{
-        //    try
-        //    {
-        //        options.MapType<ObjectId>(() => new OpenApiSchema
-        //            {
-        //                Type = "string",
-        //                Pattern = ObjectId.RegexString,
-        //                Format = nameof(ObjectId),
-        //                Description = "A ObjectId is a 24-character hexadecimal string that uniquely identifies a SendPulse entity.",
-        //                Example = new OpenApiString("abcdef0123456789abcdef01")
-        //            });
-        //    }
-        //    catch (System.ArgumentException)
-        //    {
-        //        // ignore
-        //    }
-        //};
+    //{
+    //    try
+    //    {
+    //        options.MapType<ObjectId>(() => new OpenApiSchema
+    //            {
+    //                Type = "string",
+    //                Pattern = ObjectId.RegexString,
+    //                Format = nameof(ObjectId),
+    //                Description = "A ObjectId is a 24-character hexadecimal string that uniquely identifies a SendPulse entity.",
+    //                Example = new OpenApiString("abcdef0123456789abcdef01")
+    //            });
+    //    }
+    //    catch (System.ArgumentException)
+    //    {
+    //        // ignore
+    //    }
+    //};
 
 #if NET6_0_OR_GREATER
     public static WebApplicationBuilder DescribeObjectId(this WebApplicationBuilder builder)
@@ -57,6 +56,5 @@ public static class ObjectIdDIExtensions
         services.Describe<ObjectId>(); //.ConfigureSwaggerGen(ConfigureSwaggerGen);
         return services;
     }
-
 }
 #endif

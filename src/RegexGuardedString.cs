@@ -1,6 +1,4 @@
-#if NET7_0_OR_GREATER
-using System;
-using System.ComponentModel;
+﻿#if NET7_0_OR_GREATER
 /*
  * RegexGuardedString.cs
  *
@@ -14,23 +12,25 @@ using System.ComponentModel;
  */
 
 using System.Reflection;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Expressions;
 using static System.Activator;
+using static System.Text.RegularExpressions.RegexOptions;
+
 namespace System;
 
-public delegate REx RegexProvider();
+public delegate Regex RegexProvider();
 
 public interface IRegexProvider
 {
     public static abstract RegexProvider Regex { get; }
-    public const RegexOptions DefaultRegexOptions = Compiled | CultureInvariant | IgnoreCase | IgnorePatternWhitespace;
+    public const RegexOptions DefaultRegexOptions =
+        Compiled | IgnoreCase | Multiline | IgnorePatternWhitespace;
 }
 
 public interface IRegexGuardedString<TSelf>
 {
-    public static abstract REx Regex();
+    public static abstract Regex Regex();
 
     string Value { get; }
 }
@@ -39,28 +39,27 @@ public interface IRegexGuardedString<TSelf, TRegexProvider> : IRegexGuardedStrin
     where TSelf : RegexGuardedString<TSelf>
     where TRegexProvider : IRegexProvider
 {
-    public static REx Regex() => TRegexProvider.Regex();
+    public static new Regex Regex() => TRegexProvider.Regex();
 }
 
 // [RegexGuardedString.JConverter]
-public class RegexGuardedString<TSelf, TRegexProvider> : RegexGuardedString<TSelf>, IRegexGuardedString<TSelf, TRegexProvider>
+public class RegexGuardedString<TSelf, TRegexProvider>
+    : RegexGuardedString<TSelf>,
+        IRegexGuardedString<TSelf, TRegexProvider>
     where TSelf : RegexGuardedString<TSelf, TRegexProvider>
     where TRegexProvider : IRegexProvider
 {
-    private string _value;
+    public static new Regex Regex() => TRegexProvider.Regex();
 
-    public static REx Regex() => TRegexProvider.Regex();
+    public RegexGuardedString(string value)
+        : base(value, TRegexProvider.Regex()) { }
 
-    public RegexGuardedString(string value) : base(value, TRegexProvider.Regex())
-    {
-    }
-
-    //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    //     public class JConverterAttribute : Serialization.JsonConverterAttribute
     //     {
     //         public JConverterAttribute() : base(typeof(JConverter)) { }
     //     }
 
-    //     public class JConverter : System.Text.Json.Serialization.JsonConverter<RegexGuardedString>
+    //     public class JConverter : Serialization.JsonConverter<RegexGuardedString>
     //     {
     //         public override RegexGuardedString Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions jsonSerializerOptions)
     //         {
@@ -125,18 +124,22 @@ public class RegexGuardedString<TSelf, TRegexProvider> : RegexGuardedString<TSel
 public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
     where TSelf : RegexGuardedString<TSelf>
 {
-    protected RegexGuardedString(string value, REx regex)
+    protected RegexGuardedString(string value, Regex regex)
     {
         _regex = regex;
         Value = value;
     }
 
-    protected RegexGuardedString(string value, string regex, RegexOptions options = IRegexProvider.DefaultRegexOptions) : this(value, new(regex, options))
-    {
-    }
+    protected RegexGuardedString(
+        string value,
+        string regex,
+        RegexOptions options = IRegexProvider.DefaultRegexOptions
+    )
+        : this(value, new(regex, options)) { }
 
-    private static REx _regex;
-    public static REx Regex() => _regex;
+    private static Regex _regex;
+
+    public static Regex Regex() => _regex;
 
     public static implicit operator string(RegexGuardedString<TSelf> value)
     {
@@ -166,19 +169,21 @@ public class RegexGuardedString<TSelf> : IRegexGuardedString<TSelf>
 
             if (!Regex().IsMatch(value))
             {
-                throw new ArgumentException($"Value \"{value}\" does not match the specified pattern: {Regex()}");
+                throw new ArgumentException(
+                    $"Value \"{value}\" does not match the specified pattern: {Regex()}"
+                );
             }
 
             _value = value;
         }
     }
 
-    //     public class JConverterAttribute : System.Text.Json.Serialization.JsonConverterAttribute
+    //     public class JConverterAttribute : Serialization.JsonConverterAttribute
     //     {
     //         public JConverterAttribute() : base(typeof(JConverter)) { }
     //     }
 
-    //     public class JConverter : System.Text.Json.Serialization.JsonConverter<TSelf>
+    //     public class JConverter : Serialization.JsonConverter<TSelf>
     //     {
     //         public override TSelf Read(ref Text.Json.Utf8JsonReader reader, Type typeToConvert, Text.Json.JsonSerializerOptions options)
     //         {

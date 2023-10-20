@@ -1,4 +1,6 @@
 #if !NET6_0_OR_GREATER
+namespace System;
+
 internal static class SpanHelper
 {
     public static long DigitsToInt64(int value, int length)

@@ -15,12 +15,12 @@ namespace System
     /// Represents a time of day, as would be read from a clock, within the range 00:00:00 to 23:59:59.9999999.
     /// </summary>
     public readonly partial struct TimeOnly
-            : IComparable,
-                IComparable<TimeOnly>,
-                IEquatable<TimeOnly>//,
-                                    //ISpanFormattable,
-                                    //ISpanParsable<TimeSpan>,
-                                    //IUtf8SpanFormattable
+        : IComparable,
+            IComparable<TimeOnly>,
+            IEquatable<TimeOnly> //,
+    //ISpanFormattable,
+    //ISpanParsable<TimeSpan>,
+    //IUtf8SpanFormattable
     {
         private long _ticks => GetTicks(Hour, Minute, Second, Microsecond);
         private const long TicksPerMillisecond = 10_000L;
@@ -31,23 +31,50 @@ namespace System
         internal const int MillisPerMinute = 60 * MillisPerSecond;
         internal const int MillisPerHour = 60 * MillisPerMinute;
 
-        private static TimeOnlyTuple
-                GetParts(long tickCount)
+        private static TimeOnlyTuple GetParts(long tickCount)
         {
             var parts = Math.DivRem(tickCount, TicksPerHour, out var hourTicks);
-            var hoursResult = (Value: SpanHelper.DigitsToInt64((int)(hourTicks / TicksPerMinute), 2), Foo: "Bar");
+            var hoursResult = (
+                Value: SpanHelper.DigitsToInt64((int)(hourTicks / TicksPerMinute), 2),
+                Foo: "Bar"
+            );
             parts = Math.DivRem(parts, TicksPerMinute, out var minuteTicks);
-            var minutesResult = (Value: SpanHelper.DigitsToInt64((int)(minuteTicks / TicksPerSecond), 2), Foo: "Bar");
+            var minutesResult = (
+                Value: SpanHelper.DigitsToInt64((int)(minuteTicks / TicksPerSecond), 2),
+                Foo: "Bar"
+            );
             parts = Math.DivRem(parts, TicksPerSecond, out var secondTicks);
-            var secondsResult = (Value: SpanHelper.DigitsToInt64((int)(secondTicks / TicksPerMillisecond), 2), Foo: "Bar");
-            var millisecondsResult = (Value: (int)Math.DivRem(parts, TicksPerMillisecond, out var microsecondTicks), Foo: "Bar");
-            var microsecondsResult = (Value: SpanHelper.DigitsToInt64((int)microsecondTicks, 6), Foo: "Bar");
+            var secondsResult = (
+                Value: SpanHelper.DigitsToInt64((int)(secondTicks / TicksPerMillisecond), 2),
+                Foo: "Bar"
+            );
+            var millisecondsResult = (
+                Value: (int)Math.DivRem(parts, TicksPerMillisecond, out var microsecondTicks),
+                Foo: "Bar"
+            );
+            var microsecondsResult = (
+                Value: SpanHelper.DigitsToInt64((int)microsecondTicks, 6),
+                Foo: "Bar"
+            );
 
-            return (tickCount, (int)hoursResult.Value, (int)minutesResult.Value, (int)secondsResult.Value, (int)millisecondsResult.Value, (int)microsecondsResult.Value);
+            return (
+                tickCount,
+                (int)hoursResult.Value,
+                (int)minutesResult.Value,
+                (int)secondsResult.Value,
+                (int)millisecondsResult.Value,
+                (int)microsecondsResult.Value
+            );
         }
 
         // This is to avoid overflow in the calculation above.
-        private static long GetTicks(int hour, int minute, int second, int millisecond, int microsecond)
+        private static long GetTicks(
+            int hour,
+            int minute,
+            int second,
+            int millisecond,
+            int microsecond
+        )
         {
             long totalHours = checked((long)hour * 3600L);
             long totalMinutes = checked((long)minute * 60L);
@@ -55,10 +82,12 @@ namespace System
             long totalMilliseconds = checked((long)millisecond * TicksPerMillisecond);
             long totalMicroseconds = checked(microsecond);
 
-            long result = ((totalHours + totalMinutes + totalSeconds) * TicksPerSecond) + totalMilliseconds + totalMicroseconds;
+            long result =
+                ((totalHours + totalMinutes + totalSeconds) * TicksPerSecond)
+                + totalMilliseconds
+                + totalMicroseconds;
             return result;
         }
-
 
         private static long GetTicks(int hour, int minute, int second, int microsecond)
         {
@@ -116,7 +145,13 @@ namespace System
         /// <param name="microsecond">The microseconds (0 through 999).</param>
         public TimeOnly(int hour, int minute, int second, int millisecond, int microsecond)
         {
-            TimeOnlyTuple validation = ValidateInputs(hour, minute, second, millisecond, microsecond);
+            TimeOnlyTuple validation = ValidateInputs(
+                hour,
+                minute,
+                second,
+                millisecond,
+                microsecond
+            );
 
             Hour = validation.hour;
             Minute = validation.minute;
@@ -125,15 +160,33 @@ namespace System
             Microsecond = validation.micro;
         }
 
-        private static TimeOnlyTuple ValidateInputs(int hours, int minutes, int seconds, int milliseconds, int microseconds = 0)
+        private static TimeOnlyTuple ValidateInputs(
+            int hours,
+            int minutes,
+            int seconds,
+            int milliseconds,
+            int microseconds = 0
+        )
         {
-            if ((uint)hours > 24u) ThrowHelper.ThrowArgumentOutOfRangeException();
-            if ((uint)minutes >= 60u) ThrowHelper.ThrowArgumentOutOfRangeException();
-            if ((uint)seconds >= 60u) ThrowHelper.ThrowArgumentOutOfRangeException();
-            if ((uint)milliseconds >= 1000u) ThrowHelper.ThrowArgumentOutOfRangeException();
-            if ((uint)microseconds >= 1000u) ThrowHelper.ThrowArgumentOutOfRangeException();
+            if ((uint)hours > 24u)
+                ThrowHelper.ThrowArgumentOutOfRangeException();
+            if ((uint)minutes >= 60u)
+                ThrowHelper.ThrowArgumentOutOfRangeException();
+            if ((uint)seconds >= 60u)
+                ThrowHelper.ThrowArgumentOutOfRangeException();
+            if ((uint)milliseconds >= 1000u)
+                ThrowHelper.ThrowArgumentOutOfRangeException();
+            if ((uint)microseconds >= 1000u)
+                ThrowHelper.ThrowArgumentOutOfRangeException();
 
-            return (GetTicks(hours, minutes, seconds, milliseconds, microseconds), hours, minutes, seconds, milliseconds, microseconds);
+            return (
+                GetTicks(hours, minutes, seconds, milliseconds, microseconds),
+                hours,
+                minutes,
+                seconds,
+                milliseconds,
+                microseconds
+            );
         }
 
         /// <summary>
@@ -167,7 +220,7 @@ namespace System
         /// </summary>
         public int Second { get; init; }
 
-        /// <summary> 
+        /// <summary>
         /// Gets the millisecond component of the time represented by this instance.
         /// </summary>
         public int Millisecond { get; init; }
@@ -184,7 +237,7 @@ namespace System
 
         /// <summary>
         /// Gets the time of day for this instance.
-        /// </summary>  
+        /// </summary>
         public TimeSpan TimeOfDay => new TimeSpan(Ticks);
     }
 }

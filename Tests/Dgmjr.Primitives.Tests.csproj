@@ -20,7 +20,8 @@
     <PackageReference Include="Dgmjr.System.Extensions" />
     <PackageReference Include="Dgmjr.Primitives" />
     <PackageReference Include="Dgmjr.Testing.Logging" />
-    <!-- <ProjectReference Include="../src/Dgmjr.Primitives.csproj" /> -->
+    <PackageReference Include="Dgmjr.Testing.Tests" />
+    <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
   </ItemGroup>
 
 
