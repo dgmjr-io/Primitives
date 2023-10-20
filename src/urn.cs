@@ -39,29 +39,29 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>,
                                             IUriConvertible<urn>
 #endif
 {
-  public const string Description = "a uniform resource name (urn)";
+    public const string Description = "a uniform resource name (urn)";
 
 #if NET7_0_OR_GREATER
   [StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
-  public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
+    public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
 
 #if NET7_0_OR_GREATER
   [StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
-  public const string _RegexString =
-      @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
+    public const string _RegexString =
+        @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
 
 #if NET7_0_OR_GREATER
   [StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
-  public const string EmptyStringValue = "urn:about:blank";
-  public static urn Empty => From(EmptyStringValue);
-  public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
-  public readonly string PathAndQuery =>
-      $"{Namespace}:{NamespaceSpecificString}";
-  public readonly string? DoubleSlashes = null;
-  public readonly string Value => ToString();
+    public const string EmptyStringValue = "urn:about:blank";
+    public static urn Empty => From(EmptyStringValue);
+    public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
+    public readonly string PathAndQuery =>
+        $"{Namespace}:{NamespaceSpecificString}";
+    public readonly string? DoubleSlashes = null;
+    public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
   static string IStringWithRegexValueObject<urn>.Description => Description;
   static string IStringWithRegexValueObject<urn>.RegexString => RegexString;
@@ -69,158 +69,170 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>,
   static urn IStringWithRegexValueObject<urn>.ExampleValue =>
       new(ExampleStringValue);
 #else
-  readonly string IStringWithRegexValueObject<urn>.Description => Description;
-  readonly urn IStringWithRegexValueObject<urn>.ExampleValue =>
-      ExampleStringValue;
+    readonly string IStringWithRegexValueObject<urn>.Description => Description;
+    readonly urn IStringWithRegexValueObject<urn>.ExampleValue =>
+        ExampleStringValue;
 
-  // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
-  readonly string IStringWithRegexValueObject<urn>.RegexString => RegexString;
+    // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
+    readonly string IStringWithRegexValueObject<urn>.RegexString => RegexString;
 
-  readonly Regex IStringWithRegexValueObject<urn>.Regex() => Regex();
+    readonly Regex IStringWithRegexValueObject<urn>.Regex() => Regex();
 #endif
 
-  // public static urn Parse(string urn) => From(urn);
+    // public static urn Parse(string urn) => From(urn);
 
-  // #if NET70_OR_GREATER
-  //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline |
-  //     Singleline)] public static partial Regex Regex();
-  //     // static urn IUriConvertible<urn>.FromUri(string s) => From(s);
-  //     // static urn IUriConvertible<urn>.FromUri(Uri urn) =>
-  //     From(urn.ToString());
-  // #else
-  //     public static Regex Regex() => new(RegexString, Compiled | IgnoreCase |
-  //     Multiline | Singleline);
-  // #endif
-  // public urn(string uriString) : base(uriString) { }
-  public urn(Uri urn) : this(urn.ToString()) {}
+    // #if NET70_OR_GREATER
+    //     [GeneratedRegex(RegexString, Compiled | IgnoreCase | Multiline |
+    //     Singleline)] public static partial Regex Regex();
+    //     // static urn IUriConvertible<urn>.FromUri(string s) => From(s);
+    //     // static urn IUriConvertible<urn>.FromUri(Uri urn) =>
+    //     From(urn.ToString());
+    // #else
+    //     public static Regex Regex() => new(RegexString, Compiled | IgnoreCase |
+    //     Multiline | Singleline);
+    // #endif
+    // public urn(string uriString) : base(uriString) { }
+    public urn(Uri urn) : this(urn.ToString()) { }
 
-  // public urn() : this(EmptyStringValue) { }
-  public static urn Parse(string s, IFormatProvider? formatProvider = null) =>
-      TryParse(s, out var urn)
-          ? urn
-          : throw new FormatException(
-                $"The input string {s} was not in the correct format for a {nameof(urn)}.");
+    // public urn() : this(EmptyStringValue) { }
+    public static urn Parse(string s, IFormatProvider? formatProvider = null) =>
+        TryParse(s, out var urn)
+            ? urn
+            : throw new FormatException(
+                  $"The input string {s} was not in the correct format for a {nameof(urn)}.");
 
-  public static Validation Validate(string value) {
-    if (value is null) {
-      return Validation.Invalid("Cannot create a value object with null.");
+    public static Validation Validate(string value)
+    {
+        if (value is null)
+        {
+            return Validation.Invalid("Cannot create a value object with null.");
+        }
+        if (!Regex().IsMatch(value))
+        {
+            return Validation.Invalid("The value is not a valid URI.");
+        }
+
+        return Validation.Ok;
     }
-    if (!Regex().IsMatch(value)) {
-      return Validation.Invalid("The value is not a valid URI.");
-    }
 
-    return Validation.Ok;
-  }
-
-  public static bool TryCreate(string? uriString, UriKind? uriKind,
-                               out urn urn) {
-    uriKind ??= Absolute;
-    if (IsNullOrEmpty(uriString)) {
-      urn = Empty;
-      return false;
-    }
-    if (TryParse(uriString, out var suri)) {
-      urn = From(uriString) with { OriginalString = uriString };
-      return true;
-    }
-    urn = Empty;
-    return false;
-  }
-
-  public readonly Uri Uri => this;
-
-  public static urn FromUri(string s) => From(s) with { OriginalString = s };
-
-  public static urn
-  FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
-
-  public static urn
-  From(string s) => Validate(s) == Validation.Ok
-                        ? new urn(s) with { OriginalString = s }
-                        : Empty;
-
-  public static urn
-  From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
-
-  public static implicit operator System.Uri(urn u) =>
-      Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
-          ? uri
-          : new(EmptyStringValue);
-
-  public static implicit
-  operator urn(string s) => From(s) with { OriginalString = s };
-
-  public static implicit operator string(urn urn) => urn.ToString();
-
-  // public static implicit operator urn(urn? urn) => urn.HasValue ? urn.Value :
-  // Empty;
-
-  public static bool
-  operator ==(urn? left, IResourceIdentifier right) => left?.CompareTo(right) ==
-                                                       0;
-
-  public static bool
-  operator !=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) !=
-                                                       0;
-
-  public static bool
-  operator <=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) <=
-                                                       0;
-
-  public static bool
-  operator >=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) >=
-                                                       0;
-
-  public static bool
-  operator<(urn? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
-
-  public static bool
-  operator>(urn? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
-
-  public readonly int CompareTo(IResourceIdentifier other) =>
-      other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
-
-  public override readonly int GetHashCode() => ToString().GetHashCode();
-
-  public override readonly string ToString() => IsEmpty ? string.Empty
-                                                        : Uri.ToString();
-
-  private readonly string BaseToString() => OriginalString;
-
-  public static bool TryParse(string? s, IFormatProvider? formatProvider,
-                              out urn urn) => TryParse(s, out urn);
-
-  public static bool TryParse(string? s, out urn urn) {
-    try {
-      if (IsNullOrEmpty(s)) {
+    public static bool TryCreate(string? uriString, UriKind? uriKind,
+                                 out urn urn)
+    {
+        uriKind ??= Absolute;
+        if (IsNullOrEmpty(uriString))
+        {
+            urn = Empty;
+            return false;
+        }
+        if (TryParse(uriString, out var suri))
+        {
+            urn = From(uriString) with { OriginalString = uriString };
+            return true;
+        }
         urn = Empty;
         return false;
-      }
-      if (Regex().IsMatch(s)) {
-        urn = From(s) with { OriginalString = s };
-        return true;
-      }
-    } catch {
-      // ignore
     }
-    urn = Empty;
-    return false;
-  }
 
-  public readonly bool Equals(urn? other) => Equals(other.ToString());
+    public readonly Uri Uri => this;
 
-  public readonly int CompareTo(string? other) =>
-      Compare(ToString(), other, InvariantCultureIgnoreCase);
+    public static urn FromUri(string s) => From(s) with { OriginalString = s };
 
-  public readonly int CompareTo(object? obj) =>
-      obj is urn urn      ? CompareTo(urn)
-      : obj is string str ? CompareTo(str)
-                          : throw new ArgumentException("Object is not a urn.");
+    public static urn
+    FromUri(Uri u) => From(u) with { OriginalString = u.ToString() };
 
-  public readonly bool Equals(string? other) =>
-      ToString().Equals(other, InvariantCultureIgnoreCase);
+    public static urn
+    From(string s) => Validate(s) == Validation.Ok
+                          ? new urn(s) with { OriginalString = s }
+                          : Empty;
 
-  public readonly int CompareTo(urn other) => CompareTo(other.ToString());
+    public static urn
+    From(Uri urn) => new urn(urn) with { OriginalString = urn.ToString() };
+
+    public static implicit operator System.Uri(urn u) =>
+        Uri.TryCreate(u.BaseToString(), RelativeOrAbsolute, out var uri)
+            ? uri
+            : new(EmptyStringValue);
+
+    public static implicit
+    operator urn(string s) => From(s) with { OriginalString = s };
+
+    public static implicit operator string(urn urn) => urn.ToString();
+
+    // public static implicit operator urn(urn? urn) => urn.HasValue ? urn.Value :
+    // Empty;
+
+    public static bool
+    operator ==(urn? left, IResourceIdentifier right) => left?.CompareTo(right) ==
+                                                         0;
+
+    public static bool
+    operator !=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) !=
+                                                         0;
+
+    public static bool
+    operator <=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) <=
+                                                         0;
+
+    public static bool
+    operator >=(urn? left, IResourceIdentifier right) => left?.CompareTo(right) >=
+                                                         0;
+
+    public static bool
+    operator <(urn? left, IResourceIdentifier right) => left?.CompareTo(right) < 0;
+
+    public static bool
+    operator >(urn? left, IResourceIdentifier right) => left?.CompareTo(right) > 0;
+
+    public readonly int CompareTo(IResourceIdentifier other) =>
+        other is urn urn ? CompareTo(urn) : CompareTo(other.ToString());
+
+    public override readonly int GetHashCode() => ToString().GetHashCode();
+
+    public override readonly string ToString() => IsEmpty ? string.Empty
+                                                          : Uri.ToString();
+
+    private readonly string BaseToString() => OriginalString;
+
+    public static bool TryParse(string? s, IFormatProvider? formatProvider,
+                                out urn urn) => TryParse(s, out urn);
+
+    public static bool TryParse(string? s, out urn urn)
+    {
+        try
+        {
+            if (IsNullOrEmpty(s))
+            {
+                urn = Empty;
+                return false;
+            }
+            if (Regex().IsMatch(s))
+            {
+                urn = From(s) with { OriginalString = s };
+                return true;
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+        urn = Empty;
+        return false;
+    }
+
+    public readonly bool Equals(urn? other) => Equals(other.ToString());
+
+    public readonly int CompareTo(string? other) =>
+        Compare(ToString(), other, InvariantCultureIgnoreCase);
+
+    public readonly int CompareTo(object? obj) =>
+        obj is urn urn ? CompareTo(urn)
+        : obj is string str ? CompareTo(str)
+                            : throw new ArgumentException("Object is not a urn.");
+
+    public readonly bool Equals(string? other) =>
+        ToString().Equals(other, InvariantCultureIgnoreCase);
+
+    public readonly int CompareTo(urn other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
   public class EfCoreValueConverter

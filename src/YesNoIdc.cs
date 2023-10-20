@@ -12,6 +12,6 @@
 
 namespace System.Abstractions;
 
-public partial interface IYesNo {}
+public partial interface IYesNo { }
 
-public partial interface IYesNoIdc {}
+public partial interface IYesNoIdc { }

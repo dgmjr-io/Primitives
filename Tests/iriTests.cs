@@ -3,11 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace Dgmjr.Primitives.Tests;
 
-public partial class iriTests : PrimitivesTests<iri, iriTests> {
-  public iriTests(ITestOutputHelper output) : base(output) {}
+public partial class iriTests : PrimitivesTests<iri, iriTests>
+{
+    public iriTests(ITestOutputHelper output) : base(output) { }
 
-  [StringSyntax(StringSyntaxAttribute.Regex)]
-  private const string RegexString = @"^(?<Scheme>
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+    private const string RegexString = @"^(?<Scheme>
         [a-z][a-z0-9+\-.]*
         )
         :
@@ -49,14 +50,14 @@ public partial class iriTests : PrimitivesTests<iri, iriTests> {
             )?
         )?$";
 
-  [GeneratedRegex(RegexString,
-                  Compiled | Singleline | IgnoreCase | IgnorePatternWhitespace)]
-  private static partial Regex Regex();
+    [GeneratedRegex(RegexString,
+                    Compiled | Singleline | IgnoreCase | IgnorePatternWhitespace)]
+    private static partial Regex Regex();
 
-  protected override string[][] InvalidValuesStrings =>
-      new[] { new[] { "fcku!!!!!!" } };
+    protected override string[][] InvalidValuesStrings =>
+        new[] { new[] { "fcku!!!!!!" } };
 
-  protected override string[][] ValidValuesStrings => new[] {
+    protected override string[][] ValidValuesStrings => new[] {
     new[] { uri.ExampleStringValue },
     new[] { xri.ExampleStringValue },
     new[] { url.ExampleStringValue },

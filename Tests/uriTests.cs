@@ -1,12 +1,13 @@
 namespace Dgmjr.Primitives.Tests;
 
-public class uriTests : PrimitivesTests<uri, uriTests> {
-  public uriTests(ITestOutputHelper output) : base(output) {}
+public class uriTests : PrimitivesTests<uri, uriTests>
+{
+    public uriTests(ITestOutputHelper output) : base(output) { }
 
-  protected override string[][] InvalidValuesStrings =>
-      new[] { new[] { "fcku!!!!!!" } };
+    protected override string[][] InvalidValuesStrings =>
+        new[] { new[] { "fcku!!!!!!" } };
 
-  protected override string[][] ValidValuesStrings => new[] {
+    protected override string[][] ValidValuesStrings => new[] {
     new[] { uri.ExampleStringValue },
     new[] { xri.ExampleStringValue },
     new[] { url.ExampleStringValue },
