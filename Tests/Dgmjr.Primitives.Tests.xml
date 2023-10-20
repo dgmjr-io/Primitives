@@ -246,7 +246,7 @@
             <summary>Base tag: v0.0.1</summary>
         </member>
         <member name="T:ThisAssembly.Git.BaseVersion">
-            <summary>Provides access to the base version information used to determine the <see cref="T:ThisAssembly.Git.SemVer" />.</summary>      
+            <summary>Provides access to the base version information used to determine the <see cref="T:ThisAssembly.Git.SemVer" />.</summary>
         </member>
         <member name="F:ThisAssembly.Git.BaseVersion.Major">
             <summary>Major: 0</summary>
