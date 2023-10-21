@@ -39,7 +39,7 @@ namespace System
         /// <summary>
         /// The zero mask for the integer.
         /// </summary>
-        private const uint Zero = 0x00800000;
+        public const uint Zero = 0x00800000;
 
         /// <summary>
         /// The mask for negative sign.
@@ -176,7 +176,7 @@ namespace System
         /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(i24 other)
         {
-            int thisValue = this.SignExtend();
+            int thisValue = SignExtend();
             int otherValue = other.SignExtend();
             return thisValue.CompareTo(otherValue);
         }
@@ -188,7 +188,7 @@ namespace System
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
         public bool Equals(i24 other)
         {
-            return this.SignExtend() == other.SignExtend();
+            return SignExtend() == other.SignExtend();
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace System
         /// <returns>true if obj is an i24 and its value is the same as this instance; otherwise, false. If obj is null, the method returns false.</returns>
         public override bool Equals(object? obj)
         {
-            return obj is i24 other && this.Equals(other);
+            return obj is i24 other && Equals(other);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace System
         ///<returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return this.SignExtend().GetHashCode();
+            return SignExtend().GetHashCode();
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace System
         ///<returns>The string representation of the value of this instance.</returns>
         public override string ToString()
         {
-            return this.SignExtend().ToString();
+            return SignExtend().ToString();
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace System
         ///<returns>The string representation of the value of this instance as specified by format and provider parameters. </returns>
         public string ToString(string? format, IFormatProvider? formatProvider)
         {
-            return this.SignExtend().ToString(format, formatProvider);
+            return SignExtend().ToString(format, formatProvider);
         }
 
         private const int Int32MinValue = -8388608;
@@ -312,7 +312,7 @@ namespace System
         public static bool operator >(i24 left, i24 right) => left.CompareTo(right) > 0;
 
         /// <summary>
-        /// Determines whether one specified i24 is less than or equal to another specified Int32.
+        /// Determines whether one specified i24 is less than or equal to another specified int.
         ///</summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
@@ -323,7 +323,7 @@ namespace System
         }
 
         /// <summary>
-        /// Determines whether one specified i24 is greater than or equal to another specified Int32.
+        /// Determines whether one specified i24 is greater than or equal to another specified int.
         ///</summary>
         ///<param name="left">The first object to compare. </param>
         ///<param name="right">The second object to compare. </param>
@@ -351,48 +351,51 @@ namespace System
         /// <value>-8388608</value>
         public static readonly i24 MinValue = new(Int32MaxValue);
 
-        public static explicit operator i24(sbyte value) => new i24(value);
+        public static explicit operator i24(sbyte value) => new(value);
 
-        public int ToInt32(IFormatProvider? formatProvider) => (int)this.ToInt32();
+        public int ToInt32(IFormatProvider? formatProvider) => ToInt32();
 
-        public uint ToUInt32(IFormatProvider? formatProvider) => (uint)this.ToInt32();
+        public uint ToUInt32(IFormatProvider? formatProvider) => (uint)ToInt32();
 
-        public long ToInt64(IFormatProvider? formatProvider) => (long)this.ToInt32();
+        public long ToInt64(IFormatProvider? formatProvider) => (long)ToInt32();
 
-        public ulong ToUInt64(IFormatProvider? formatProvider) => (ulong)this.ToInt32();
+        public ulong ToUInt64(IFormatProvider? formatProvider) => (ulong)ToInt32();
 
-        public short ToInt16(IFormatProvider? formatProvider) => (short)this.ToInt32();
+        public short ToInt16(IFormatProvider? formatProvider) => (short)ToInt32();
 
-        public ushort ToUInt16(IFormatProvider? formatProvider) => (ushort)this.ToInt32();
+        public ushort ToUInt16(IFormatProvider? formatProvider) => (ushort)ToInt32();
 
 #if NET7_0_OR_GREATER
-        public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)this.ToInt32();
+        public Int128 ToInt128(IFormatProvider? formatProvider) => (Int128)ToInt32();
 
-        public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)this.ToInt32();
+        public UInt128 ToUInt128(IFormatProvider? formatProvider) => (UInt128)ToInt32();
 #endif
 
-        public byte ToByte(IFormatProvider? formatProvider) => (byte)this.ToInt32();
+        public byte ToByte(IFormatProvider? formatProvider) => (byte)ToInt32();
 
-        public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)this.ToInt32();
+        public sbyte ToSByte(IFormatProvider? formatProvider) => (sbyte)ToInt32();
 
-        public Single ToSingle(IFormatProvider? formatProvider) => (Single)this.ToInt32();
+        public Single ToSingle(IFormatProvider? formatProvider) => (Single)ToInt32();
 
-        public double ToDouble(IFormatProvider? formatProvider) => (double)this.ToInt32();
+        public double ToDouble(IFormatProvider? formatProvider) => (double)ToInt32();
 
-        public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)this.ToInt32();
+        public decimal ToDecimal(IFormatProvider? formatProvider) => (decimal)ToInt32();
 
-        public char ToChar(IFormatProvider? formatProvider) => (char)this.ToInt32();
+        public char ToChar(IFormatProvider? formatProvider) => (char)ToInt32();
 
         public DateTime ToDateTime(IFormatProvider? formatProvider) =>
-            DateTime.FromBinary((long)this.ToInt32());
+            DateTime.FromBinary((long)ToInt32());
 
-        public bool ToBoolean(IFormatProvider? formatProvider) => this.ToInt32() > 0;
+        public bool ToBoolean(IFormatProvider? formatProvider) => ToInt32() > 0;
 
         public object ToType(Type conversionType, IFormatProvider? formatProvider) =>
-            Convert.ChangeType(this.ToInt32(), conversionType, formatProvider);
+            Convert.ChangeType(ToInt32(), conversionType, formatProvider);
 
         public string ToString(IFormatProvider? formatProvider) =>
-            ((Int32)this.ToInt32()).ToString(formatProvider);
+            ((int)ToInt32()).ToString(formatProvider);
+
+        public static i24 Parse(string s, Globalization.NumberStyles style = 0) =>
+            new(int.Parse(s, style));
 
         /// <summary>
         /// Converts an i24 to and from an int for storage in a database table
@@ -406,7 +409,7 @@ namespace System
     }
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static class i24EfCoreExtensions
+    public static class I24EfCoreExtensions
     {
         public static void Configurei24<TEntity>(
             this ModelBuilder modelBuilder,

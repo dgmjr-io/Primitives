@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Validation = Vogen.Validation;
+using Vogen;
 
 /// <summary>
 /// Represents an "internationalized resource identifier (IRI)"
@@ -128,10 +129,8 @@ public readonly partial record struct iri
                 return true;
             }
         }
-        catch
-        {
-            // ignore
-        }
+        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+
         iri = Empty;
         return false;
     }

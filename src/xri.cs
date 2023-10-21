@@ -176,10 +176,8 @@ public readonly partial record struct xri
                 return true;
             }
         }
-        catch
-        {
-            // ignore
-        }
+        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+
         xri = Empty;
         return false;
     }

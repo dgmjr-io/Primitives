@@ -169,10 +169,8 @@ public readonly partial record struct url
                 return true;
             }
         }
-        catch
-        {
-            // ignore it
-        }
+        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+
         url = Empty;
         return false;
     }

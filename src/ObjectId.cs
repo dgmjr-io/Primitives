@@ -13,6 +13,7 @@
 namespace System;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -57,7 +58,9 @@ public readonly partial record struct ObjectId
 
     public readonly Uri Uri => IsEmpty ? null : new(Format(UrnPrefix, ToString()));
 
-    public static ObjectId NewId() => From(Guid.NewGuid().ToString("N").Substring(0, 24));
+    private static string NextId => $"{CurrentTimestamp:x8}{_Machine:x10}{NextCounter():x6}";
+
+    public static ObjectId NewId() => From(NextId) with { OriginalString = NextId };
 
     public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
 
@@ -142,6 +145,23 @@ public readonly partial record struct ObjectId
     public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result) =>
         (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default)
         != default;
+
+    public static int CurrentTimestamp => (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+    public readonly DateTimeOffset TimestampAsDateTimeOffset =>
+        DateTimeOffset.FromUnixTimeSeconds(Timestamp);
+    public readonly int Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
+    public long Machine => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
+    public i24 Counter => i24.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+
+    public static i24 NextCounter() => _counter++;
+
+    private static i24 _counter = new(Randoms.NextInt32(0, i24.MaxValue));
+
+    public static long _Machine = BitConverter.ToInt64(
+        Guid.NewGuid().ToByteArray().Take(5).ToArray(),
+        0
+    );
 }
 
 #if NETSTANDARD2_0_OR_GREATER
