@@ -42,9 +42,30 @@ public static class OpenApiRegistrations
                 {
                     Type = "string",
                     Pattern = typeof(T).GetRuntimeProperty("RegexString").GetValue(null) as string,
-                    Format = typeof(T).Name,
+                    Format = typeof(T).GetRuntimeProperty("Name").GetValue(null) as string,
                     Description = T.Description,
-                    Example = new OpenApiString(T.ExampleValue.ToString())
+                    Example = new OpenApiString(T.ExampleValue.ToString()),
+                    ExternalDocs =
+                        (
+                            typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
+                            as IEnumerable<ExternalDocsTuple>
+                        )?.Any() ?? false
+                            ? new OpenApiExternalDocs
+                            {
+                                Description = (
+                                    typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
+                                    as IEnumerable<ExternalDocsTuple>
+                                )
+                                    .First()
+                                    .Description,
+                                Url = (
+                                    typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
+                                    as IEnumerable<ExternalDocsTuple>
+                                )
+                                    .First()
+                                    .Url
+                            }
+                            : null
                 };
 #else
             throw new PlatformNotSupportedException(

@@ -67,6 +67,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public readonly bool IsEmpty => this == Empty;
     public string OriginalString { get; init; }
 
+    public static IEnumerable<ExternalDocsTuple> ExternalDocs =>[("E.164", new System.Uri("https://en.wikipedia.org/wiki/E.164"))];
     public readonly Uri Uri => new(Format(UriPattern, ToString()));
 
     public static PhoneNumber FromUri(string s) =>

@@ -66,7 +66,11 @@ public interface IStringWithRegexValueObject<TSelf>
     /// <returns>an example (archetypal) value for the value object</returns>
     public abstract static TSelf ExampleValue { get; }
     public static abstract TSelf Empty { get; }
+
     // public abstract static Validation Validate(string value);
+
+    public virtual static IEnumerable<ExternalDocsTuple> ExternalDocumentation =>
+        Empty<ExternalDocsTuple>();
 #else
     /// <summary>
     /// Returns <inheritdoc cref="RegexString" path="/returns" />

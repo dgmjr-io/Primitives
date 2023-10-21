@@ -52,6 +52,8 @@ public readonly partial record struct iri
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
     // public string? DoubleSlashes => "//";
 
+    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Internationalized Resource Identifier (IRI)", new Uri("https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier"))];
+
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
 #endif

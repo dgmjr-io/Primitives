@@ -47,9 +47,6 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
         IUriConvertible<uri>
 #endif
 {
-#if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Uri)]
-#endif
     public const string Description = "a uniform resource identifier (uri)";
 
 #if NET7_0_OR_GREATER
@@ -57,9 +54,6 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
 #endif
     public const string ExampleStringValue = "example:example";
 
-#if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Regex)]
-#endif
     public const RegexOptions _RegexOptions =
         Compiled | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
@@ -77,6 +71,8 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
     public readonly string PathAndQuery =>
         $"{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
+
+    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Uniform Resource Identifier (URI)", new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Identifier"))];
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER

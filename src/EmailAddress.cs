@@ -72,6 +72,8 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// Gets the regex string.
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
+
+    public static ExternalDocsTuple[] ExternalDocumentation => [("Email Address",new Uri("https://en.wikipedia.org/wiki/Email_address"))];
 #else
     readonly Regx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
 

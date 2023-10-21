@@ -52,6 +52,8 @@ public readonly partial record struct xri
     public const string _RegexString =
         @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
 
+    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Extensible Resource Identifier (XRI)", new Uri("https://en.wikipedia.org/wiki/Extensible_Resource_Identifier"))];
+
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
 #endif

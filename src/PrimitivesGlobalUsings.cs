@@ -4,3 +4,4 @@ global using TimeTuple = (int Hour, int Minute, int Second, int Millisecond, int
 global using dmy = (int Day, int Month, int Year);
 global using datet = (int Year, int Month, int Day);
 global using timet = (int Hour, int Minute, int Second, int Millisecond, int Nanosecond);
+global using ExternalDocsTuple = (string Description, System.Uri Url);

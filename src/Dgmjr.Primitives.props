@@ -4,6 +4,8 @@
     <Using Include="System.UInt24" Alias="ui24"/>
     <Using Include="System.DateOnly" Alias="date"/>
     <Using Include="System.TimeOnly" Alias="time"/>
+    <Using Include="Dgmjr.Primitives" />
+    <Using Include="Dgmjr.Primitives.Abstractions" />
   </ItemGroup>
   <ItemGroup>
     <!-- <PackageReference Include="System.ComponentModel.Usings"/> -->

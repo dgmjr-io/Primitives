@@ -50,6 +50,7 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
+    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Uniform Resource Name (URN)", new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Name"))];
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
