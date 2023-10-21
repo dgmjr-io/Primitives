@@ -247,10 +247,14 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
         {
             return From(s);
         }
-        catch
-        {
-            return Empty;
-        }
+        catch(ValueObjectValidationException) { return Empty; }
+        catch(ArgumentNullException) { return Empty; }
+        catch(FormatException) { return Empty; }
+        catch(OverflowException) { return Empty; }
+        catch(ArgumentException) { return Empty; }
+        catch(InvalidCastException) { return Empty; }
+        catch(InvalidOperationException) { return Empty; }
+        catch(Exception) { return Empty; }
     }
 
     public static implicit operator string?(EmailAddress? addr) =>
