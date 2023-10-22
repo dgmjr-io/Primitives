@@ -247,7 +247,7 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
         {
             return From(s);
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { return Empty; }
+        catch (Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { return Empty; }
     }
 
     public static implicit operator string?(EmailAddress? addr) =>

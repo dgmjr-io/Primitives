@@ -196,7 +196,7 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
 
         urn = Empty;
         return false;

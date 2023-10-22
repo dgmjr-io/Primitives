@@ -107,7 +107,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             number = From(s) with { OriginalString = s };
             return true;
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { number = null; return false; }
+        catch (Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { number = null; return false; }
     }
 
     private const Rxo RegexOptions =

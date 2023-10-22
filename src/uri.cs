@@ -187,7 +187,7 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
 
         uri = Empty;
         return false;
