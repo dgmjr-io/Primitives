@@ -12,16 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Dgmjr.System.Extensions" />
     <PackageReference Include="Dgmjr.Primitives" />
+    <PackageReference Include="Dgmjr.System.Extensions" />
     <PackageReference Include="Dgmjr.Testing.Logging" />
     <PackageReference Include="Dgmjr.Testing.Tests" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="Vogen" />
     <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
+    <UsingsPackageReference Include="System.Text.RegularExpressions.Usings" />
   </ItemGroup>
 
 

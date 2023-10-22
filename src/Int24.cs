@@ -61,10 +61,10 @@ namespace System
         private readonly byte _b2;
 
         public static implicit operator uint(i24 value) =>
-            (uint)value | (uint)(value >> BitOffset) | (uint)(value >> BitOffset * 2);
+            (uint)value._b0 | (uint)(value._b1 >> BitOffset) | (uint)(value._b2 >> BitOffset * 2);
 
         public static implicit operator int(i24 value) =>
-            (int)value | (int)(value >> BitOffset) | (int)(value >> BitOffset * 2);
+            (int)value._b0 | (int)(value._b1 >> BitOffset) | (int)(value._b2 >> BitOffset * 2);
 
         /// <summary>
         /// Gets the value of the integer.

@@ -64,6 +64,8 @@ public readonly partial record struct ObjectId
 
     public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
 
+    public override readonly string ToString() => IsEmpty ? string.Empty : Value;
+
     public readonly bool IsNull => Value == EmptyValue;
     public readonly bool IsEmpty => Value == EmptyValue;
     public string OriginalString { get; init; }
@@ -153,10 +155,9 @@ public readonly partial record struct ObjectId
     public readonly int Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
     public long Machine => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
     public i24 Counter => i24.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+    private static i24 _counter = new(Randoms.NextInt32(0, i24.MaxValue));
 
     public static i24 NextCounter() => _counter++;
-
-    private static i24 _counter = new(Randoms.NextInt32(0, i24.MaxValue));
 
     public static long _Machine = BitConverter.ToInt64(
         Guid.NewGuid().ToByteArray().Take(5).ToArray(),

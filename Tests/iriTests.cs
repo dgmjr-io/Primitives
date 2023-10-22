@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
@@ -52,8 +53,11 @@ public partial class iriTests : PrimitivesTests<iri, iriTests>
             )?
         )?$";
 
-    [GeneratedRegex(RegexString, Compiled | Singleline | IgnoreCase | IgnorePatternWhitespace)]
-    private static partial Regex Regex();
+    [GeneratedRegex(
+        RegexString,
+        Rxo.Compiled | Rxo.Singleline | Rxo.IgnoreCase | Rxo.IgnorePatternWhitespace
+    )]
+    public static partial Regex Regex();
 
     protected override string[][] InvalidValuesStrings => new[] { new[] { "fcku!!!!!!" } };
 

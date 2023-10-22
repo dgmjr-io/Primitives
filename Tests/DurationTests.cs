@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 public class DurationTests : BaseTest
 {
-    public DurationTests(IOutputHelper output)
+    public DurationTests(ITestOutputHelper output)
         : base(output) { }
 
     [Theory]
