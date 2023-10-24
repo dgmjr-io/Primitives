@@ -72,7 +72,11 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     public readonly string PathAndQuery =>
         $"{Path}{Query.FormatIfNotNullOrEmpty("?{0}")}{Fragment.FormatIfNotNullOrEmpty("#{0}")}";
 
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Uniform Resource Identifier (URI)", new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Identifier"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        (
+            "Uniform Resource Identifier (URI)",
+            new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Identifier")
+        );
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
@@ -187,7 +191,18 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        { /* ignore it */
+        }
 
         uri = Empty;
         return false;
@@ -216,6 +231,13 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
     {
         public EfCoreValueConverter()
             : base(v => v.ToString(), v => From(v)) { }
+    }
+
+    public class NullableEfCoreValueConverter
+        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri?, string?>
+    {
+        public NullableEfCoreValueConverter()
+            : base(v => v.HasValue ? v.ToString() : default, v => From(v)) { }
     }
 
     public class JConverterAttribute : JsonConverterAttribute
@@ -286,17 +308,38 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
 #if NETSTANDARD2_0_OR_GREATER
 public static class UriEfCoreExtensions
 {
-    public static void ConfigureUri<TEntity>(
+    public static PropertyBuilder<uri> UriProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUri(propertyExpression);
+        where TEntity : class => modelBuilder.Entity<TEntity>().UriProperty(propertyExpression);
 
-    public static void ConfigureUri<TEntity>(
+    public static PropertyBuilder<uri?> UriProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, uri?>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().UriProperty(propertyExpression);
+
+    public static PropertyBuilder<uri> UriProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, uri>> propertyExpression
     )
         where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<uri.EfCoreValueConverter>();
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new uri.EfCoreValueConverter())
+            .IsUnicode(false)
+            .HasMaxLength(UriMaxLength);
+
+    public static PropertyBuilder<uri?> UriProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, uri?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new uri.NullableEfCoreValueConverter())
+            .IsUnicode(false)
+            .HasMaxLength(UriMaxLength);
 }
 #endif

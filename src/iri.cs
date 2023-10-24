@@ -51,9 +51,14 @@ public readonly partial record struct iri
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
+
     // public string? DoubleSlashes => "//";
 
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Internationalized Resource Identifier (IRI)", new Uri("https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        (
+            "Internationalized Resource Identifier (IRI)",
+            new Uri("https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier")
+        );
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -129,7 +134,18 @@ public readonly partial record struct iri
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        { /* ignore it */
+        }
 
         iri = Empty;
         return false;
@@ -301,17 +317,36 @@ public readonly partial record struct iri
 #if NETSTANDARD2_0_OR_GREATER
 public static class IriEfCoreExtensions
 {
-    public static void ConfigureIri<TEntity>(
+    public static PropertyBuilder<iri> IriProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureIri(propertyExpression);
+        where TEntity : class => modelBuilder.Entity<TEntity>().IriProperty(propertyExpression);
 
-    public static void ConfigureIri<TEntity>(
+    public static PropertyBuilder<iri?> IriProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, iri?>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().IriProperty(propertyExpression);
+
+    public static PropertyBuilder<iri> IriProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, iri>> propertyExpression
     )
         where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<iri.EfCoreValueConverter>();
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion<iri.EfCoreValueConverter>()
+            .HasMaxLength(UriMaxLength);
+
+    public static PropertyBuilder<iri?> IriProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, iri?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion<iri.EfCoreValueConverter>()
+            .HasMaxLength(UriMaxLength);
 }
 #endif

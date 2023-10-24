@@ -69,7 +69,7 @@ namespace System
         /// <summary>
         /// Gets the value of the integer.
         /// </summary>
-        public Int24 Value => this;
+        public i24 Value => this;
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with three bytes.
@@ -411,16 +411,30 @@ namespace System
 #if NETSTANDARD2_0_OR_GREATER
     public static class I24EfCoreExtensions
     {
-        public static void Configurei24<TEntity>(
+        public static PropertyBuilder<i24?> Int24Property<TEntity>(
             this ModelBuilder modelBuilder,
-            Expression<Func<TEntity, uri>> propertyExpression
+            Expression<Func<TEntity, i24?>> propertyExpression
         )
             where TEntity : class =>
-            modelBuilder.Entity<TEntity>().Configurei24(propertyExpression);
+            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
 
-        public static void Configurei24<TEntity>(
+        public static PropertyBuilder<i24?> Int24Property<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
-            Expression<Func<TEntity, uri>> propertyExpression
+            Expression<Func<TEntity, i24?>> propertyExpression
+        )
+            where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
+
+        public static PropertyBuilder<i24> Int24Property<TEntity>(
+            this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, i24>> propertyExpression
+        )
+            where TEntity : class =>
+            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
+
+        public static PropertyBuilder<i24> Int24Property<TEntity>(
+            this EntityTypeBuilder<TEntity> entityBuilder,
+            Expression<Func<TEntity, i24>> propertyExpression
         )
             where TEntity : class =>
             entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();

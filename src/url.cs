@@ -56,7 +56,8 @@ public readonly partial record struct url
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Uniform Resource Locator (URL)", new Uri("https://en.wikipedia.org/wiki/URL"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        ("Uniform Resource Locator (URL)", new Uri("https://en.wikipedia.org/wiki/URL"));
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -169,7 +170,18 @@ public readonly partial record struct url
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        { /* ignore it */
+        }
 
         url = Empty;
         return false;
@@ -197,6 +209,13 @@ public readonly partial record struct url
     {
         public EfCoreValueConverter()
             : base(v => v.ToString(), v => From(v)) { }
+    }
+
+    public class NullableEfCoreValueConverter
+        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<url?, string?>
+    {
+        public NullableEfCoreValueConverter()
+            : base(v => v.HasValue ? v.ToString() : null, v => From(v)) { }
     }
 
     public class JConverterAttribute : JsonConverterAttribute
@@ -270,19 +289,38 @@ public readonly partial record struct url
 }
 
 #if NETSTANDARD2_0_OR_GREATER
-public static class urlEfCoreExtensions
+public static class UrlEfCoreExtensions
 {
-    public static void Configureurl<TEntity>(
+    public static PropertyBuilder<url> UrlProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, url>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().Configureurl(propertyExpression);
+        where TEntity : class => modelBuilder.Entity<TEntity>().UrlProperty(propertyExpression);
 
-    public static void Configureurl<TEntity>(
+    public static PropertyBuilder<url?> UrlProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, url?>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().UrlProperty(propertyExpression);
+
+    public static PropertyBuilder<url> UrlProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, url>> propertyExpression
     )
         where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<url.EfCoreValueConverter>();
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new url.EfCoreValueConverter())
+            .HasMaxLength(UriMaxLength);
+
+    public static PropertyBuilder<url?> UrlProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, url?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new url.NullableEfCoreValueConverter())
+            .HasMaxLength(UriMaxLength);
 }
 #endif

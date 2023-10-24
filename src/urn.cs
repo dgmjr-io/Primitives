@@ -50,7 +50,11 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Uniform Resource Name (URN)", new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Name"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        (
+            "Uniform Resource Name (URN)",
+            new Uri("https://en.wikipedia.org/wiki/Uniform_Resource_Name")
+        );
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -196,7 +200,18 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        { /* ignore it */
+        }
 
         urn = Empty;
         return false;
@@ -225,6 +240,13 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     {
         public EfCoreValueConverter()
             : base(v => v.ToString(), v => From(v)) { }
+    }
+
+    public class NullableEfCoreValueConverter
+        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn?, string?>
+    {
+        public NullableEfCoreValueConverter()
+            : base(v => v.HasValue ? v.ToString() : default, v => From(v)) { }
     }
 
     public class JsonConverter : JsonConverter<urn>
@@ -306,17 +328,32 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
 #if NETSTANDARD2_0_OR_GREATER
 public static class UrnEfCoreExtensions
 {
-    public static void ConfigureUrn<TEntity>(
+    public static PropertyBuilder<urn> UrnProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureUrn(propertyExpression);
+        where TEntity : class => modelBuilder.Entity<TEntity>().UrnProperty(propertyExpression);
 
-    public static void ConfigureUrn<TEntity>(
+    public static PropertyBuilder<urn?> UrnProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, urn?>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().UrnProperty(propertyExpression);
+
+    public static PropertyBuilder<urn> UrnProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, urn>> propertyExpression
     )
         where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<urn.EfCoreValueConverter>();
+        entityBuilder.Property(propertyExpression).HasConversion(new urn.EfCoreValueConverter());
+
+    public static PropertyBuilder<urn?> UrnProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, urn?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new urn.NullableEfCoreValueConverter());
 }
 #endif

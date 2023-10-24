@@ -9,5 +9,5 @@ public interface IHaveAuri
 
 public interface IHaveAWritableuri : IHaveAuri
 {
-    new uri Uri { get; set; }
+    new uri Uri { set; }
 }

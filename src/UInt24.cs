@@ -396,7 +396,7 @@ namespace System
         /// Converts an int24 to and from an int for storage in a database table
         /// </summary>
         public class EfCoreValueConverter
-            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<Int24, int>
+            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<i24, int>
         {
             public EfCoreValueConverter()
                 : base(v => v.ToInt32(), v => (i24)v) { }
@@ -404,21 +404,35 @@ namespace System
     }
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static class ui24EfCoreExtensions
+    public static class UInt24EfCoreExtensions
     {
-        public static void Configureui24<TEntity>(
+        public static PropertyBuilder<ui24?> Int24Property<TEntity>(
             this ModelBuilder modelBuilder,
-            Expression<Func<TEntity, uri>> propertyExpression
+            Expression<Func<TEntity, ui24?>> propertyExpression
         )
             where TEntity : class =>
-            modelBuilder.Entity<TEntity>().Configureui24(propertyExpression);
+            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
 
-        public static void Configureui24<TEntity>(
+        public static PropertyBuilder<ui24?> Int24Property<TEntity>(
             this EntityTypeBuilder<TEntity> entityBuilder,
-            Expression<Func<TEntity, uri>> propertyExpression
+            Expression<Func<TEntity, ui24?>> propertyExpression
         )
             where TEntity : class =>
-            entityBuilder.Property(propertyExpression).HasConversion<ui24.EfCoreValueConverter>();
+            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
+
+        public static PropertyBuilder<ui24> Int24Property<TEntity>(
+            this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, ui24>> propertyExpression
+        )
+            where TEntity : class =>
+            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
+
+        public static PropertyBuilder<ui24> Int24Property<TEntity>(
+            this EntityTypeBuilder<TEntity> entityBuilder,
+            Expression<Func<TEntity, ui24>> propertyExpression
+        )
+            where TEntity : class =>
+            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
     }
 #endif
 }

@@ -73,7 +73,8 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// </summary>
     static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
 
-    public static ExternalDocsTuple[] ExternalDocumentation => [("Email Address",new Uri("https://en.wikipedia.org/wiki/Email_address"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        ("Email Address", new Uri("https://en.wikipedia.org/wiki/Email_address"));
 #else
     readonly Regx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
 
@@ -247,7 +248,19 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
         {
             return From(s);
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { return Empty; }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        {
+            return Empty;
+        }
     }
 
     public static implicit operator string?(EmailAddress? addr) =>
@@ -273,12 +286,12 @@ public static class EmailAddressEfCoreExtensions
     /// <typeparam name="TEntity"></typeparam>
     /// <param name="modelBuilder">The model builder.</param>
     /// <param name="propertyExpression">The property expression.</param>
-    public static void ConfigureEmailAddress<TEntity>(
+    public static PropertyBuilder<EmailAddress?> EmailAddressProperty<TEntity>(
         this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, EmailAddress>> propertyExpression
+        Expression<Func<TEntity, EmailAddress?>> propertyExpression
     )
         where TEntity : class =>
-        modelBuilder.Entity<TEntity>().ConfigureEmailAddress(propertyExpression);
+        modelBuilder.Entity<TEntity>().EmailAddressProperty(propertyExpression);
 
     /// <summary>
     /// Configures the email address.
@@ -286,14 +299,44 @@ public static class EmailAddressEfCoreExtensions
     /// <typeparam name="TEntity"></typeparam>
     /// <param name="entityBuilder">The entity builder.</param>
     /// <param name="propertyExpression">The property expression.</param>
-    public static void ConfigureEmailAddress<TEntity>(
+    public static PropertyBuilder<EmailAddress?> EmailAddressProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, EmailAddress?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new EmailAddress.EfCoreValueConverter())
+            .HasMaxLength(UriMaxLength);
+
+    /// <summary>
+    /// Configures the email address.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <param name="modelBuilder">The model builder.</param>
+    /// <param name="propertyExpression">The property expression.</param>
+    public static PropertyBuilder<EmailAddress> EmailAddressProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, EmailAddress>> propertyExpression
+    )
+        where TEntity : class =>
+        modelBuilder.Entity<TEntity>().EmailAddressProperty(propertyExpression);
+
+    /// <summary>
+    /// Configures the email address.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <param name="entityBuilder">The entity builder.</param>
+    /// <param name="propertyExpression">The property expression.</param>
+    public static PropertyBuilder<EmailAddress> EmailAddressProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, EmailAddress>> propertyExpression
     )
         where TEntity : class =>
         entityBuilder
             .Property(propertyExpression)
-            .HasConversion<EmailAddress.EfCoreValueConverter>();
+            .HasConversion(new EmailAddress.EfCoreValueConverter())
+            .HasMaxLength(UriMaxLength);
 }
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

@@ -2,7 +2,7 @@
 authors:
 - dgmjr
 date: 2023-07-02T20:00:10.681Z
-description: This package contains several "primitive" types that are used throughout the rest of the Types package.
+description: This package contains several *primitive* types that are used throughout the rest of the Types package.
 keywords:
 - DGMJR-IO
 - emailaddress
@@ -16,7 +16,6 @@ keywords:
 - url
 - xri
 - iri
-lastMod: 2023-03-19T03:27:38.342Z
 license: MIT
 slug: primitives
 title: DGMJR-IO Primitives

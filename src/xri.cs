@@ -52,7 +52,11 @@ public readonly partial record struct xri
     public const string _RegexString =
         @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
 
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs => [("Extensible Resource Identifier (XRI)", new Uri("https://en.wikipedia.org/wiki/Extensible_Resource_Identifier"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        (
+            "Extensible Resource Identifier (XRI)",
+            new Uri("https://en.wikipedia.org/wiki/Extensible_Resource_Identifier")
+        );
 
 #if NET7_0_OR_GREATER
     [StringSyntax(StringSyntaxAttribute.Uri)]
@@ -176,7 +180,18 @@ public readonly partial record struct xri
                 return true;
             }
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { /* ignore it */ }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        { /* ignore it */
+        }
 
         xri = Empty;
         return false;
@@ -264,18 +279,37 @@ public readonly partial record struct xri
     }
 }
 
-public static class xriEfCoreExtensions
+public static class XriEfCoreExtensions
 {
-    public static void ConfigureXri<TEntity>(
+    public static PropertyBuilder<xri> XriProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
     )
-        where TEntity : class => modelBuilder.Entity<TEntity>().ConfigureXri(propertyExpression);
+        where TEntity : class => modelBuilder.Entity<TEntity>().XriProperty(propertyExpression);
 
-    public static void ConfigureXri<TEntity>(
+    public static PropertyBuilder<xri?> XriProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, xri?>> propertyExpression
+    )
+        where TEntity : class => modelBuilder.Entity<TEntity>().XriProperty(propertyExpression);
+
+    public static PropertyBuilder<xri> XriProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, xri>> propertyExpression
     )
         where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion<xri.EfCoreValueConverter>();
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion<xri.EfCoreValueConverter>()
+            .HasMaxLength(UriMaxLength);
+
+    public static PropertyBuilder<xri?> XriProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, xri?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion<xri.EfCoreValueConverter>()
+            .HasMaxLength(UriMaxLength);
 }

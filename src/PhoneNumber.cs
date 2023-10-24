@@ -55,6 +55,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static PhoneNumber ExampleValue => From(ExampleString);
     public const string EmptyString = "+10000000000";
     public static PhoneNumber Empty => From(EmptyString);
+    public const int MaxLength = 24;
     public const string RegexString =
         @"^[\+]?(?:[\s\.]+)?(?:[0-9]+)?[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     private static readonly Util _util = Util.GetInstance();
@@ -67,7 +68,9 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public readonly bool IsEmpty => this == Empty;
     public string OriginalString { get; init; }
 
-    public static IEnumerable<ExternalDocsTuple> ExternalDocs =>[("E.164", new System.Uri("https://en.wikipedia.org/wiki/E.164"))];
+    public static ExternalDocsTuple ExternalDocs =>
+        ("E.164", new System.Uri("https://en.wikipedia.org/wiki/E.164"));
+
     public readonly Uri Uri => new(Format(UriPattern, ToString()));
 
     public static PhoneNumber FromUri(string s) =>
@@ -107,7 +110,20 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
             number = From(s) with { OriginalString = s };
             return true;
         }
-        catch(Exception e) when (e is ValueObjectValidationException or ArgumentNullException or FormatException or OverflowException or ArgumentException or InvalidCastException or InvalidOperationException) { number = null; return false; }
+        catch (Exception e)
+            when (e
+                    is ValueObjectValidationException
+                        or ArgumentNullException
+                        or FormatException
+                        or OverflowException
+                        or ArgumentException
+                        or InvalidCastException
+                        or InvalidOperationException
+            )
+        {
+            number = null;
+            return false;
+        }
     }
 
     private const Rxo RegexOptions =
@@ -199,21 +215,41 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 
 public static class PhoneNumberEfCoreExtensions
 {
-    public static void ConfigurePhoneNumber<TEntity>(
+    public static PropertyBuilder<PhoneNumber?> PhoneNumberProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, PhoneNumber?>> propertyExpression
+    )
+        where TEntity : class =>
+        modelBuilder.Entity<TEntity>().PhoneNumberProperty(propertyExpression);
+
+    public static PropertyBuilder<PhoneNumber?> PhoneNumberProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, PhoneNumber?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new PhoneNumber.EfCoreValueConverter())
+            .IsUnicode(false)
+            .HasMaxLength(PhoneNumber.MaxLength);
+
+    public static PropertyBuilder<PhoneNumber> PhoneNumberProperty<TEntity>(
         this ModelBuilder modelBuilder,
         Expression<Func<TEntity, PhoneNumber>> propertyExpression
     )
         where TEntity : class =>
-        modelBuilder.Entity<TEntity>().ConfigurePhoneNumber(propertyExpression);
+        modelBuilder.Entity<TEntity>().PhoneNumberProperty(propertyExpression);
 
-    public static void ConfigurePhoneNumber<TEntity>(
+    public static PropertyBuilder<PhoneNumber> PhoneNumberProperty<TEntity>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, PhoneNumber>> propertyExpression
     )
         where TEntity : class =>
         entityBuilder
             .Property(propertyExpression)
-            .HasConversion<PhoneNumber.EfCoreValueConverter>();
+            .HasConversion(new PhoneNumber.EfCoreValueConverter())
+            .IsUnicode(false)
+            .HasMaxLength(PhoneNumber.MaxLength);
 }
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

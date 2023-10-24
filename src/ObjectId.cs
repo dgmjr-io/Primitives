@@ -16,6 +16,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using Vogen;
 
@@ -63,6 +66,9 @@ public readonly partial record struct ObjectId
     public static ObjectId NewId() => From(NextId) with { OriginalString = NextId };
 
     public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
+
+    public static ExternalDocsTuple ExternalDocs =>
+        ("ObjectId", new("https://docs.mongodb.com/manual/reference/method/ObjectId/"));
 
     public override readonly string ToString() => IsEmpty ? string.Empty : Value;
 
@@ -180,4 +186,39 @@ public class ObjectIdAttribute : RegularExpressionAttribute
 {
     public ObjectIdAttribute()
         : base(ObjectId.RegexString) { }
+}
+
+public static class ObjectIdEfCoreConversionExtensions
+{
+    public static PropertyBuilder<ObjectId> ObjectIdProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, ObjectId>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new ObjectIdConverter())
+            .IsUnicode(false);
+
+    public static PropertyBuilder<ObjectId?> ObjectIdProperty<TEntity>(
+        this EntityTypeBuilder<TEntity> entityBuilder,
+        Expression<Func<TEntity, ObjectId?>> propertyExpression
+    )
+        where TEntity : class =>
+        entityBuilder
+            .Property(propertyExpression)
+            .HasConversion(new ObjectIdConverter())
+            .HasMaxLength(ObjectId.Length)
+            .IsUnicode(false);
+
+    public static PropertyBuilder<ObjectId> ObjectIdProperty<TEntity>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, ObjectId>> propertyExpression
+    )
+        where TEntity : class =>
+        modelBuilder
+            .Entity<TEntity>()
+            .ObjectIdProperty(propertyExpression)
+            .HasMaxLength(ObjectId.Length)
+            .IsUnicode(false);
 }
