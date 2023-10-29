@@ -33,7 +33,7 @@ using Validation = global::Validation;
 )]
 [StructLayout(LayoutKind.Auto)]
 [EmailAddress.JConverter]
-public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAddress>, IFormattable
+public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFormattable
 {
     /// <summary>
     /// The example value string.
@@ -60,27 +60,27 @@ public partial record struct EmailAddress : IStringWithRegexValueObject<EmailAdd
     /// <summary>
     /// Gets the description.
     /// </summary>
-    static string IStringWithRegexValueObject<EmailAddress>.Description => Description;
+    static string IRegexValueObject<EmailAddress>.Description => Description;
 
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    static EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue =>
+    static EmailAddress IRegexValueObject<EmailAddress>.ExampleValue =>
         From(ExampleValueString);
 
     /// <summary>
     /// Gets the regex string.
     /// </summary>
-    static string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
+    static string IRegexValueObject<EmailAddress>.RegexString => RegexString;
 
     public static ExternalDocsTuple ExternalDocs =>
         ("Email Address", new Uri("https://en.wikipedia.org/wiki/Email_address"));
 #else
-    readonly Regx IStringWithRegexValueObject<EmailAddress>.Regex() => Regex();
+    readonly Regx IRegexValueObject<EmailAddress>.Regex() => Regex();
 
-    readonly string IStringWithRegexValueObject<EmailAddress>.RegexString => RegexString;
-    readonly string IStringWithRegexValueObject<EmailAddress>.Description => Description;
-    readonly EmailAddress IStringWithRegexValueObject<EmailAddress>.ExampleValue =>
+    readonly string IRegexValueObject<EmailAddress>.RegexString => RegexString;
+    readonly string IRegexValueObject<EmailAddress>.Description => Description;
+    readonly EmailAddress IRegexValueObject<EmailAddress>.ExampleValue =>
         From(ExampleValueString);
 #endif
 

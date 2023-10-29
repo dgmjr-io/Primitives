@@ -26,13 +26,11 @@ using static System.Text.RegularExpressions.RegexOptions;
 using Validation = global::Validation;
 #endif
 
-/// <summary>
-/// Represents an "extensible resource identifier"
-/// </summary>
+/// <summary>Represents an "eXtensible resource identifier" (XRI)</summary>
 [RegexDto(xri._RegexString, RegexOptions: uri._RegexOptions)]
 [StructLayout(LayoutKind.Auto)]
 public readonly partial record struct xri
-    : IStringWithRegexValueObject<xri>,
+    : IRegexValueObject<xri>,
         IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
         ,
@@ -70,15 +68,15 @@ public readonly partial record struct xri
 
     public readonly string Value { get; init; }
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<xri>.Description => Description;
-    static string IStringWithRegexValueObject<xri>.RegexString => RegexString;
-    static xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    static string IRegexValueObject<xri>.Description => Description;
+    static string IRegexValueObject<xri>.RegexString => RegexString;
+    static xri IRegexValueObject<xri>.ExampleValue => ExampleStringValue;
 #else
-    readonly string IStringWithRegexValueObject<xri>.Description => Description;
-    readonly xri IStringWithRegexValueObject<xri>.ExampleValue => ExampleStringValue;
-    readonly string IStringWithRegexValueObject<xri>.RegexString => RegexString;
+    readonly string IRegexValueObject<xri>.Description => Description;
+    readonly xri IRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    readonly string IRegexValueObject<xri>.RegexString => RegexString;
 
-    readonly Regex IStringWithRegexValueObject<xri>.Regex() => Regex();
+    readonly Regex IRegexValueObject<xri>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;

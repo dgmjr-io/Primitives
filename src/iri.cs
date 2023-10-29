@@ -22,17 +22,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Validation = Vogen.Validation;
 using Vogen;
+#endif
 
-/// <summary>
-/// Represents an "internationalized resource identifier (IRI)"
-/// </summary>
+/// <summary>Represents an "internationalized resource identifier" (IRI)</summary>
+#if NETSTANDARD2_0_OR_GREATER
 [RegexDto(_RegexString, RegexOptions: uri._RegexOptions)]
 [SystemTextJsonConverter]
 [StructLayout(LayoutKind.Auto)]
 #endif
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct iri
-    : IStringWithRegexValueObject<iri>,
+    : IRegexValueObject<iri>,
         IResourceIdentifierWithAuthorityHostPortQueryAndFragment
 #if NET7_0_OR_GREATER
         ,
@@ -71,16 +71,16 @@ public readonly partial record struct iri
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<iri>.RegexString => RegexString;
-    static string IStringWithRegexValueObject<iri>.Description => Description;
-    static iri IStringWithRegexValueObject<iri>.Empty => EmptyStringValue;
-    static iri IStringWithRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
+    static string IRegexValueObject<iri>.RegexString => RegexString;
+    static string IRegexValueObject<iri>.Description => Description;
+    static iri IRegexValueObject<iri>.Empty => EmptyStringValue;
+    static iri IRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
 #else
-    readonly string IStringWithRegexValueObject<iri>.Description => Description;
-    readonly iri IStringWithRegexValueObject<iri>.ExampleValue => ExampleStringValue;
-    readonly string IStringWithRegexValueObject<iri>.RegexString => RegexString;
+    readonly string IRegexValueObject<iri>.Description => Description;
+    readonly iri IRegexValueObject<iri>.ExampleValue => ExampleStringValue;
+    readonly string IRegexValueObject<iri>.RegexString => RegexString;
 
-    readonly Regex IStringWithRegexValueObject<iri>.Regex() => Regex();
+    readonly Regex IRegexValueObject<iri>.Regex() => Regex();
 #endif
 
     // public static iri Parse(string iri) => From(iri);

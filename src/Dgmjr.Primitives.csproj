@@ -53,4 +53,7 @@
   <ItemGroup>
     <Using Include="Dgmjr.Primitives.Constants" Static="true" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageTag Include="primitives" />
+  </ItemGroup>
 </Project>

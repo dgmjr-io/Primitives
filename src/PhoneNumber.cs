@@ -43,7 +43,7 @@ using Validation = global::Validation;
 )]
 [StructLayout(LayoutKind.Auto)]
 [PhoneNumber.JConverter]
-public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumber>
+public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
 {
     /// <summary>
     /// The string that will be prefixed to the number when converting it to a URI
@@ -86,12 +86,12 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
         };
 
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
-    static string IStringWithRegexValueObject<PhoneNumber>.Description => Description;
+    static string IRegexValueObject<PhoneNumber>.RegexString => RegexString;
+    static string IRegexValueObject<PhoneNumber>.Description => Description;
 #else
-    readonly string IStringWithRegexValueObject<PhoneNumber>.RegexString => RegexString;
-    readonly string IStringWithRegexValueObject<PhoneNumber>.Description => Description;
-    readonly PhoneNumber IStringWithRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
+    readonly string IRegexValueObject<PhoneNumber>.RegexString => RegexString;
+    readonly string IRegexValueObject<PhoneNumber>.Description => Description;
+    readonly PhoneNumber IRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
 #endif
 
     public override readonly string ToString() =>
@@ -134,11 +134,11 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
     public static partial Regex Regex();
 #elif NET6_0_OR_GREATER
     public static Regex Regex() => new(RegexString, RegexOptions);
-    // Regex IStringWithRegexValueObject<PhoneNumber>.RegexString => Regex();
+    // Regex IRegexValueObject<PhoneNumber>.RegexString => Regex();
 #else
     private static readonly Regex _regex = new(RegexString, RegexOptions);
 
-    readonly Regex IStringWithRegexValueObject<PhoneNumber>.Regex() => _regex;
+    readonly Regex IRegexValueObject<PhoneNumber>.Regex() => _regex;
 #endif
 
     public static implicit operator PhoneNumber?(string? s) =>
@@ -175,7 +175,7 @@ public partial record struct PhoneNumber : IStringWithRegexValueObject<PhoneNumb
 #else
     public static Validation Validate(string s) =>
         Util.IsViablePhoneNumber(s)
-        && ((IStringWithRegexValueObject<PhoneNumber>)ExampleValue).Regex().IsMatch(s)
+        && ((IRegexValueObject<PhoneNumber>)ExampleValue).Regex().IsMatch(s)
             ? Validation.Ok
             : Validation.Invalid("Phone number is not valid.");
 #endif

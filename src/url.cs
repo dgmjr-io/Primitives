@@ -28,15 +28,13 @@ using static System.Text.RegularExpressions.RegexOptions;
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-/// <summary>
-/// Represents an "uniform resource locator (URL)"
-/// </summary>
+/// <summary>Represents a "uniform resource locator" (URL)</summary>
 [RegexDto(url._RegexString, RegexOptions: uri._RegexOptions)]
 [url.JConverter]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct url
-    : IStringWithRegexValueObject<url>,
+    : IRegexValueObject<url>,
         IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
         ,
@@ -71,15 +69,15 @@ public readonly partial record struct url
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<url>.Description => Description;
-    static string IStringWithRegexValueObject<url>.RegexString => RegexString;
-    static url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
+    static string IRegexValueObject<url>.Description => Description;
+    static string IRegexValueObject<url>.RegexString => RegexString;
+    static url IRegexValueObject<url>.ExampleValue => ExampleStringValue;
 #else
-    readonly string IStringWithRegexValueObject<url>.Description => Description;
-    readonly url IStringWithRegexValueObject<url>.ExampleValue => ExampleStringValue;
-    readonly string IStringWithRegexValueObject<url>.RegexString => RegexString;
+    readonly string IRegexValueObject<url>.Description => Description;
+    readonly url IRegexValueObject<url>.ExampleValue => ExampleStringValue;
+    readonly string IRegexValueObject<url>.RegexString => RegexString;
 
-    readonly Regex IStringWithRegexValueObject<url>.Regex() => Regex();
+    readonly Regex IRegexValueObject<url>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;

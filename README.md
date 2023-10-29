@@ -71,7 +71,7 @@ The `PhoneNumber` struct encapsulates parsing, validation, and formatting of pho
 
 Key features:
 
-- Implements `IStringWithRegexValueObject` for parsing and validation.
+- Implements `IRegexValueObject` for parsing and validation.
 - Leverages `libphonenumber` for parsing into components.
 - Provides implicit conversions to/from string.
 - Generates a tel: URI from the number.

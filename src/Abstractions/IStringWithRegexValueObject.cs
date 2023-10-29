@@ -3,7 +3,7 @@ namespace System;
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-public interface IStringWithRegexValueObject<TSelf>
+public interface IRegexValueObject<TSelf>
     : IComparable<TSelf>,
         IComparable,
         IEquatable<TSelf>,
@@ -13,7 +13,7 @@ public interface IStringWithRegexValueObject<TSelf>
         IParsable<TSelf>,
         IUriConvertible<TSelf>
 #endif
-    where TSelf : IStringWithRegexValueObject<TSelf>
+    where TSelf : IRegexValueObject<TSelf>
 {
     /// <summary>Gets The value of the value object as a string.  Will be <see langword="null" /> or <see cref="string.Empty" /> iff <see cref="IsEmpty" /> == <see langword="true" /></summary>
     string Value { get; }

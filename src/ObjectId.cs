@@ -34,7 +34,7 @@ using Validation = global::Validation;
 )]
 // [RegexDto(ObjectId.RegexString)]
 public readonly partial record struct ObjectId
-    : IStringWithRegexValueObject<ObjectId>,
+    : IRegexValueObject<ObjectId>,
         IComparable<ObjectId>,
         IComparable,
         IEquatable<ObjectId>
@@ -42,7 +42,7 @@ public readonly partial record struct ObjectId
     public const string Description =
         "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<ObjectId>.Description => Description;
+    static string IRegexValueObject<ObjectId>.Description => Description;
 #endif
     public const string EmptyValue = "000000000000000000000000";
     public const int Length = 24;
@@ -77,7 +77,7 @@ public readonly partial record struct ObjectId
     public string OriginalString { get; init; }
 
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
+    static string IRegexValueObject<ObjectId>.RegexString => RegexString;
 #endif
 
     public const string ExampleValueString = "abcdef0123456789abcdef01";
@@ -88,13 +88,13 @@ public readonly partial record struct ObjectId
         };
 
 #if !NET6_0_OR_GREATER
-    readonly Regex IStringWithRegexValueObject<ObjectId>.Regex() => Regex();
+    readonly Regex IRegexValueObject<ObjectId>.Regex() => Regex();
 
-    readonly string IStringWithRegexValueObject<ObjectId>.RegexString => RegexString;
+    readonly string IRegexValueObject<ObjectId>.RegexString => RegexString;
 
-    readonly string IStringWithRegexValueObject<ObjectId>.Description => Description;
+    readonly string IRegexValueObject<ObjectId>.Description => Description;
 
-    readonly ObjectId IStringWithRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
+    readonly ObjectId IRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
 
     public static ObjectId Parse(string s) =>

@@ -25,19 +25,18 @@ using Vogen;
 
 using static System.Text.RegularExpressions.RegexOptions;
 
-/// <summary>
-/// /// Represents an "uniform resource name"
-/// </summary>
-[RegexDto(urn._RegexString, RegexOptions: uri._RegexOptions)]
+/// <summary>Represents an "uniform resource name" (URN)</summary>
+[RegexDto(_RegexString, RegexOptions: uri._RegexOptions)]
 [JsonConverter(typeof(urn.JsonConverter))]
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
-public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IResourceIdentifier
+public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<urn>
 #endif
 {
+    public readonly string? DoubleSlashes { get; } = null;
     public const string Description = "a uniform resource name (urn)";
 
 #if NET7_0_OR_GREATER
@@ -63,21 +62,20 @@ public readonly partial record struct urn : IStringWithRegexValueObject<urn>, IR
     public static urn Empty => From(EmptyStringValue);
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
     public readonly string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
-    public readonly string? DoubleSlashes = null;
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<urn>.Description => Description;
-    static string IStringWithRegexValueObject<urn>.RegexString => RegexString;
-    static urn IStringWithRegexValueObject<urn>.Empty => EmptyStringValue;
-    static urn IStringWithRegexValueObject<urn>.ExampleValue => new(ExampleStringValue);
+    static string IRegexValueObject<urn>.Description => Description;
+    static string IRegexValueObject<urn>.RegexString => RegexString;
+    static urn IRegexValueObject<urn>.Empty => EmptyStringValue;
+    static urn IRegexValueObject<urn>.ExampleValue => new(ExampleStringValue);
 #else
-    readonly string IStringWithRegexValueObject<urn>.Description => Description;
-    readonly urn IStringWithRegexValueObject<urn>.ExampleValue => ExampleStringValue;
+    readonly string IRegexValueObject<urn>.Description => Description;
+    readonly urn IRegexValueObject<urn>.ExampleValue => ExampleStringValue;
 
-    // urn IStringWithRegexValueObject<urn>.Empty => EmptyValue;
-    readonly string IStringWithRegexValueObject<urn>.RegexString => RegexString;
+    // urn IRegexValueObject<urn>.Empty => EmptyValue;
+    readonly string IRegexValueObject<urn>.RegexString => RegexString;
 
-    readonly Regex IStringWithRegexValueObject<urn>.Regex() => Regex();
+    readonly Regex IRegexValueObject<urn>.Regex() => Regex();
 #endif
 
     // public static urn Parse(string urn) => From(urn);

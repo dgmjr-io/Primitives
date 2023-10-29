@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 namespace Dgmjr.Primitives.Tests;
 
 public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
-    where TPrimitive : IStringWithRegexValueObject<TPrimitive>
+    where TPrimitive : IRegexValueObject<TPrimitive>
     where TSelf : PrimitivesTests<TPrimitive, TSelf>
 {
     public ILogger Logger { get; }

@@ -32,16 +32,14 @@ using static System.Text.RegularExpressions.RegexOptions;
 #if !NETSTANDARD2_0_OR_GREATER
 using Validation = global::Validation;
 #endif
-/// <summary>
-/// Represents an "uniform resource identifier (URI)"
-/// </summary>
+/// <summary>Represents a "uniform resource identifier" (URI)</summary>
 [RegexDto(uri._RegexString, RegexOptions: uri._RegexOptions)]
 [uri.JConverter]
 [DebuggerDisplay("{ToString()}")]
 [StructLayout(LayoutKind.Auto)]
 #if NET6_0_OR_GREATER
 #endif
-public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IResourceIdentifier
+public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIdentifier
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<uri>
@@ -80,22 +78,18 @@ public readonly partial record struct uri : IStringWithRegexValueObject<uri>, IR
 
     public readonly string Value => ToString();
 #if NET6_0_OR_GREATER
-    static string IStringWithRegexValueObject<uri>.RegexString => RegexString;
-    static string IStringWithRegexValueObject<uri>.Description => Description;
-    static uri IStringWithRegexValueObject<uri>.Empty => EmptyStringValue;
-    static uri IStringWithRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
+    static string IRegexValueObject<uri>.RegexString => RegexString;
+    static string IRegexValueObject<uri>.Description => Description;
+    static uri IRegexValueObject<uri>.Empty => EmptyStringValue;
+    static uri IRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
 
-    static uri IStringWithRegexValueObject<uri>.Parse(string s) =>
-        From(s) with
-        {
-            OriginalString = s
-        };
+    static uri IRegexValueObject<uri>.Parse(string s) => From(s) with { OriginalString = s };
 #else
-    readonly string IStringWithRegexValueObject<uri>.Description => Description;
-    readonly uri IStringWithRegexValueObject<uri>.ExampleValue => ExampleStringValue;
-    readonly string IStringWithRegexValueObject<uri>.RegexString => RegexString;
+    readonly string IRegexValueObject<uri>.Description => Description;
+    readonly uri IRegexValueObject<uri>.ExampleValue => ExampleStringValue;
+    readonly string IRegexValueObject<uri>.RegexString => RegexString;
 
-    readonly Regex IStringWithRegexValueObject<uri>.Regex() => Regex();
+    readonly Regex IRegexValueObject<uri>.Regex() => Regex();
 #endif
 
     public readonly Uri Uri => this;
