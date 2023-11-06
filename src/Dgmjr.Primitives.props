@@ -8,33 +8,21 @@
     <Using Include="Dgmjr.Primitives.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <PackageReference Include="System.ComponentModel.Usings"/> -->
-    <!-- <SourceGenerator Include="Dgmjr.Enumerations.CodeGenerator"/> -->
     <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
     <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
     <PackageReference Include="Dgmjr.System.Extensions"/>
     <PackageReference Include="libphonenumber-csharp"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design"  />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
     <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
     <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <Using Include="System.Text.RegularExpressions"/>
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="REx"/>
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="Rx"/>
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="RegX"/>
-        <Using Include="System.Text.RegularExpressions.Regex" Alias="Regx"/>
-        <Using Include="System.Text.RegularExpressions.Regex" Static="true"/>
-        <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true"/>
-        <Using Include="System.Text.RegularExpressions.RegexOptions" Alias="Rxo"/> -->
-    <!-- <Using Include="System.Console" Static="true"/> -->
     <Using Include="Dgmjr.Abstractions" />
     <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true" />
-    <!-- <Using Include="Validation" Alias="Validation" /> -->
-    <!-- <Using Include="(int Day, int Month, int Year)" Alias="DayMonthYearTuple" /> -->
     <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives'" />
   </ItemGroup>
 </Project>

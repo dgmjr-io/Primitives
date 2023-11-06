@@ -19,6 +19,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Vogen;
 
@@ -221,4 +222,46 @@ public static class ObjectIdEfCoreConversionExtensions
             .ObjectIdProperty(propertyExpression)
             .HasMaxLength(ObjectId.Length)
             .IsUnicode(false);
+
+    public static MigrationBuilder HasIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.HasIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
+
+    public static MigrationBuilder HasIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.HasIsValidObjectIdFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder HasIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql(
+            typeof(Constants).Assembly
+                .GetManifestResourceStream(ufn_ + "IsValidObjectId.sql")
+                .ReadToEnd()
+        );
+        return migrationBuilder;
+    }
+
+    public static MigrationBuilder RollBackIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.RollBackIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
+
+    public static MigrationBuilder RollBackIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.RollBackIsValidObjectIdFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder RollBackIsValidObjectIdFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}];");
+        return migrationBuilder;
+    }
 }

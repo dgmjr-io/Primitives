@@ -16,6 +16,8 @@ using System.Runtime.InteropServices;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using static System.Text.RegularExpressions.RegexOptions;
 
@@ -65,8 +67,7 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    static EmailAddress IRegexValueObject<EmailAddress>.ExampleValue =>
-        From(ExampleValueString);
+    static EmailAddress IRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
 
     /// <summary>
     /// Gets the regex string.
@@ -80,8 +81,7 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
 
     readonly string IRegexValueObject<EmailAddress>.RegexString => RegexString;
     readonly string IRegexValueObject<EmailAddress>.Description => Description;
-    readonly EmailAddress IRegexValueObject<EmailAddress>.ExampleValue =>
-        From(ExampleValueString);
+    readonly EmailAddress IRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
 #endif
 
     /// <summary>
@@ -337,6 +337,49 @@ public static class EmailAddressEfCoreExtensions
             .Property(propertyExpression)
             .HasConversion(new EmailAddress.EfCoreValueConverter())
             .HasMaxLength(UriMaxLength);
+
+    public static MigrationBuilder HasIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.HasIsValidEmailAddressFunction(ufn_ + "IsValidEmailAddress");
+
+    public static MigrationBuilder HasIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.HasIsValidEmailAddressFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder HasIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql(
+            typeof(Constants).Assembly
+                .ReadAssemblyResourceAllText(ufn_ + "IsValidEmailAddress.sql")
+                .Replace("{schema}", schema)
+                .Replace("{functionName}", functionName)
+        );
+        return migrationBuilder;
+    }
+
+    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.RollBackIsValidEmailAddressFunction(ufn_ + "IsValidEmailAddress");
+
+    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.RollBackIsValidEmailAddressFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        return migrationBuilder;
+    }
 }
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

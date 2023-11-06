@@ -18,6 +18,8 @@ using System.Runtime.InteropServices;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 using static System.Text.RegularExpressions.RegexOptions;
@@ -250,6 +252,49 @@ public static class PhoneNumberEfCoreExtensions
             .HasConversion(new PhoneNumber.EfCoreValueConverter())
             .IsUnicode(false)
             .HasMaxLength(PhoneNumber.MaxLength);
+
+    public static MigrationBuilder HasIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.HasIsValidPhoneNumberFunction(ufn_ + "IsValidPhoneNumber");
+
+    public static MigrationBuilder HasIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.HasIsValidPhoneNumberFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder HasIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql(
+            typeof(Constants).Assembly
+                .ReadAssemblyResourceAllText(ufn_ + "IsValidPhoneNumber.sql")
+                .Replace("{schema}", schema)
+                .Replace("{functionName}", functionName)
+        );
+        return migrationBuilder;
+    }
+
+    public static MigrationBuilder RollBackIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.RollBackIsValidPhoneNumberFunction(ufn_ + "IsValidPhoneNumber");
+
+    public static MigrationBuilder RollBackIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.RollBackIsValidPhoneNumberFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder RollBackIsValidPhoneNumberFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        return migrationBuilder;
+    }
 }
 
 //"^\+((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))$"

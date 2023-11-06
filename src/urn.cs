@@ -20,6 +20,8 @@ using System.Runtime.InteropServices;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using Vogen;
 
@@ -353,5 +355,47 @@ public static class UrnEfCoreExtensions
         entityBuilder
             .Property(propertyExpression)
             .HasConversion(new urn.NullableEfCoreValueConverter());
+
+    public static MigrationBuilder HasIsValidUrnFunction(this MigrationBuilder migrationBuilder) =>
+        migrationBuilder.HasIsValidUrnFunction(ufn_ + "IsUrn");
+
+    public static MigrationBuilder HasIsValidUrnFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.HasIsValidUrnFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder HasIsValidUrnFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql(
+            typeof(Constants).Assembly
+                .ReadAssemblyResourceAllText(ufn_ + "IsUri.sql")
+                .Replace("{schema}", schema)
+                .Replace("{functionName}", functionName)
+        );
+        return migrationBuilder;
+    }
+
+    public static MigrationBuilder RollBackIsValidUrnFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.RollBackIsValidUrnFunction(ufn_ + "IsUrn");
+
+    public static MigrationBuilder RollBackIsValidUrnFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.RollBackIsValidUrnFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder RollBackIsValidUrnFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        return migrationBuilder;
+    }
 }
 #endif

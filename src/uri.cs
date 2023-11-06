@@ -26,6 +26,8 @@ using Validation = global::Vogen.Validation;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 using static System.Text.RegularExpressions.RegexOptions;
 
@@ -335,5 +337,47 @@ public static class UriEfCoreExtensions
             .HasConversion(new uri.NullableEfCoreValueConverter())
             .IsUnicode(false)
             .HasMaxLength(UriMaxLength);
+
+    public static MigrationBuilder HasIsValidUriFunction(this MigrationBuilder migrationBuilder) =>
+        migrationBuilder.HasIsValidUriFunction(ufn_ + "IsValidUri");
+
+    public static MigrationBuilder HasIsValidUriFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.HasIsValidUriFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder HasIsValidUriFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql(
+            typeof(Constants).Assembly
+                .ReadAssemblyResourceAllText(ufn_ + "IsUri.sql")
+                .Replace("{schema}", schema)
+                .Replace("{functionName}", functionName)
+        );
+        return migrationBuilder;
+    }
+
+    public static MigrationBuilder RollBackIsValidUriFunction(
+        this MigrationBuilder migrationBuilder
+    ) => migrationBuilder.RollBackIsValidUriFunction(ufn_ + "IsValidUri");
+
+    public static MigrationBuilder RollBackIsValidUriFunction(
+        this MigrationBuilder migrationBuilder,
+        string functionName
+    ) => migrationBuilder.RollBackIsValidUriFunction(DboSchema.ShortName, functionName);
+
+    public static MigrationBuilder RollBackIsValidUriFunction(
+        this MigrationBuilder migrationBuilder,
+        string schema,
+        string functionName
+    )
+    {
+        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        return migrationBuilder;
+    }
 }
 #endif

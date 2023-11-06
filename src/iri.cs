@@ -20,6 +20,8 @@ using static System.Text.RegularExpressions.RegexOptions;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Validation = Vogen.Validation;
 using Vogen;
 #endif

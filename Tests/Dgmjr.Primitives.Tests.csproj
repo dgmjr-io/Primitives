@@ -23,7 +23,7 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="Vogen" />
     <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
-    <UsingsPackageReference Include="System.Text.RegularExpressions.Usings" />
+    <PackageReference Include="System.Text.RegularExpressions.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
   </ItemGroup>
 
 
