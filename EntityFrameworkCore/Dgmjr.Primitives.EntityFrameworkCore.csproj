@@ -15,6 +15,7 @@
   <ItemGroup>
     <Using Include="Dgmjr.Primitives.EntityFrameworkCore.FunctionNames" Static="true" />
     <Using Include="Dgmjr.Primitives.EntityFrameworkCore.Constants" Static="true" />
+    <Using Include="Dgmjr.EntityFrameworkCore.Migrations" />
     <Using Include="System" />
   </ItemGroup>
   <Import Project="../src/Dgmjr.Primitives.props" />

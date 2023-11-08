@@ -1,5 +1,5 @@
 RETURN
-    CASE WHEN @url LIKE '%://%'
+    CASE WHEN @value LIKE '%://%'
     -- OR @url LIKE 'http://%'
     -- OR @url LIKE 'ftp://%'
     -- OR @url LIKE 'tg://%'

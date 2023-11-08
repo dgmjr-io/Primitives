@@ -1,7 +1,7 @@
 DECLARE @bitEmailVal as Bit
-DECLARE @EmailText nvarchar(MAX) = @EMAIL
+DECLARE @EmailText nvarchar(MAX) = @value
 
-SET @EmailText=ltrim(rtrim(isnull(@EMAIL,'')))
+SET @EmailText=ltrim(rtrim(isnull(@value,'')))
 
 SET @bitEmailVal = case when @EmailText = '' then 0
                         when @EmailText like '% %' then 0

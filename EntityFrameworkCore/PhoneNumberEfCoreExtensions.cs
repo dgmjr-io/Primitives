@@ -53,11 +53,13 @@ public static class PhoneNumberEfCoreExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(IsValidPhoneNumber + _sql)
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
+        migrationBuilder.Operations.Add(
+            new CreateFunctionOperation(
+                schema,
+                functionName,
+                "@value nvarchar(MAX)",
+                typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsValidPhoneNumber + _sql)
+            )
         );
         return migrationBuilder;
     }

@@ -1,3 +1,5 @@
+using Dgmjr.EntityFrameworkCore.Migrations;
+
 namespace Dgmjr.Primitives.EntityFrameworkCore;
 
 public static class UriEfCoreExtensions
@@ -33,11 +35,13 @@ public static class UriEfCoreExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(IsUri + _sql)
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
+        migrationBuilder.Operations.Add(
+            new CreateFunctionOperation(
+                schema,
+                functionName,
+                "@value nvarchar(MAX)",
+                typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsUri + _sql)
+            )
         );
         return migrationBuilder;
     }
@@ -57,7 +61,7 @@ public static class UriEfCoreExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        migrationBuilder.Operations.Add(new DropFunctionOperation(schema, functionName));
         return migrationBuilder;
     }
 

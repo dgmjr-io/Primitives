@@ -49,17 +49,20 @@ public static class ObjectIdEfCoreConversionExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .GetManifestResourceStream(ufn_ + "IsValidObjectId.sql")
-                .ReadToEnd()
+        migrationBuilder.Operations.Add(
+            new CreateFunctionOperation(
+                schema,
+                functionName,
+                "@value nvarchar(MAX)",
+                typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsValidObjectId + _sql)
+            )
         );
         return migrationBuilder;
     }
 
     public static MigrationBuilder RollBackIsValidObjectIdFunction(
         this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.RollBackIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
+    ) => migrationBuilder.RollBackIsValidObjectIdFunction(IsValidObjectId);
 
     public static MigrationBuilder RollBackIsValidObjectIdFunction(
         this MigrationBuilder migrationBuilder,
@@ -72,15 +75,15 @@ public static class ObjectIdEfCoreConversionExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}];");
+        migrationBuilder.Operations.Add(new DropFunctionOperation(schema, functionName));
         return migrationBuilder;
     }
 
 #if NET7_0_OR_GREATER
-    public static Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder HasObjectIdCheckConstraint(
-        this Microsoft.EntityFrameworkCore.Metadata.Builders.TableBuilder tableBuilder,
+    public static TableBuilder HasObjectIdCheckConstraint(
+        this TableBuilder tableBuilder,
         string columnName,
-        string functionName = "IsValidObjectId",
+        string functionName = IsValidObjectId,
         string schema = DboSchema.ShortName
     )
     {

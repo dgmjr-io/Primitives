@@ -32,11 +32,13 @@ public static class UrlEfCoreExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(IsUrl + _sql)
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
+        migrationBuilder.Operations.Add(
+            new CreateFunctionOperation(
+                schema,
+                functionName,
+                "@value nvarchar(MAX)",
+                typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsUrl + _sql)
+            )
         );
         return migrationBuilder;
     }
@@ -56,7 +58,7 @@ public static class UrlEfCoreExtensions
         string functionName
     )
     {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        migrationBuilder.Operations.Add(new DropFunctionOperation(schema, functionName));
         return migrationBuilder;
     }
 
