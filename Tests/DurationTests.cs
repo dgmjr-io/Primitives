@@ -5,11 +5,8 @@ using Dgmjr.Primitives;
 using Xunit;
 using Xunit.Abstractions;
 
-public class DurationTests : BaseTest
+public class DurationTests(ITestOutputHelper output) : BaseTest(output)
 {
-    public DurationTests(ITestOutputHelper output)
-        : base(output) { }
-
     [Theory]
     [MemberData(nameof(DayTimeDurationTestData))]
     public void Day_Time_Duration_Parses_Correctly(

@@ -24,11 +24,6 @@ using global::Vogen;
 
 using Validation = global::Vogen.Validation;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 using static System.Text.RegularExpressions.RegexOptions;
 
 #if !NETSTANDARD2_0_OR_GREATER
@@ -222,20 +217,6 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
     public readonly int CompareTo(uri other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
-    public class EfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri, string>
-    {
-        public EfCoreValueConverter()
-            : base(v => v.ToString(), v => From(v)) { }
-    }
-
-    public class NullableEfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<uri?, string?>
-    {
-        public NullableEfCoreValueConverter()
-            : base(v => v.HasValue ? v.ToString() : default, v => From(v)) { }
-    }
-
     public class JConverterAttribute : JsonConverterAttribute
     {
         public JConverterAttribute()
@@ -300,84 +281,3 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
     }
 #endif
 }
-
-#if NETSTANDARD2_0_OR_GREATER
-public static class UriEfCoreExtensions
-{
-    public static PropertyBuilder<uri> UriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, uri>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().UriProperty(propertyExpression);
-
-    public static PropertyBuilder<uri?> UriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, uri?>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().UriProperty(propertyExpression);
-
-    public static PropertyBuilder<uri> UriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, uri>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new uri.EfCoreValueConverter())
-            .IsUnicode(false)
-            .HasMaxLength(UriMaxLength);
-
-    public static PropertyBuilder<uri?> UriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, uri?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new uri.NullableEfCoreValueConverter())
-            .IsUnicode(false)
-            .HasMaxLength(UriMaxLength);
-
-    public static MigrationBuilder HasIsValidUriFunction(this MigrationBuilder migrationBuilder) =>
-        migrationBuilder.HasIsValidUriFunction(ufn_ + "IsValidUri");
-
-    public static MigrationBuilder HasIsValidUriFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.HasIsValidUriFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder HasIsValidUriFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(ufn_ + "IsUri.sql")
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
-        );
-        return migrationBuilder;
-    }
-
-    public static MigrationBuilder RollBackIsValidUriFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.RollBackIsValidUriFunction(ufn_ + "IsValidUri");
-
-    public static MigrationBuilder RollBackIsValidUriFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.RollBackIsValidUriFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder RollBackIsValidUriFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
-        return migrationBuilder;
-    }
-}
-#endif

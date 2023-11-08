@@ -13,8 +13,6 @@
     <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
     <PackageReference Include="Dgmjr.System.Extensions"/>
     <PackageReference Include="libphonenumber-csharp"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design"  />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
     <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
@@ -22,7 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <Using Include="Dgmjr.Abstractions" />
+    <Using Include="System.Domain" />
+    <Using Include="System.Net.Mail" />
+    <Using Include="System" />
     <Using Include="System.Text.RegularExpressions.RegexOptions" Static="true" />
-    <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives'" />
+    <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives' And '$(MSBuildProjectName)' != 'Dgmjr.Primitives.EntityFrameworkCore'" />
   </ItemGroup>
 </Project>

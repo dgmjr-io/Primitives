@@ -2,11 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 namespace System
 {
     /// <summary>
@@ -36,7 +31,7 @@ namespace System
         /// <summary>
         /// The size of the bits in the integer.
         /// </summary>
-        private const int BitsSize = 24;
+        public const int Size = 24;
 
         /// <summary>
         /// The zero mask for the integer.
@@ -62,16 +57,18 @@ namespace System
         [FieldOffset(2)]
         private readonly byte _b2;
 
+        private readonly byte[] Bytes => [_b0, _b1, _b2];
+
         public static implicit operator uint(i24 value) =>
             (uint)value._b0 | (uint)(value._b1 >> BitOffset) | (uint)(value._b2 >> BitOffset * 2);
 
         public static implicit operator int(i24 value) =>
-            (int)value._b0 | (int)(value._b1 >> BitOffset) | (int)(value._b2 >> BitOffset * 2);
+            (int)value._b0 | ((int)value._b1 >> BitOffset) | ((int)value._b2 >> BitOffset * 2);
 
-        /// <summary>
-        /// Gets the value of the integer.
-        /// </summary>
-        public i24 Value => this;
+        // /// <summary>
+        // /// Gets the value of the integer.
+        // /// </summary>
+        // public i24 Value => this;
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with three bytes.
@@ -85,39 +82,29 @@ namespace System
             _b1 = b1;
             _b2 = b2;
         }
+        /// <summary>
+        /// Initializes a new instance of the i24 struct with three bytes.
+        /// </summary>
+        /// <param name="bytes">The array of three bytes holding the int24 value.</param>
+        public Int24(byte[] bytes) : this(bytes[0], bytes[1], bytes[2]) { }
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with a signed byte value.
         /// </summary>
         /// <param name="value">The signed byte value.</param>
-        public Int24(sbyte value)
-        {
-            _b0 = (byte)value;
-            _b1 = (byte)(value >> 8);
-            _b2 = (byte)(value >> 16);
-        }
+        public Int24(sbyte value) : this((byte)value, 0x0, 0x0) { }
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with a short integer value.
         /// </summary>
         ///<param name="value">The short integer value.</param>
-        public Int24(short value)
-        {
-            _b0 = (byte)value;
-            _b1 = (byte)(value >> BitOffset);
-            _b2 = (byte)(value >> BitOffset * 2);
-        }
+        public Int24(short value) : this((byte)(value & 0xFF), (byte)(value >> BitOffset), 0x0) { }
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with an integer value.
         /// </summary>
         ///<param name="value">The integer value.</param>
-        public Int24(int value)
-        {
-            _b0 = (byte)value;
-            _b1 = (byte)(value >> BitOffset);
-            _b2 = (byte)(value >> BitOffset * 2);
-        }
+        public Int24(int value) : this((byte)(value & 0xFF), (byte)(value >> BitOffset), (byte)(value >> BitOffset * 2)) { }
 
         /// <summary>
         /// Initializes a new instance of the i24 struct with an unsigned integer value.
@@ -125,12 +112,12 @@ namespace System
         /// <param name="value">The unsigned integer value.</param>
         public Int24(uint value)
         {
-            if (value > (1 << BitsSize - 1) - 1)
+            if (value > (1 << Size - 1) - 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), "Value too large for i24");
             }
 
-            _b0 = (byte)value;
+            _b0 = (byte)(value & 0xFF);
             _b1 = (byte)(value >> BitOffset);
             _b2 = (byte)(value >> BitOffset * 2);
         }
@@ -190,7 +177,7 @@ namespace System
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
         public bool Equals(i24 other)
         {
-            return SignExtend() == other.SignExtend();
+            return SignExtend()  == other.SignExtend();
         }
 
         /// <summary>
@@ -209,13 +196,13 @@ namespace System
         /// <returns>A new i24 struct with sign extension applied.</returns>
         public i24 SignExtend()
         {
-            if ((Value & Zero) != 0)
+            if ((this & Zero) != 0)
             {
                 // Negative number: fill upper 8 bits with 1's
-                return new i24((int)(Value | NegativeSignMask));
+                return unchecked ((i24)(int)(this | NegativeSignMask));
             }
             // Positive number: fill upper 8 bits with 0's
-            return new i24((int)(Value & PositiveSignMask));
+            return (i24)(int)(this & PositiveSignMask);
         }
 
         /// <summary>
@@ -279,7 +266,7 @@ namespace System
         /// Implicitly converts an i24 struct to an integer.
         /// </summary>
         ///<param name="value">The i24 struct to convert.</param>
-        public static implicit operator i24(int value) => new i24(value);
+        public static implicit operator i24(int value) => new(value);
 
         /// <summary>
         /// Determines whether two specified i24 objects have the same value.
@@ -398,48 +385,9 @@ namespace System
 
         public static i24 Parse(string s, Globalization.NumberStyles style = 0) =>
             new(int.Parse(s, style));
-
-        /// <summary>
-        /// Converts an i24 to and from an int for storage in a database table
-        /// </summary>
-        public class EfCoreValueConverter
-            : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<i24, int>
-        {
-            public EfCoreValueConverter()
-                : base(v => v.ToInt32(), v => (i24)v) { }
-        }
     }
 
 #if NETSTANDARD2_0_OR_GREATER
-    public static class I24EfCoreExtensions
-    {
-        public static PropertyBuilder<i24?> Int24Property<TEntity>(
-            this ModelBuilder modelBuilder,
-            Expression<Func<TEntity, i24?>> propertyExpression
-        )
-            where TEntity : class =>
-            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
 
-        public static PropertyBuilder<i24?> Int24Property<TEntity>(
-            this EntityTypeBuilder<TEntity> entityBuilder,
-            Expression<Func<TEntity, i24?>> propertyExpression
-        )
-            where TEntity : class =>
-            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
-
-        public static PropertyBuilder<i24> Int24Property<TEntity>(
-            this ModelBuilder modelBuilder,
-            Expression<Func<TEntity, i24>> propertyExpression
-        )
-            where TEntity : class =>
-            modelBuilder.Entity<TEntity>().Int24Property(propertyExpression);
-
-        public static PropertyBuilder<i24> Int24Property<TEntity>(
-            this EntityTypeBuilder<TEntity> entityBuilder,
-            Expression<Func<TEntity, i24>> propertyExpression
-        )
-            where TEntity : class =>
-            entityBuilder.Property(propertyExpression).HasConversion<i24.EfCoreValueConverter>();
-    }
 #endif
 }

@@ -1,13 +1,11 @@
 using System;
 
-using Dgmjr.Primitives;
-
-namespace Primitives;
+namespace Dgmjr.Primitives;
 
 [RegexDto(
     @"^(?<Negative:string?>\-?)P(?:(?<Years:int?>\d+)?Y)?(?:(?<Months:int?>\d+)M)?(?:(?<Days:int?>\d+)?D)?T?(?:(?<Hours:int?>\d+)H)?(?:(?<Minutes:int?>\d+)M)?(?:(?<Seconds:double?>\d+(?:\.(?:\d+)?)?S)?)$"
 )]
-public partial record struct xsduration
+public readonly partial record struct xsduration
 {
     public readonly bool IsNegative => !IsNullOrEmpty(Negative);
     public readonly int Sign => IsNegative ? -1 : 1;
@@ -15,33 +13,31 @@ public partial record struct xsduration
     public static implicit operator duration(xsduration xsd) =>
         duration.FromTicks(
             new duration(
-                (int)
-                    Math.Floor(
-                        (xsd.Years.HasValue ? xsd.Years.Value * YearMonthDuration.DaysPerYear : 0)
-                            + (
-                                xsd.Months.HasValue
-                                    ? xsd.Months.Value * YearMonthDuration.DaysPerMonth
-                                    : 0
-                            )
-                            + (xsd.Days ?? 0)
-                    ),
+                (int)Floor(
+                    (xsd.Years.HasValue ? xsd.Years.Value * YearMonthDuration.DaysPerYear : 0)
+                        + (
+                            xsd.Months.HasValue
+                                ? xsd.Months.Value * YearMonthDuration.DaysPerMonth
+                                : 0
+                        )
+                        + (xsd.Days ?? 0)
+                ),
                 xsd.Hours ?? 0,
                 xsd.Minutes ?? 0,
-                xsd.Seconds.HasValue ? (int)Math.Floor(xsd.Seconds.Value) : 0,
+                xsd.Seconds.HasValue ? (int)Floor(xsd.Seconds.Value) : 0,
                 xsd.Seconds.HasValue
-                    ? (int)Math.Floor((xsd.Seconds.Value * 1000) - Math.Floor(xsd.Seconds.Value))
+                    ? (int)Floor((xsd.Seconds.Value * 1000) - Floor(xsd.Seconds.Value))
                     : 0
-#if NET7_0_OR_GREATER
-                ,
-                xsd.Seconds.HasValue
-                    ? (int)
-                        Math.Floor(
-                            (xsd.Seconds.Value * 1000000)
-                                - Math.Floor(xsd.Seconds.Value * 1000)
-                                - Math.Floor(xsd.Seconds.Value)
-                        )
-                    : 0
-#endif
+            // #if NET7_0_OR_GREATER
+            //                 ,
+            //                 xsd.Seconds.HasValue
+            //                     ? (int)Floor(
+            //                         (xsd.Seconds.Value * 1000000)
+            //                             - Floor(xsd.Seconds.Value * 1000)
+            //                             - Floor(xsd.Seconds.Value)
+            //                     )
+            //                     : 0
+            // #endif
             ).Ticks * xsd.Sign
         );
 

@@ -18,10 +18,6 @@ namespace System;
 using static System.Text.RegularExpressions.RegexOptions;
 #if NETSTANDARD2_0_OR_GREATER
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Validation = Vogen.Validation;
 using Vogen;
 #endif
@@ -243,13 +239,6 @@ public readonly partial record struct iri
 
     public readonly int CompareTo(iri other) => CompareTo(other.ToString());
 
-    public class EfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<iri, string>
-    {
-        public EfCoreValueConverter()
-            : base(v => v.ToString(), v => From(v)) { }
-    }
-
     public class SystemTextJsonConverterAttribute : JsonConverterAttribute
     {
         public SystemTextJsonConverterAttribute()
@@ -317,38 +306,5 @@ public readonly partial record struct iri
 }
 
 #if NETSTANDARD2_0_OR_GREATER
-public static class IriEfCoreExtensions
-{
-    public static PropertyBuilder<iri> IriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, iri>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().IriProperty(propertyExpression);
 
-    public static PropertyBuilder<iri?> IriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, iri?>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().IriProperty(propertyExpression);
-
-    public static PropertyBuilder<iri> IriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, iri>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion<iri.EfCoreValueConverter>()
-            .HasMaxLength(UriMaxLength);
-
-    public static PropertyBuilder<iri?> IriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, iri?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion<iri.EfCoreValueConverter>()
-            .HasMaxLength(UriMaxLength);
-}
 #endif

@@ -1,0 +1,4 @@
+RETURN CASE
+  WHEN @uri LIKE '%:%' THEN 1
+  ELSE 0
+END

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dgmjr.EntityFrameworkCore.Constants.All" />
+    <PackageReference Include="Dgmjr.EntityFrameworkCore.Migrations" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="./Resources/*.*" LogicalName="%(Filename)%(Extension)" />
+    <Compile Remove="../src/PrimitivesGlobalUsings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Dgmjr.Primitives.EntityFrameworkCore.FunctionNames" Static="true" />
+    <Using Include="Dgmjr.Primitives.EntityFrameworkCore.Constants" Static="true" />
+    <Using Include="System" />
+  </ItemGroup>
+  <Import Project="../src/Dgmjr.Primitives.props" />
+</Project>

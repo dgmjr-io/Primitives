@@ -17,12 +17,6 @@ namespace System;
 
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 using Vogen;
 
 using static System.Text.RegularExpressions.RegexOptions;
@@ -235,20 +229,6 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
     public readonly int CompareTo(urn other) => CompareTo(other.ToString());
 
 #if NETSTANDARD2_0_OR_GREATER
-    public class EfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn, string>
-    {
-        public EfCoreValueConverter()
-            : base(v => v.ToString(), v => From(v)) { }
-    }
-
-    public class NullableEfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<urn?, string?>
-    {
-        public NullableEfCoreValueConverter()
-            : base(v => v.HasValue ? v.ToString() : default, v => From(v)) { }
-    }
-
     public class JsonConverter : JsonConverter<urn>
     {
         public override urn Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
@@ -324,78 +304,3 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
     }
 #endif
 }
-
-#if NETSTANDARD2_0_OR_GREATER
-public static class UrnEfCoreExtensions
-{
-    public static PropertyBuilder<urn> UrnProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, urn>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().UrnProperty(propertyExpression);
-
-    public static PropertyBuilder<urn?> UrnProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, urn?>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().UrnProperty(propertyExpression);
-
-    public static PropertyBuilder<urn> UrnProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, urn>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder.Property(propertyExpression).HasConversion(new urn.EfCoreValueConverter());
-
-    public static PropertyBuilder<urn?> UrnProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, urn?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new urn.NullableEfCoreValueConverter());
-
-    public static MigrationBuilder HasIsValidUrnFunction(this MigrationBuilder migrationBuilder) =>
-        migrationBuilder.HasIsValidUrnFunction(ufn_ + "IsUrn");
-
-    public static MigrationBuilder HasIsValidUrnFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.HasIsValidUrnFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder HasIsValidUrnFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(ufn_ + "IsUri.sql")
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
-        );
-        return migrationBuilder;
-    }
-
-    public static MigrationBuilder RollBackIsValidUrnFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.RollBackIsValidUrnFunction(ufn_ + "IsUrn");
-
-    public static MigrationBuilder RollBackIsValidUrnFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.RollBackIsValidUrnFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder RollBackIsValidUrnFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
-        return migrationBuilder;
-    }
-}
-#endif

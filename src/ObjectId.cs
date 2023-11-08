@@ -1,4 +1,5 @@
-﻿/*
+﻿using System;
+/*
  * ObjectId.cs
  *
  *   Created: 2022-12-03-12:15:18
@@ -14,12 +15,9 @@ namespace System;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 using Vogen;
 
@@ -27,19 +25,18 @@ using Vogen;
 using Validation = global::Validation;
 #endif
 
-[ValueObject(
-    typeof(string),
-    conversions: Conversions.EfCoreValueConverter
-        | Conversions.SystemTextJson
-        | Conversions.TypeConverter
-)]
+[ValueObject(typeof(string), conversions: Conversions.SystemTextJson | Conversions.TypeConverter)]
 // [RegexDto(ObjectId.RegexString)]
 public readonly partial record struct ObjectId
     : IRegexValueObject<ObjectId>,
         IComparable<ObjectId>,
         IComparable,
-        IEquatable<ObjectId>
+        IEquatable<ObjectId>,
+        IObjectId
 {
+    private static System.Security.Cryptography.RandomNumberGenerator Random =
+        System.Security.Cryptography.RandomNumberGenerator.Create();
+
     public const string Description =
         "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
 #if NET6_0_OR_GREATER
@@ -58,18 +55,22 @@ public readonly partial record struct ObjectId
     public static Regex Regex() => _regex;
 #endif
 
-    public const string UrnPrefix = "urn:publicid:objectid:{0}";
+    public const string UrnPrefix = "https://docs.mongodb.com/manual/reference/method/ObjectId";
+    public const string UrnPattern = UrnPrefix + "/{0}";
 
-    public readonly Uri Uri => IsEmpty ? null : new(Format(UrnPrefix, ToString()));
+    public readonly Uri Uri => IsEmpty ? null : new(Format(UrnPattern, ToString()));
 
-    private static string NextId => $"{CurrentTimestamp:x8}{_Machine:x10}{NextCounter():x6}";
+    private static string NextId() => $"{CurrentTimestamp:x8}{Machine:x10}{NextCounter():x6}";
 
-    public static ObjectId NewId() => From(NextId) with { OriginalString = NextId };
+    public static ObjectId NewId()
+    {
+        var nextId = NextId();
+        return From(nextId) with { OriginalString = nextId };
+    }
 
     public static ObjectId Empty => From(EmptyValue) with { OriginalString = EmptyValue };
 
-    public static ExternalDocsTuple ExternalDocs =>
-        ("ObjectId", new("https://docs.mongodb.com/manual/reference/method/ObjectId/"));
+    public static ExternalDocsTuple ExternalDocs => ("ObjectId", new(UrnPrefix));
 
     public override readonly string ToString() => IsEmpty ? string.Empty : Value;
 
@@ -158,28 +159,28 @@ public readonly partial record struct ObjectId
     public static int CurrentTimestamp => (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
     public readonly DateTimeOffset TimestampAsDateTimeOffset =>
-        DateTimeOffset.FromUnixTimeSeconds(Timestamp);
-    public readonly int Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
-    public long Machine => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
-    public i24 Counter => i24.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
-    private static i24 _counter = new(Randoms.NextInt32(0, i24.MaxValue));
+        DateTimeOffset.FromUnixTimeSeconds(((IObjectId)this).Timestamp);
+    readonly int IObjectId.Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
+    readonly long IObjectId.Machine => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
+    readonly int IObjectId.Counter => int.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+    private static int _counter = Random.NextInt32(0, i24.MaxValue);
 
-    public static i24 NextCounter() => _counter++;
+    public static int NextCounter() => _counter++;
 
-    public static long _Machine = BitConverter.ToInt64(
-        Guid.NewGuid().ToByteArray().Take(5).ToArray(),
-        0
-    );
+    private static readonly byte[] _MachineBytes = new byte[5];
+    public static new readonly long Machine;
 }
 
-#if NETSTANDARD2_0_OR_GREATER
-public class ObjectIdConverter
-    : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<ObjectId, string>
+public interface IObjectId
 {
-    public ObjectIdConverter()
-        : base(v => v.Value, v => ObjectId.Parse(v)) { }
-}
+    int Timestamp { get; }
+    long Machine { get; }
+    int Counter { get; }
+    DateTimeOffset TimestampAsDateTimeOffset { get; }
+#if NET6_0_OR_GREATER
+    static abstract ObjectId NewId();
 #endif
+}
 
 [System.Diagnostics.DebuggerDisplay("ObjectIdAttribute")]
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
@@ -187,81 +188,4 @@ public class ObjectIdAttribute : RegularExpressionAttribute
 {
     public ObjectIdAttribute()
         : base(ObjectId.RegexString) { }
-}
-
-public static class ObjectIdEfCoreConversionExtensions
-{
-    public static PropertyBuilder<ObjectId> ObjectIdProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, ObjectId>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new ObjectIdConverter())
-            .IsUnicode(false);
-
-    public static PropertyBuilder<ObjectId?> ObjectIdProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, ObjectId?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new ObjectIdConverter())
-            .HasMaxLength(ObjectId.Length)
-            .IsUnicode(false);
-
-    public static PropertyBuilder<ObjectId> ObjectIdProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, ObjectId>> propertyExpression
-    )
-        where TEntity : class =>
-        modelBuilder
-            .Entity<TEntity>()
-            .ObjectIdProperty(propertyExpression)
-            .HasMaxLength(ObjectId.Length)
-            .IsUnicode(false);
-
-    public static MigrationBuilder HasIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.HasIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
-
-    public static MigrationBuilder HasIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.HasIsValidObjectIdFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder HasIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .GetManifestResourceStream(ufn_ + "IsValidObjectId.sql")
-                .ReadToEnd()
-        );
-        return migrationBuilder;
-    }
-
-    public static MigrationBuilder RollBackIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.RollBackIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
-
-    public static MigrationBuilder RollBackIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.RollBackIsValidObjectIdFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder RollBackIsValidObjectIdFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}];");
-        return migrationBuilder;
-    }
 }

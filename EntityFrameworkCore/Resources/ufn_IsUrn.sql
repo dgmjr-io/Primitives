@@ -1,0 +1,1 @@
+RETURN CASE WHEN @urn LIKE 'urn:%' THEN 1 ELSE 0 END

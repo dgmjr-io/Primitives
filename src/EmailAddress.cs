@@ -14,11 +14,6 @@ namespace System.Net.Mail;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 using static System.Text.RegularExpressions.RegexOptions;
 
 using Vogen;
@@ -27,12 +22,7 @@ using Vogen;
 using Validation = global::Validation;
 #endif
 
-[ValueObject(
-    typeof(string),
-    conversions: Conversions.EfCoreValueConverter
-        | Conversions.SystemTextJson
-        | Conversions.TypeConverter
-)]
+[ValueObject(typeof(string), conversions: Conversions.SystemTextJson | Conversions.TypeConverter)]
 [StructLayout(LayoutKind.Auto)]
 [EmailAddress.JConverter]
 public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFormattable
@@ -272,113 +262,6 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
     {
         public JConverterAttribute()
             : base(typeof(EmailAddressSystemTextJsonConverter)) { }
-    }
-}
-
-/// <summary>
-/// The email address ef core extensions.
-/// </summary>
-public static class EmailAddressEfCoreExtensions
-{
-    /// <summary>
-    /// Configures the email address.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="propertyExpression">The property expression.</param>
-    public static PropertyBuilder<EmailAddress?> EmailAddressProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, EmailAddress?>> propertyExpression
-    )
-        where TEntity : class =>
-        modelBuilder.Entity<TEntity>().EmailAddressProperty(propertyExpression);
-
-    /// <summary>
-    /// Configures the email address.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="entityBuilder">The entity builder.</param>
-    /// <param name="propertyExpression">The property expression.</param>
-    public static PropertyBuilder<EmailAddress?> EmailAddressProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, EmailAddress?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new EmailAddress.EfCoreValueConverter())
-            .HasMaxLength(UriMaxLength);
-
-    /// <summary>
-    /// Configures the email address.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="modelBuilder">The model builder.</param>
-    /// <param name="propertyExpression">The property expression.</param>
-    public static PropertyBuilder<EmailAddress> EmailAddressProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, EmailAddress>> propertyExpression
-    )
-        where TEntity : class =>
-        modelBuilder.Entity<TEntity>().EmailAddressProperty(propertyExpression);
-
-    /// <summary>
-    /// Configures the email address.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="entityBuilder">The entity builder.</param>
-    /// <param name="propertyExpression">The property expression.</param>
-    public static PropertyBuilder<EmailAddress> EmailAddressProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, EmailAddress>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion(new EmailAddress.EfCoreValueConverter())
-            .HasMaxLength(UriMaxLength);
-
-    public static MigrationBuilder HasIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.HasIsValidEmailAddressFunction(ufn_ + "IsValidEmailAddress");
-
-    public static MigrationBuilder HasIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.HasIsValidEmailAddressFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder HasIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql(
-            typeof(Constants).Assembly
-                .ReadAssemblyResourceAllText(ufn_ + "IsValidEmailAddress.sql")
-                .Replace("{schema}", schema)
-                .Replace("{functionName}", functionName)
-        );
-        return migrationBuilder;
-    }
-
-    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.RollBackIsValidEmailAddressFunction(ufn_ + "IsValidEmailAddress");
-
-    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder,
-        string functionName
-    ) => migrationBuilder.RollBackIsValidEmailAddressFunction(DboSchema.ShortName, functionName);
-
-    public static MigrationBuilder RollBackIsValidEmailAddressFunction(
-        this MigrationBuilder migrationBuilder,
-        string schema,
-        string functionName
-    )
-    {
-        migrationBuilder.Sql($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
-        return migrationBuilder;
     }
 }
 

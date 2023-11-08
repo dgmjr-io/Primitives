@@ -6,17 +6,16 @@ using Xunit.Abstractions;
 
 namespace Dgmjr.Primitives.Tests;
 
-public abstract class PrimitivesTests<TPrimitive, TSelf> : ILog
+public abstract class PrimitivesTests<TPrimitive, TSelf> : BaseTest
     where TPrimitive : IRegexValueObject<TPrimitive>
     where TSelf : PrimitivesTests<TPrimitive, TSelf>
 {
-    public ILogger Logger { get; }
     private static ITestOutputHelper _output;
 
     protected PrimitivesTests(ITestOutputHelper output)
+        : base(output)
     {
         _output = output;
-        Logger = new OutputHelperLogger(_output);
     }
 
     [Fact]

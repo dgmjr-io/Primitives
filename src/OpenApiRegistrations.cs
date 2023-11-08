@@ -41,29 +41,16 @@ public static class OpenApiRegistrations
                 new OpenApiSchema
                 {
                     Type = "string",
-                    Pattern = typeof(T).GetRuntimeProperty("RegexString").GetValue(null) as string,
-                    Format = typeof(T).GetRuntimeProperty("Name").GetValue(null) as string,
+                    Pattern = T.RegexString,
+                    Format = T.Name,
                     Description = T.Description,
                     Example = new OpenApiString(T.ExampleValue.ToString()),
                     ExternalDocs =
-                        (
-                            typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
-                            as IEnumerable<ExternalDocsTuple>
-                        )?.Any() ?? false
+                        T.ExternalDocumentation != null
                             ? new OpenApiExternalDocs
                             {
-                                Description = (
-                                    typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
-                                    as IEnumerable<ExternalDocsTuple>
-                                )
-                                    .First()
-                                    .Description,
-                                Url = (
-                                    typeof(T).GetRuntimeProperty("ExternalDocs").GetValue(null)
-                                    as IEnumerable<ExternalDocsTuple>
-                                )
-                                    .First()
-                                    .Url
+                                Description = T.ExternalDocumentation?.Description,
+                                Url = T.ExternalDocumentation?.Url
                             }
                             : null
                 };

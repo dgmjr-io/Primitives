@@ -31,6 +31,10 @@ public interface IRegexValueObject<TSelf>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
     public abstract static string RegexString { get; }
 
+    /// <summary>Gets <inheritdoc cref="Name" path="/returns" /></summary>
+    /// <returns>the name of the value object</returns>
+    public virtual static string Name { get; } = typeof(TSelf).Name;
+
     /// <summary>Gets <inheritdoc cref="Description" path="/returns" /></summary>
     /// <returns>a description of the value object type</returns>
     public abstract static string Description { get; }
@@ -56,7 +60,7 @@ public interface IRegexValueObject<TSelf>
 
     // public abstract static Validation Validate(string value);
     /// <summary>Gets the "external documentation" for the value object</summary>
-    public static ExternalDocsTuple? ExternalDocumentation => null;
+    public static virtual ExternalDocsTuple? ExternalDocumentation => null;
 #else
     /// <summary>Gets <inheritdoc cref="RegexString" path="/returns" /></summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>

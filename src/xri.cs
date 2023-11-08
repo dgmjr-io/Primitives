@@ -15,11 +15,6 @@ namespace System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 using Vogen;
 
 using static System.Text.RegularExpressions.RegexOptions;
@@ -214,13 +209,6 @@ public readonly partial record struct xri
 
     public readonly int CompareTo(xri other) => CompareTo(other.ToString());
 
-    public class EfCoreValueConverter
-        : Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<xri, string>
-    {
-        public EfCoreValueConverter()
-            : base(v => v.ToString(), v => From(v)) { }
-    }
-
     public class JsonConverter : JsonConverter<xri>
     {
         public override xri Read(ref Utf8JsonReader reader, Type typeToConvert, Jso options) =>
@@ -277,39 +265,4 @@ public readonly partial record struct xri
                 ? idValue.ToString()
                 : base.ConvertTo(context, culture, value, destinationType);
     }
-}
-
-public static class XriEfCoreExtensions
-{
-    public static PropertyBuilder<xri> XriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, xri>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().XriProperty(propertyExpression);
-
-    public static PropertyBuilder<xri?> XriProperty<TEntity>(
-        this ModelBuilder modelBuilder,
-        Expression<Func<TEntity, xri?>> propertyExpression
-    )
-        where TEntity : class => modelBuilder.Entity<TEntity>().XriProperty(propertyExpression);
-
-    public static PropertyBuilder<xri> XriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, xri>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion<xri.EfCoreValueConverter>()
-            .HasMaxLength(UriMaxLength);
-
-    public static PropertyBuilder<xri?> XriProperty<TEntity>(
-        this EntityTypeBuilder<TEntity> entityBuilder,
-        Expression<Func<TEntity, xri?>> propertyExpression
-    )
-        where TEntity : class =>
-        entityBuilder
-            .Property(propertyExpression)
-            .HasConversion<xri.EfCoreValueConverter>()
-            .HasMaxLength(UriMaxLength);
 }
