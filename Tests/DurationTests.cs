@@ -41,9 +41,9 @@ public class DurationTests(ITestOutputHelper output) : BaseTest(output)
             new object[] { "PT525600M", duration.FromMinutes(525600) }
         };
 
-    public static IEnumerable<object[]> YearMonthDurationTestData =>
-        new[]
-        {
+public static IEnumerable<object[]> YearMonthDurationTestData =>
+    new[]
+    {
             new object[]
             {
                 "-P6500Y1M",
@@ -70,5 +70,5 @@ public class DurationTests(ITestOutputHelper output) : BaseTest(output)
                 )
             },
             new object[] { "P3M", duration.FromDays(90) }
-        };
+    };
 }
