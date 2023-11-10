@@ -6,5 +6,6 @@
     <Using Include="Microsoft.EntityFrameworkCore.Migrations" />
     <Using Include="Microsoft.EntityFrameworkCore.Storage.ValueConversion" />
     <Using Include="Dgmjr.EntityFrameworkCore.Constants.UriMaxLengthConstant" Static="true" />
+    <Using Include="Dgmjr.Primitives.EntityFrameworkCore.Constants" Static="true" />
   </ItemGroup>
 </Project>

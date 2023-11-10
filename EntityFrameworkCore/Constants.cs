@@ -12,5 +12,5 @@ public static class FunctionNames
 
 public static class Constants
 {
-    public const string _sql = ".sql";
+    // public const string _sql = ".sql";
 }

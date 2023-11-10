@@ -36,7 +36,7 @@ public static class ObjectIdEfCoreConversionExtensions
 
     public static MigrationBuilder HasIsValidObjectIdFunction(
         this MigrationBuilder migrationBuilder
-    ) => migrationBuilder.HasIsValidObjectIdFunction(ufn_ + "IsValidObjectId");
+    ) => migrationBuilder.HasIsValidObjectIdFunction(ufn_ + IsValidObjectId);
 
     public static MigrationBuilder HasIsValidObjectIdFunction(
         this MigrationBuilder migrationBuilder,

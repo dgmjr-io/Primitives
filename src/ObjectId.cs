@@ -60,7 +60,7 @@ public readonly partial record struct ObjectId
 
     public readonly Uri Uri => IsEmpty ? null : new(Format(UrnPattern, ToString()));
 
-    private static string NextId() => $"{CurrentTimestamp:x8}{Machine:x10}{NextCounter():x6}";
+    private static string NextId() => $"{CurrentTimestamp:x8}{ThisMachineId:x10}{NextCounter():x6}";
 
     public static ObjectId NewId()
     {
@@ -98,6 +98,40 @@ public readonly partial record struct ObjectId
 
     readonly ObjectId IRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
+
+    public static implicit operator ObjectId(byte[] value) => From(value);
+
+    public static implicit operator byte[](ObjectId value) => value.GetBytes();
+
+    public static implicit operator ObjectId(ReadOnlySpan<byte> value) => From(value);
+
+    public static implicit operator ReadOnlySpan<byte>(ObjectId value) => value.GetBytes();
+
+    public static ObjectId From(ReadOnlySpan<byte> bytes) => From(bytes.ToArray());
+
+    public static ObjectId From(byte[] bytes)
+    {
+        if (bytes is null)
+        {
+            throw new ArgumentNullException(nameof(bytes));
+        }
+
+        if (bytes.Length != 12)
+        {
+            throw new ArgumentException(
+                $"An ObjectId must be 12 bytes, but {bytes.Length} bytes were provided.",
+                nameof(bytes)
+            );
+        }
+
+        var hex = new StringBuilder(bytes.Length * 2);
+        foreach (var b in bytes)
+        {
+            hex.AppendFormat("{0:x2}", b);
+        }
+
+        return From(hex.ToString());
+    }
 
     public static ObjectId Parse(string s) =>
         TryParse(s, out var result)
@@ -146,6 +180,16 @@ public readonly partial record struct ObjectId
         return Validation.Ok;
     }
 
+    public byte[] GetBytes()
+    {
+        var @this = this;
+        return Enumerable
+            .Range(0, Value.Length)
+            .Where(x => x % 2 == 0)
+            .Select(x => Convert.ToByte(@this.Value.Substring(x, 2), 16))
+            .ToArray();
+    }
+
     public static ObjectId Parse(string s, IFormatProvider? provider) =>
         From(s) with
         {
@@ -157,24 +201,44 @@ public readonly partial record struct ObjectId
         != default;
 
     public static int CurrentTimestamp => (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    public static byte[] CurrentTimestampBytes =>
+        BitConverter.IsLittleEndian
+            ? BitConverter.GetBytes(CurrentTimestamp).Reverse().ToArray()
+            : BitConverter.GetBytes(CurrentTimestamp);
 
     public readonly DateTimeOffset TimestampAsDateTimeOffset =>
         DateTimeOffset.FromUnixTimeSeconds(((IObjectId)this).Timestamp);
-    readonly int IObjectId.Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
-    readonly long IObjectId.Machine => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
-    readonly int IObjectId.Counter => int.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+    public int Timestamp => int.Parse(Value.Substring(0, 8), NumberStyles.HexNumber);
+    public readonly byte[] TimestampBytes =>
+        BitConverter.IsLittleEndian
+            ? BitConverter.GetBytes(((IObjectId)this).Timestamp).Reverse().ToArray()
+            : BitConverter.GetBytes(((IObjectId)this).Timestamp);
+    public readonly long MachineId => long.Parse(Value.Substring(7, 10), NumberStyles.HexNumber);
+    public readonly byte[] MachineIdBytes =>
+        BitConverter.IsLittleEndian
+            ? BitConverter.GetBytes(((IObjectId)this).MachineId).Reverse().ToArray()
+            : BitConverter.GetBytes(((IObjectId)this).MachineId);
+
+    public readonly int Counter => int.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+    public readonly byte[] CounterBytes =>
+        BitConverter.IsLittleEndian
+            ? BitConverter.GetBytes(((IObjectId)this).Counter).Reverse().ToArray()
+            : BitConverter.GetBytes(((IObjectId)this).Counter);
+
     private static int _counter = Random.NextInt32(0, i24.MaxValue);
 
     public static int NextCounter() => _counter++;
 
-    private static readonly byte[] _MachineBytes = new byte[5];
-    public static new readonly long Machine;
+    public static readonly long ThisMachineId = Environment.MachineName.GetHashCode();
+    private static readonly byte[] ThisMachineIdBytes = BitConverter.IsLittleEndian
+        ? BitConverter.GetBytes(ThisMachineId).Reverse().ToArray()
+        : BitConverter.GetBytes(ThisMachineId);
 }
 
 public interface IObjectId
 {
     int Timestamp { get; }
-    long Machine { get; }
+    long MachineId { get; }
     int Counter { get; }
     DateTimeOffset TimestampAsDateTimeOffset { get; }
 #if NET6_0_OR_GREATER
