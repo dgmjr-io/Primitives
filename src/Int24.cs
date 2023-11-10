@@ -177,7 +177,7 @@ namespace System
         /// <returns>true if the value of the other parameter is the same as the value of this instance; otherwise, false.</returns>
         public bool Equals(i24 other)
         {
-            return SignExtend()  == other.SignExtend();
+            return SignExtend() == other.SignExtend();
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace System
             if ((this & Zero) != 0)
             {
                 // Negative number: fill upper 8 bits with 1's
-                return unchecked ((i24)(int)(this | NegativeSignMask));
+                return unchecked((i24)(int)(this | NegativeSignMask));
             }
             // Positive number: fill upper 8 bits with 0's
             return (i24)(int)(this & PositiveSignMask);
