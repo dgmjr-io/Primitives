@@ -55,7 +55,10 @@ public partial class iriTests : PrimitivesTests<iri, iriTests>
 
     [GeneratedRegex(
         RegexString,
-        Rxo.Compiled | Rxo.Singleline | Rxo.IgnoreCase | Rxo.IgnorePatternWhitespace
+        RegexOptions.Compiled
+            | RegexOptions.Singleline
+            | RegexOptions.IgnoreCase
+            | RegexOptions.IgnorePatternWhitespace
     )]
     public static partial Regex Regex();
 

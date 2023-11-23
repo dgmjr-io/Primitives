@@ -67,7 +67,7 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
     public static ExternalDocsTuple ExternalDocs =>
         ("Email Address", new Uri("https://en.wikipedia.org/wiki/Email_address"));
 #else
-    readonly Regx IRegexValueObject<EmailAddress>.Regex() => Regex();
+    readonly Regex IRegexValueObject<EmailAddress>.Regex() => Regex();
 
     readonly string IRegexValueObject<EmailAddress>.RegexString => RegexString;
     readonly string IRegexValueObject<EmailAddress>.Description => Description;

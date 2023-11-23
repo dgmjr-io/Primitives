@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Security.Cryptography;
 
 using Vogen;
 
@@ -50,7 +51,10 @@ public readonly partial record struct ObjectId
     [GeneratedRegex(RegexString, RegexOptions.Compiled | RegexOptions.IgnoreCase)]
     public static partial Regex Regex();
 #else
-    private static readonly Regex _regex = new Regex(RegexString, Rxo.Compiled | Rxo.IgnoreCase);
+    private static readonly Regex _regex = new Regex(
+        RegexString,
+        RegexOptions.Compiled | RegexOptions.IgnoreCase
+    );
 
     public static Regex Regex() => _regex;
 #endif

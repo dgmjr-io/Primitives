@@ -117,7 +117,7 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
         }
     }
 
-    private const Rxo RegexOptions =
+    private const RegexOptions RegexOptions =
         Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
 #if NET7_0_OR_GREATER
