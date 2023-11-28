@@ -22,7 +22,7 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="xunit" />
     <PackageReference Include="Vogen" />
-    <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
+    <!-- <ProjectReference Include="../src/Dgmjr.Primitives.csproj" /> -->
     <PackageReference Include="System.Text.RegularExpressions.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
   </ItemGroup>
 

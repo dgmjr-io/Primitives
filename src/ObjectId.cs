@@ -223,13 +223,13 @@ public readonly partial record struct ObjectId
             ? BitConverter.GetBytes(((IObjectId)this).MachineId).Reverse().ToArray()
             : BitConverter.GetBytes(((IObjectId)this).MachineId);
 
-    public readonly int Counter => int.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
+    public readonly i24 Counter => i24.Parse(Value.Substring(17, 6), NumberStyles.HexNumber);
     public readonly byte[] CounterBytes =>
         BitConverter.IsLittleEndian
             ? BitConverter.GetBytes(((IObjectId)this).Counter).Reverse().ToArray()
             : BitConverter.GetBytes(((IObjectId)this).Counter);
 
-    private static int _counter = Random.NextInt32(0, i24.MaxValue);
+    private static i24 _counter = (i24)Random.NextInt32(0, i24.MaxValue);
 
     public static int NextCounter() => _counter++;
 
@@ -243,7 +243,7 @@ public interface IObjectId
 {
     int Timestamp { get; }
     long MachineId { get; }
-    int Counter { get; }
+    i24 Counter { get; }
     DateTimeOffset TimestampAsDateTimeOffset { get; }
 #if NET6_0_OR_GREATER
     static abstract ObjectId NewId();
