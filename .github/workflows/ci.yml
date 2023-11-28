@@ -48,7 +48,7 @@ jobs:
         private-nuget-endpoint: ${{ vars.PROGET_ENDPOINT_URL }}
         private-nuget-api-key: ${{ secrets.PROGET_API_KEY }}
         repo: dgmjr-io/Primitives
-        project-file-path: src/Dgmjr.Primitives.csproj
+        project-file-path: All/Dgmjr.Primitives.All.csproj
         push-nuget: false
         push-dgmjr-io: true
         push-github: true
