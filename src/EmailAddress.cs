@@ -24,7 +24,7 @@ using Validation = global::Validation;
 
 [ValueObject(typeof(string), conversions: Conversions.SystemTextJson | Conversions.TypeConverter)]
 [StructLayout(LayoutKind.Auto)]
-[EmailAddress.JConverter]
+// [EmailAddress.JConverter]
 public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFormattable
 {
     /// <summary>
