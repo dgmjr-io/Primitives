@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <Description>This metapackage contains all of the primitives packages</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />

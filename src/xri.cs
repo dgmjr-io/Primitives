@@ -37,12 +37,12 @@ public readonly partial record struct xri
     public const string Description = "an eXtensible resource locator (xri)";
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
     public const string ExampleStringValue = "xri://@DGMJR-IO/=david.g.moore.jr";
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>xri):(?<DoubleSlashes:string?>\/\/)?(?<Path:string?>[^\/?#]+(?:\/[^\/?#]+))*(?:\?(?<Query:string?>(?:[^#]*)))?(?:#(?<Fragment:string?>(?:.*)))?$";
@@ -54,7 +54,7 @@ public readonly partial record struct xri
         );
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
     public const string EmptyStringValue = "xri://null";
     public static xri Empty => From(EmptyStringValue);

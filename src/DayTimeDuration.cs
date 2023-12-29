@@ -1,6 +1,4 @@
-﻿using System;
-
-/*
+﻿/*
  * DayTimeDuration.cs
  *
  *   Created: 2023-08-30-01:44:46
@@ -13,14 +11,15 @@
  */
 
 namespace Dgmjr.Primitives;
+using Humanizer;
 
 [RegexDto(
-    @"^(?<Negative:string?>\-?)P(?:(?<Days:int?>\d+)?D)?T?(?:(?<Hours:int?>\d+)H)?(?:(?<Minutes:int?>\d+)M)?(?:(?<Seconds:double?>\d+(?:\.(?:\d+)?)?S)?)"
+    @"^(?<Negative:string?>\-?)P(?:(?<Days:int?>\d+)?D)?T?(?:(?<Hours:int?>\d+)H)?(?:(?<Minutes:int?>\d+)M)?(?:(?<Seconds:decimal?>\d+(?:\.(?:\d+)?)?S)?)"
 )]
 public partial record struct DayTimeDuration
 {
-    private const int TicksPerMillisecond = 1000;
-    private const int TicksPerSecond = 1000000;
+    private const decimal TicksPerMillisecond = 1000;
+    private const decimal TicksPerSecond = 1000000;
 
     public readonly bool IsNegative => !IsNullOrEmpty(Negative);
     public readonly int Sign => IsNegative ? -1 : 1;
@@ -31,18 +30,18 @@ public partial record struct DayTimeDuration
                 dtd.Days ?? 0,
                 dtd.Hours ?? 0,
                 dtd.Minutes ?? 0,
-                dtd.Seconds.HasValue ? (int)Math.Floor(dtd.Seconds.Value) : 0,
+                dtd.Seconds.HasValue ? (int)Floor(dtd.Seconds.Value) : 0,
                 dtd.Seconds.HasValue
-                    ? (int)Math.Floor((dtd.Seconds.Value * TicksPerMillisecond) - Math.Floor(dtd.Seconds.Value))
+                    ? (int)Floor((dtd.Seconds.Value * TicksPerMillisecond) - Math.Floor(dtd.Seconds.Value))
                     : 0
 #if NET7_0_OR_GREATER
                 ,
                 dtd.Seconds.HasValue
                     ? (int)
-                        Math.Floor(
+                        Floor(
                             (dtd.Seconds.Value * TicksPerSecond)
-                                - Math.Floor(dtd.Seconds.Value * TicksPerMillisecond)
-                                - Math.Floor(dtd.Seconds.Value)
+                                - Floor(dtd.Seconds.Value * TicksPerMillisecond)
+                                - Floor(dtd.Seconds.Value)
                         )
                     : 0
 #endif
@@ -50,5 +49,5 @@ public partial record struct DayTimeDuration
         );
 
     public static implicit operator string(DayTimeDuration dtd) =>
-        $"{(dtd.IsNegative ? "-" : "")}P{(dtd.Days.HasValue ? $"{dtd.Days.Value}D" : "")}{(dtd.Hours.HasValue || dtd.Minutes.HasValue || dtd.Seconds.HasValue ? "T" : "")}{(dtd.Hours.HasValue ? $"{dtd.Hours.Value}H" : "")}{(dtd.Minutes.HasValue ? $"{dtd.Minutes.Value}M" : "")}{(dtd.Seconds.HasValue ? $"{dtd.Seconds.Value}S" : "")}";
+        $"{(dtd.IsNegative ? "-" : "")}P{(dtd.Days.HasValue ? $"{dtd.Days.Value}D" : "")}{(dtd.Hours.HasValue || dtd.Minutes.HasValue || dtd.Seconds.HasValue ? "T" : "")}{(dtd.Hours.HasValue ? $"{dtd.Hours.Value}H" : "")}{(dtd.Minutes.HasValue ? $"{dtd.Minutes.Value}M" : "")}{(dtd.Seconds.HasValue ? $"{dtd.Seconds.Value:0.00000000000000000000}S" : "")}";
 }

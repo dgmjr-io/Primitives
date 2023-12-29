@@ -33,6 +33,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Humanizer.Core" />
+    <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
+    <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
+    <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
+    <PackageReference Include="libphonenumber-csharp"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
+    <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
+    <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentDateTime" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
     <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
     <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />

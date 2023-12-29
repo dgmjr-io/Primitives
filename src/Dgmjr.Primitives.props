@@ -8,16 +8,7 @@
     <Using Include="Dgmjr.Primitives.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dgmjr.Abstractions" PrivateAssets="None"/>
-    <PackageReference Include="Dgmjr.Enumerations.Abstractions" PrivateAssets="All"/>
-    <PackageReference Include="Dgmjr.Enumerations.Enumeration" PrivateAssets="All"/>
-    <PackageReference Include="libphonenumber-csharp"/>
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
-    <PackageReference Include="System.Threading.Tasks.Extensions" VersionOverride="[4.5.4,)" />
-    <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup>
+    <Using Include="FluentDateTime" />
     <Using Include="Dgmjr.Abstractions" />
     <Using Include="System.Domain" />
     <Using Include="System.Net.Mail" />

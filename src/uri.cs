@@ -45,7 +45,7 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
     public const string Description = "a uniform resource identifier (uri)";
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
     public const string ExampleStringValue = "example:example";
 
@@ -53,13 +53,13 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
         Compiled | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntaxAttribute.Regex)]
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
 
 #if NET7_0_OR_GREATER
-    [StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntaxAttribute.Uri)]
 #endif
     public const string EmptyStringValue = "about:blank";
     public static uri Empty => From(EmptyStringValue);
