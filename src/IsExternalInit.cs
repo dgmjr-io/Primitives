@@ -20,6 +20,7 @@ namespace System.Runtime.CompilerServices;
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 internal // polyfill!
-static class IsExternalInit { }
+static class IsExternalInit
+{ }
 
 #endif
