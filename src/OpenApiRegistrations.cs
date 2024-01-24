@@ -36,25 +36,54 @@ public static class OpenApiRegistrations
     {
         services.ConfigureSwaggerGen(options =>
         {
-#if NET7_0_OR_GREATER
+            // #if NET7_0_OR_GREATER
             options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
                 new OpenApiSchema
                 {
                     Type = "string",
-                    Pattern = T.RegexString,
-                    Format = T.Name,
-                    Description = T.Description,
-                    Example = new OpenApiString(T.ExampleValue.ToString()),
+                    Pattern =
+                        typeof(T)
+                            .GetRuntimeProperty(nameof(RegexValueObject.RegexString))
+                            .GetValue(null) as string,
+                    Format =
+                        typeof(T).GetRuntimeProperty(nameof(RegexValueObject.Name)).GetValue(null)
+                        as string,
+                    Description =
+                        typeof(T)
+                            .GetRuntimeProperty(nameof(RegexValueObject.Description))
+                            .GetValue(null) as string,
+                    Example = new OpenApiString(
+                        typeof(T)
+                            .GetRuntimeProperty(nameof(RegexValueObject.ExampleValue))
+                            .GetValue(null)
+                            ?.ToString()
+                    ),
                     ExternalDocs =
-                        T.ExternalDocumentation != null
+                        typeof(T)
+                            .GetRuntimeProperty(nameof(RegexValueObject.ExternalDocumentation))
+                            .GetValue(null) != null
                             ? new OpenApiExternalDocs
                             {
-                                Description = T.ExternalDocumentation?.Description,
-                                Url = T.ExternalDocumentation?.Url
+                                Description = (
+                                    (ExternalDocsTuple?)
+                                        typeof(T)
+                                            .GetRuntimeProperty(
+                                                nameof(RegexValueObject.ExternalDocumentation)
+                                            )
+                                            .GetValue(null)
+                                )?.Description,
+                                Url = (
+                                    (ExternalDocsTuple?)
+                                        typeof(T)
+                                            .GetRuntimeProperty(
+                                                nameof(RegexValueObject.ExternalDocumentation)
+                                            )
+                                            .GetValue(null)
+                                )?.Url
                             }
                             : null
                 };
-#else
+            // #else
             throw new PlatformNotSupportedException(
                 "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it."
             );
@@ -66,7 +95,7 @@ public static class OpenApiRegistrations
             //     Description = typeof(T).GetRuntimeProperty(nameof(IRegexValueObject<ObjectId>.Description)).GetValue(null) as string,
             //     Example = new OpenApiString(typeof(T).GetRuntimeProperty(nameof(IRegexValueObject<ObjectId>.ExampleValue)).GetValue(null).ToString())
             // };
-#endif
+            // #endif
         });
         return services;
     }

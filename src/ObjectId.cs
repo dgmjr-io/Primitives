@@ -38,11 +38,13 @@ public readonly partial record struct ObjectId
     private static System.Security.Cryptography.RandomNumberGenerator Random =
         System.Security.Cryptography.RandomNumberGenerator.Create();
 
-    public const string Description =
+    public const string DescriptionString =
         "A ObjectId is a 24-digit (96-bit) hexadecimal string that uniquely identifies an object in a database";
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<ObjectId>.Description => Description;
-#endif
+
+    // #if NET6_0_OR_GREATER
+    public static string Description => DescriptionString;
+
+    // #endif
     public const string EmptyValue = "000000000000000000000000";
     public const int Length = 24;
     public const string RegexString = "^[0-9a-z]{24}$";
@@ -82,9 +84,10 @@ public readonly partial record struct ObjectId
     public readonly bool IsEmpty => Value == EmptyValue;
     public string OriginalString { get; init; }
 
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<ObjectId>.RegexString => RegexString;
-#endif
+    // #if NET6_0_OR_GREATER
+    // static string IRegexValueObject<ObjectId>.RegexString => RegexString;
+
+    // #endif
 
     public const string ExampleValueString = "abcdef0123456789abcdef01";
     public static ObjectId ExampleValue =>
@@ -94,13 +97,13 @@ public readonly partial record struct ObjectId
         };
 
 #if !NET6_0_OR_GREATER
-    readonly Regex IRegexValueObject<ObjectId>.Regex() => Regex();
+    // readonly Regex IRegexValueObject<ObjectId>.Regex() => Regex();
 
-    readonly string IRegexValueObject<ObjectId>.RegexString => RegexString;
+    // readonly string IRegexValueObject<ObjectId>.RegexString => RegexString;
 
-    readonly string IRegexValueObject<ObjectId>.Description => Description;
+    // readonly string IRegexValueObject<ObjectId>.Description => Description;
 
-    readonly ObjectId IRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
+    // readonly ObjectId IRegexValueObject<ObjectId>.ExampleValue => ExampleValue;
 #endif
 
     public static implicit operator ObjectId(byte[] value) => From(value);
@@ -157,14 +160,14 @@ public readonly partial record struct ObjectId
         return true;
     }
 
-    // public override bool Equals(object? obj) => obj is ObjectId other && Equals(other);
-    // public bool Equals(ObjectId other) => _value == other._value;
-    // public override int GetHashCode() => _value.GetHashCode();
-    // public int CompareTo(ObjectId other) => _value.CompareTo(other._value);
-    public readonly int CompareTo(object? obj) =>
-        obj is ObjectId other
-            ? CompareTo(other)
-            : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
+    // // public override bool Equals(object? obj) => obj is ObjectId other && Equals(other);
+    // // public bool Equals(ObjectId other) => _value == other._value;
+    // // public override int GetHashCode() => _value.GetHashCode();
+    // // public int CompareTo(ObjectId other) => _value.CompareTo(other._value);
+    // public readonly int CompareTo(object? obj) =>
+    //     obj is ObjectId other
+    //         ? CompareTo(other)
+    //         : throw new ArgumentException($"object must be of type {nameof(ObjectId)}");
 
     // public override string ToString() => _value.ToString();
 
@@ -201,8 +204,14 @@ public readonly partial record struct ObjectId
         };
 
     public static bool TryParse(string? s, IFormatProvider? provider, out ObjectId result) =>
-        (result = Validate(s).ErrorMessage is null ? From(s) with { OriginalString = s } : default)
-        != default;
+        (
+            result = Validate(s).ErrorMessage is null
+                ? From(s) with
+                {
+                    OriginalString = s
+                }
+                : default(ObjectId)
+        ) != default(ObjectId);
 
     public static int CurrentTimestamp => (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     public static byte[] CurrentTimestampBytes =>

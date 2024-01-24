@@ -31,14 +31,14 @@ using Validation = global::Validation;
 [StructLayout(LayoutKind.Auto)]
 [DebuggerDisplay("{ToString()}")]
 public readonly partial record struct url
-    : IRegexValueObject<url>,
-        IResourceIdentifierWithQueryAndFragment
+    : //IRegexValueObject<url>,
+    IResourceIdentifierWithQueryAndFragment
 #if NET7_0_OR_GREATER
         ,
         IUriConvertible<url>
 #endif
 {
-    public const string Description = "a uniform resource locator (URL)";
+    public const string DescriptionString = "a uniform resource locator (URL)";
 
 #if NET7_0_OR_GREATER
     [@StringSyntax(StringSyntaxAttribute.Uri)]
@@ -65,17 +65,20 @@ public readonly partial record struct url
         $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
     public readonly string Value => ToString();
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<url>.Description => Description;
-    static string IRegexValueObject<url>.RegexString => RegexString;
-    static url IRegexValueObject<url>.ExampleValue => ExampleStringValue;
-#else
-    readonly string IRegexValueObject<url>.Description => Description;
-    readonly url IRegexValueObject<url>.ExampleValue => ExampleStringValue;
-    readonly string IRegexValueObject<url>.RegexString => RegexString;
 
-    readonly Regex IRegexValueObject<url>.Regex() => Regex();
-#endif
+    // #if NET6_0_OR_GREATER
+    public static string Description => DescriptionString;
+
+    //    public static string RegexString => _RegexString;
+    public static url ExampleValue => ExampleStringValue;
+
+    // #else
+    // readonly string IRegexValueObject<url>.Description => Description;
+    // readonly url IRegexValueObject<url>.ExampleValue => ExampleStringValue;
+    // readonly string IRegexValueObject<url>.RegexString => RegexString;
+
+    // readonly Regex IRegexValueObject<url>.Regex() => Regex();
+    // #endif
 
     public readonly Uri Uri => this;
 

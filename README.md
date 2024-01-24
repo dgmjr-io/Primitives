@@ -54,7 +54,7 @@ Key features:
 ```csharp
 var email = EmailAddress.From("user@example.com");
 
-if (email.IsEmpty) {
+if (!email.IsEmpty) {
   // use email
 }
 ```
@@ -126,9 +126,9 @@ if (id.IsEmpty) {
 - [`Int24`](https://github.com/dgmjr-io/Primitives/blob/main/src/Int24.cs) - a 24-bit signed integer (*alias: i24*)
 - [`UInt24`](https://github.com/dgmjr-io/Primitives/blob/main/src/Int24.cs) - a 24-bit unsigned integer (*alias: ui24*)
 
-## The <ins>`blank`</ins> Resource <ins>`blank`</ins>s
+## The <ins>`X`</ins> Resource <ins>`Y`</ins>s
 
-These are a collection of <ins>`blank`</ins> Resource <ins>`blank`</ins>s.
+These are a collection of <ins>`X`</ins> Resource <ins>`Y`</ins>s.
 
 - [`iri`](https://github.com/dgmjr-io/Primitives/blob/main/src/iri.cs) - An internationalized resource identifier
 - [`uri`](https://github.com/dgmjr-io/Primitives/blob/main/src/uri.cs) - A uniform resource identifier

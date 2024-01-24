@@ -37,7 +37,7 @@ public readonly partial record struct iri
         IUriConvertible<iri>
 #endif
 {
-    public const string Description = "an internationalized resource identifier (iri)";
+    public const string DescriptionString = "an internationalized resource identifier (iri)";
 
 #if NET7_0_OR_GREATER
     [@StringSyntax(StringSyntaxAttribute.Uri)]
@@ -68,18 +68,21 @@ public readonly partial record struct iri
         $"{Path}{(!IsNullOrEmpty(Query) ? $"?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
     public readonly string Value => ToString();
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<iri>.RegexString => RegexString;
-    static string IRegexValueObject<iri>.Description => Description;
-    static iri IRegexValueObject<iri>.Empty => EmptyStringValue;
-    static iri IRegexValueObject<iri>.ExampleValue => new(ExampleStringValue);
-#else
-    readonly string IRegexValueObject<iri>.Description => Description;
-    readonly iri IRegexValueObject<iri>.ExampleValue => ExampleStringValue;
-    readonly string IRegexValueObject<iri>.RegexString => RegexString;
 
-    readonly Regex IRegexValueObject<iri>.Regex() => Regex();
-#endif
+    // #if NET6_0_OR_GREATER
+    // public static string RegexString => _RegexString;
+    public static string Description => DescriptionString;
+
+    // public static iri Empty => EmptyStringValue;
+    public static iri ExampleValue => new(ExampleStringValue);
+
+    // #else
+    // readonly string Description => Description;
+    // readonly iri ExampleValue => ExampleStringValue;
+    // readonly string RegexString => RegexString;
+
+    // readonly Regex Regex() => Regex();
+    // #endif
 
     // public static iri Parse(string iri) => From(iri);
 

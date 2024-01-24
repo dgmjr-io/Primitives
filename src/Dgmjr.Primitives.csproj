@@ -12,7 +12,7 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <!-- <TargetFramework>net7.0</TargetFramework> -->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Dgmjr.Primitives</AssemblyName>
@@ -50,15 +50,14 @@
 
   <ItemGroup>
     <Compile Remove="./PRE_NET6_0_POLYFILLS_NOT_USING/*.cs" />
-    <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
+    <!-- <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" /> -->
+    <Compile Remove="./PRE_NET6_0_POLYFILLS/*.cs" />
     <NoWarn Include="CS8335" Description="Do not use '{0}'. This is reserved for compiler usage." Condition="$(DefineConstants.Contains('NET6_0_OR_GREATER'))" />
     <PackageFile Include="./PrimitivesGlobalUsings.cs" Pack="true" PackagePath="Build/%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dgmjr.System.Extensions"/>
-    <SourceCode Include="System.Private.CoreLib.Polyfills" />
     <PackageReference Include="Dgmjr.RegexDtoGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;BuildMultitargeting;ContentFiles;Compile;Runtime" PrivateAssets="All" />
-    <!-- <PackageReference Include="Dgmjr.RegexDtoGenerator" IncludeAssets="Analyzers;Build" ExcludeAssets="Native;BuildTransitive;BuildMultitargeting;ContentFiles;Compile;Runtime" PrivateAssets="All" /> -->
     <PackageReference Include="System.Text.Json.Usings" IncludeAssets="Build;BuildTransitive;BuildMultitargeting;Runtime;Compile" ExcludeAssets="ContentFiles;Native;Analyzers" PrivateAssets="None" />
     <Usings Include="System.Text.RegularExpressions.Usings"/>
     <Usings Include="System.Usings"/>
@@ -76,5 +75,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="./Resources/*.*" LogicalName="%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Polyfills" />
   </ItemGroup>
 </Project>

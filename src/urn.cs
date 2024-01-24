@@ -33,7 +33,7 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
 #endif
 {
     public readonly string? DoubleSlashes { get; } = null;
-    public const string Description = "a uniform resource name (urn)";
+    public const string DescriptionString = "a uniform resource name (urn)";
 
 #if NET7_0_OR_GREATER
     [@StringSyntax(StringSyntaxAttribute.Uri)]
@@ -59,20 +59,24 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
     public readonly bool IsEmpty => BaseToString() == EmptyStringValue;
     public readonly string PathAndQuery => $"{Namespace}:{NamespaceSpecificString}";
     public readonly string Value => ToString();
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<urn>.Description => Description;
-    static string IRegexValueObject<urn>.RegexString => RegexString;
-    static urn IRegexValueObject<urn>.Empty => EmptyStringValue;
-    static urn IRegexValueObject<urn>.ExampleValue => new(ExampleStringValue);
-#else
-    readonly string IRegexValueObject<urn>.Description => Description;
-    readonly urn IRegexValueObject<urn>.ExampleValue => ExampleStringValue;
 
-    // urn IRegexValueObject<urn>.Empty => EmptyValue;
-    readonly string IRegexValueObject<urn>.RegexString => RegexString;
+    // #if NET6_0_OR_GREATER
+    public static string Description => DescriptionString;
 
-    readonly Regex IRegexValueObject<urn>.Regex() => Regex();
-#endif
+    //    public static string RegexString => _RegexString;
+
+    // public static urn Empty => EmptyStringValue;
+    public static urn ExampleValue => new(ExampleStringValue);
+
+    // #else
+    // readonly string IRegexValueObject<urn>.Description => Description;
+    // readonly urn IRegexValueObject<urn>.ExampleValue => ExampleStringValue;
+
+    // // urn IRegexValueObject<urn>.Empty => EmptyValue;
+    // readonly string IRegexValueObject<urn>.RegexString => RegexString;
+
+    // readonly Regex IRegexValueObject<urn>.Regex() => Regex();
+    // #endif
 
     // public static urn Parse(string urn) => From(urn);
 

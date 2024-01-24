@@ -1,6 +1,6 @@
 namespace System;
 
-public interface IUriConvertible<T>
+public interface IUriConvertible<T> : IHaveAUri
     where T : IUriConvertible<T>, IHaveAUri
 {
 #if NET70_OR_GREATER

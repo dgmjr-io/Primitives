@@ -40,7 +40,7 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
     /// <summary>
     /// The description.
     /// </summary>
-    public const string Description = "an email address in the form of *user@domain.ext*";
+    public const string DescriptionString = "an email address in the form of *user@domain.ext*";
     public const string UriPrefix = "mailto:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
 
@@ -48,31 +48,27 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
 
     public string OriginalString { get; init; }
 
-#if NET6_0_OR_GREATER
+    // #if NET6_0_OR_GREATER
     /// <summary>
     /// Gets the description.
     /// </summary>
-    static string IRegexValueObject<EmailAddress>.Description => Description;
+    public static string Description => DescriptionString;
 
     /// <summary>
     /// Gets the example value.
     /// </summary>
-    static EmailAddress IRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
-
-    /// <summary>
-    /// Gets the regex string.
-    /// </summary>
-    static string IRegexValueObject<EmailAddress>.RegexString => RegexString;
+    public static EmailAddress ExampleValue => From(ExampleValueString);
 
     public static ExternalDocsTuple ExternalDocs =>
         ("Email Address", new Uri("https://en.wikipedia.org/wiki/Email_address"));
-#else
-    readonly Regex IRegexValueObject<EmailAddress>.Regex() => Regex();
 
-    readonly string IRegexValueObject<EmailAddress>.RegexString => RegexString;
-    readonly string IRegexValueObject<EmailAddress>.Description => Description;
-    readonly EmailAddress IRegexValueObject<EmailAddress>.ExampleValue => From(ExampleValueString);
-#endif
+    // #else
+    // readonly Regex Regex() => Regex();
+
+    // readonly string RegexString => RegexString;
+    // readonly string Description => Description;
+    // readonly EmailAddress ExampleValue => From(ExampleValueString);
+    // #endif
 
     /// <summary>
     /// Gets a value indicating whether is empty.
@@ -168,15 +164,15 @@ public partial record struct EmailAddress : IRegexValueObject<EmailAddress>, IFo
     ///     </returns>
     public readonly override string ToString() => IsEmpty ? string.Empty : Value;
 
-    /// <summary>
-    /// Returns
-    /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns>a negative value if the current value is less than
-    ///     <paramref name="obj"/>, 0 if they're equal, and a positive value if
-    ///     it's greater than <paramref name="obj"/>..</returns>
-    public readonly int CompareTo(object? obj) =>
-        CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
+    // /// <summary>
+    // /// Returns
+    // /// </summary>
+    // /// <param name="obj">The obj.</param>
+    // /// <returns>a negative value if the current value is less than
+    // ///     <paramref name="obj"/>, 0 if they're equal, and a positive value if
+    // ///     it's greater than <paramref name="obj"/>..</returns>
+    // public readonly int CompareTo(object? obj) =>
+    //     CompareOrdinal(Value, obj?.ToString() ?? string.Empty);
 
     /// <summary>
     /// Parses the <see cref="EmailAddress"/>.

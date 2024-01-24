@@ -41,7 +41,7 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
     /// </summary>
     public const string UriPrefix = "tel:";
     public const string UriPattern = $"{UriPrefix}{{0}}";
-    public static string Description => "a phone number in e.164 format";
+    public const string DescriptionString = "a phone number in e.164 format";
     public const string ExampleString = "+19174097331";
     public static PhoneNumber ExampleValue => From(ExampleString);
     public const string EmptyString = "+10000000000";
@@ -76,14 +76,15 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
             OriginalString = u.ToString()
         };
 
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<PhoneNumber>.RegexString => RegexString;
-    static string IRegexValueObject<PhoneNumber>.Description => Description;
-#else
-    readonly string IRegexValueObject<PhoneNumber>.RegexString => RegexString;
-    readonly string IRegexValueObject<PhoneNumber>.Description => Description;
-    readonly PhoneNumber IRegexValueObject<PhoneNumber>.ExampleValue => ExampleValue;
-#endif
+    // #if NET6_0_OR_GREATER
+    // public static string RegexString => RegexString;
+    public static string Description => DescriptionString;
+
+    // #else
+    // readonly string RegexString => RegexString;
+    // readonly string Description => Description;
+    // readonly PhoneNumber ExampleValue => ExampleValue;
+    // #endif
 
     public override readonly string ToString() =>
         IsEmpty ? string.Empty : _util.Format(ParsedNumber, PhoneNumberFormat.E164);
@@ -123,13 +124,13 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
 #if NET7_0_OR_GREATER
     [GeneratedRegex(RegexString, RegexOptions)]
     public static partial Regex Regex();
-#elif NET6_0_OR_GREATER
+#else// NET6_0_OR_GREATER
     public static Regex Regex() => new(RegexString, RegexOptions);
-    // Regex IRegexValueObject<PhoneNumber>.RegexString => Regex();
-#else
-    private static readonly Regex _regex = new(RegexString, RegexOptions);
+    // Regex RegexString => Regex();
+    // #else
+    // private static readonly Regex _regex = new(RegexString, RegexOptions);
 
-    readonly Regex IRegexValueObject<PhoneNumber>.Regex() => _regex;
+    // readonly Regex Regex() => _regex;
 #endif
 
     public static implicit operator PhoneNumber?(string? s) =>
@@ -165,8 +166,7 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
             : Validation.Invalid("Phone number is not valid.");
 #else
     public static Validation Validate(string s) =>
-        Util.IsViablePhoneNumber(s)
-        && ((IRegexValueObject<PhoneNumber>)ExampleValue).Regex().IsMatch(s)
+        Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
             ? Validation.Ok
             : Validation.Invalid("Phone number is not valid.");
 #endif
@@ -179,8 +179,8 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
 
     public static PhoneNumber Parse(string value) => From(value) with { OriginalString = value };
 
-    public readonly int CompareTo(object? obj) =>
-        obj is not PhoneNumber n ? -1 : CompareOrdinal(Value, n.Value);
+    // public readonly int CompareTo(object? obj) =>
+    //     obj is not PhoneNumber n ? -1 : CompareOrdinal(Value, n.Value);
 
 #if !NETSTANDARD2_0_OR_GREATER
     public string Value { get; private set; }

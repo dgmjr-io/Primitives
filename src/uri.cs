@@ -42,7 +42,7 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
         IUriConvertible<uri>
 #endif
 {
-    public const string Description = "a uniform resource identifier (uri)";
+    public const string DescriptionString = "a uniform resource identifier (uri)";
 
 #if NET7_0_OR_GREATER
     [@StringSyntax(StringSyntaxAttribute.Uri)]
@@ -74,20 +74,23 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
         );
 
     public readonly string Value => ToString();
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<uri>.RegexString => RegexString;
-    static string IRegexValueObject<uri>.Description => Description;
-    static uri IRegexValueObject<uri>.Empty => EmptyStringValue;
-    static uri IRegexValueObject<uri>.ExampleValue => new(ExampleStringValue);
 
-    static uri IRegexValueObject<uri>.Parse(string s) => From(s) with { OriginalString = s };
-#else
-    readonly string IRegexValueObject<uri>.Description => Description;
-    readonly uri IRegexValueObject<uri>.ExampleValue => ExampleStringValue;
-    readonly string IRegexValueObject<uri>.RegexString => RegexString;
+    // #if NET6_0_OR_GREATER
+    //    public static string RegexString => _RegexString;
+    public static string Description => DescriptionString;
 
-    readonly Regex IRegexValueObject<uri>.Regex() => Regex();
-#endif
+    // public static uri Empty => EmptyStringValue;
+    public static uri ExampleValue => new(ExampleStringValue);
+
+    // public static uri Parse(string s) => From(s) with { OriginalString = s };
+
+    // #else
+    // readonly string Description => Description;
+    // readonly uri ExampleValue => ExampleStringValue;
+    // readonly string RegexString => RegexString;
+
+    // readonly Regex Regex() => Regex();
+    // #endif
 
     public readonly Uri Uri => this;
 
@@ -192,7 +195,8 @@ public readonly partial record struct uri : IRegexValueObject<uri>, IResourceIde
                         or InvalidCastException
                         or InvalidOperationException
             )
-        { /* ignore it */
+        {
+            /* ignore it */
         }
 
         uri = Empty;

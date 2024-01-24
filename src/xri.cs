@@ -34,7 +34,7 @@ public readonly partial record struct xri
         IUriConvertible<xri>
 #endif
 {
-    public const string Description = "an eXtensible resource locator (xri)";
+    public const string DescriptionString = "an eXtensible resource locator (xri)";
 
 #if NET7_0_OR_GREATER
     [@StringSyntax(StringSyntaxAttribute.Uri)]
@@ -64,17 +64,20 @@ public readonly partial record struct xri
         $"{Path}{(Path.EndsWith("/") ? "" : "/")}{(!IsNullOrEmpty(Query) ? $" ?{Query})" : "")}{(!IsNullOrEmpty(Fragment) ? $"#{Fragment}" : "")}";
 
     public readonly string Value { get; init; }
-#if NET6_0_OR_GREATER
-    static string IRegexValueObject<xri>.Description => Description;
-    static string IRegexValueObject<xri>.RegexString => RegexString;
-    static xri IRegexValueObject<xri>.ExampleValue => ExampleStringValue;
-#else
-    readonly string IRegexValueObject<xri>.Description => Description;
-    readonly xri IRegexValueObject<xri>.ExampleValue => ExampleStringValue;
-    readonly string IRegexValueObject<xri>.RegexString => RegexString;
 
-    readonly Regex IRegexValueObject<xri>.Regex() => Regex();
-#endif
+    // #if NET6_0_OR_GREATER
+    public static string Description => DescriptionString;
+
+    //    public static string RegexString => _RegexString;
+    public static xri ExampleValue => ExampleStringValue;
+
+    // #else
+    // readonly string IRegexValueObject<xri>.Description => Description;
+    // readonly xri IRegexValueObject<xri>.ExampleValue => ExampleStringValue;
+    // readonly string IRegexValueObject<xri>.RegexString => RegexString;
+
+    // readonly Regex IRegexValueObject<xri>.Regex() => Regex();
+    // #endif
 
     public readonly Uri Uri => this;
 
