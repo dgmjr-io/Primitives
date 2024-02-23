@@ -36,7 +36,7 @@ public static class OpenApiRegistrations
     {
         services.ConfigureSwaggerGen(options =>
         {
-            // #if NET7_0_OR_GREATER
+            #if NET7_0_OR_GREATER
             options.SchemaGeneratorOptions.CustomTypeMappings[typeof(T)] = () =>
                 new OpenApiSchema
                 {
@@ -83,7 +83,7 @@ public static class OpenApiRegistrations
                             }
                             : null
                 };
-            // #else
+            #else
             throw new PlatformNotSupportedException(
                 "This feature is not supported by this framework.  Upgrade to .NET 7.0 or higher to use it."
             );
@@ -95,7 +95,7 @@ public static class OpenApiRegistrations
             //     Description = typeof(T).GetRuntimeProperty(nameof(IRegexValueObject<ObjectId>.Description)).GetValue(null) as string,
             //     Example = new OpenApiString(typeof(T).GetRuntimeProperty(nameof(IRegexValueObject<ObjectId>.ExampleValue)).GetValue(null).ToString())
             // };
-            // #endif
+            #endif
         });
         return services;
     }

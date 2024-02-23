@@ -57,7 +57,8 @@ public static class PhoneNumberEfCoreExtensions
             new CreateFunctionOperation(
                 schema,
                 functionName,
-                "@value nvarchar(MAX)",
+                ["@value nvarchar(MAX)"],
+                "bit",
                 typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsValidPhoneNumber + _sql)
             )
         );

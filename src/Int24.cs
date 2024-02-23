@@ -93,14 +93,14 @@ namespace System
     /// </para>
     /// </remarks>
     [Serializable]
-    public struct Int24
+    public readonly struct Int24
         : IComparable,
             IFormattable,
             IConvertible,
-            IComparable<Int24>,
-            IComparable<Int32>,
-            IEquatable<Int24>,
-            IEquatable<Int32>
+            IComparable<i24>,
+            IComparable<int>,
+            IEquatable<i24>,
+            IEquatable<int>
     {
         #region [ Members ]
 
@@ -112,16 +112,16 @@ namespace System
         public const int BitMask = -16777216;
 
         // Fields
-        private readonly int m_value; // We internally store the Int24 value in a 4-byte integer for convenience
+        private readonly int _value; // We internally store the Int24 value in a 4-byte integer for convenience
         #endregion
 
         #region [ Constructors ]
 
         /// <summary>Creates 24-bit signed integer from an existing 24-bit signed integer.</summary>
         /// <param name="value">24-but signed integer to create new Int24 from.</param>
-        public Int24(Int24 value)
+        public Int24(i24 value)
         {
-            m_value = ApplyBitMask((int)value);
+            _value = ApplyBitMask((int)value);
         }
 
         /// <summary>Creates 24-bit signed integer from a 32-bit signed integer.</summary>
@@ -130,7 +130,7 @@ namespace System
         public Int24(int value)
         {
             ValidateNumericRange(value);
-            m_value = ApplyBitMask(value);
+            _value = ApplyBitMask(value);
         }
 
         /// <summary>Creates 24-bit signed integer from three bytes at a specified position in a byte array.</summary>
@@ -145,7 +145,7 @@ namespace System
         /// <exception cref="ArgumentException"><paramref name="value"/> length from <paramref name="startIndex"/> is too small to represent a <see cref="UInt24"/>.</exception>
         public Int24(byte[] value, int startIndex)
         {
-            m_value = GetValue(value, startIndex).m_value;
+            _value = GetValue(value, startIndex)._value;
         }
 
         #endregion
@@ -167,23 +167,23 @@ namespace System
         /// <summary>
         /// Compares this instance to a specified object and returns an indication of their relative values.
         /// </summary>
-        /// <param name="value">An object to compare, or null.</param>
+        /// <param name="obj">An object to compare, or null.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and value. Returns less than zero
         /// if this instance is less than value, zero if this instance is equal to value, or greater than zero
         /// if this instance is greater than value.
         /// </returns>
         /// <exception cref="ArgumentException">value is not an Int32 or Int24.</exception>
-        public int CompareTo(object value)
+        public int CompareTo(object? obj)
         {
-            if ((object)value == null)
+            if (obj is null)
                 return 1;
 
-            if (!(value is int) && !(value is Int24))
+            if (obj is not int and not i24)
                 throw new ArgumentException("Argument must be an Int32 or an Int24");
 
-            int num = (int)value;
-            return (m_value < num ? -1 : (m_value > num ? 1 : 0));
+            var num = (int)obj;
+            return _value < num ? -1 : (_value > num ? 1 : 0);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace System
         /// </returns>
         public int CompareTo(int value)
         {
-            return (m_value < value ? -1 : (m_value > value ? 1 : 0));
+            return _value < value ? -1 : (_value > value ? 1 : 0);
         }
 
         /// <summary>
@@ -224,11 +224,9 @@ namespace System
         /// True if obj is an instance of Int32 or Int24 and equals the value of this instance;
         /// otherwise, False.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is int || obj is Int24)
-                return Equals((int)obj);
-            return false;
+            return (obj is int || obj is i24) && Equals((int)obj);
         }
 
         /// <summary>
@@ -238,7 +236,7 @@ namespace System
         /// <returns>
         /// True if obj has the same value as this instance; otherwise, False.
         /// </returns>
-        public bool Equals(Int24 obj)
+        public bool Equals(i24 obj)
         {
             return Equals((int)obj);
         }
@@ -252,7 +250,7 @@ namespace System
         /// </returns>
         public bool Equals(int obj)
         {
-            return (m_value == obj);
+            return _value == obj;
         }
 
         /// <summary>
@@ -263,7 +261,7 @@ namespace System
         /// </returns>
         public override int GetHashCode()
         {
-            return m_value;
+            return _value;
         }
 
         /// <summary>
@@ -275,7 +273,7 @@ namespace System
         /// </returns>
         public override string ToString()
         {
-            return m_value.ToString();
+            return _value.ToString();
         }
 
         /// <summary>
@@ -288,7 +286,7 @@ namespace System
         /// </returns>
         public string ToString(string format)
         {
-            return m_value.ToString(format);
+            return _value.ToString(format);
         }
 
         /// <summary>
@@ -301,9 +299,9 @@ namespace System
         /// <returns>
         /// The string representation of the value of this instance as specified by provider.
         /// </returns>
-        public string ToString(IFormatProvider provider)
+        public string ToString(IFormatProvider? provider = null)
         {
-            return m_value.ToString(provider);
+            return _value.ToString(provider);
         }
 
         /// <summary>
@@ -311,15 +309,15 @@ namespace System
         /// specified format and culture-specific format information.
         /// </summary>
         /// <param name="format">A format specification.</param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.
         /// </param>
         /// <returns>
         /// The string representation of the value of this instance as specified by format and provider.
         /// </returns>
-        public string ToString(string format, IFormatProvider provider)
+        public string ToString(string? format, IFormatProvider? formatProvider = null)
         {
-            return m_value.ToString(format, provider);
+            return _value.ToString(format, formatProvider);
         }
 
         /// <summary>
@@ -334,9 +332,9 @@ namespace System
         /// s represents a number less than Int24.MinValue or greater than Int24.MaxValue.
         /// </exception>
         /// <exception cref="FormatException">s is not in the correct format.</exception>
-        public static Int24 Parse(string s)
+        public static i24 Parse(string s)
         {
-            return (Int24)int.Parse(s);
+            return (i24)int.Parse(s);
         }
 
         /// <summary>
@@ -359,9 +357,9 @@ namespace System
         /// s represents a number less than Int24.MinValue or greater than Int24.MaxValue.
         /// </exception>
         /// <exception cref="FormatException">s is not in a format compliant with style.</exception>
-        public static Int24 Parse(string s, NumberStyles style)
+        public static i24 Parse(string s, NumberStyles style)
         {
-            return (Int24)int.Parse(s, style);
+            return (i24)int.Parse(s, style);
         }
 
         /// <summary>
@@ -380,9 +378,9 @@ namespace System
         /// s represents a number less than Int24.MinValue or greater than Int24.MaxValue.
         /// </exception>
         /// <exception cref="FormatException">s is not in the correct format.</exception>
-        public static Int24 Parse(string s, IFormatProvider provider)
+        public static i24 Parse(string s, IFormatProvider provider)
         {
-            return (Int24)int.Parse(s, provider);
+            return (i24)int.Parse(s, provider);
         }
 
         /// <summary>
@@ -409,9 +407,9 @@ namespace System
         /// s represents a number less than Int24.MinValue or greater than Int24.MaxValue.
         /// </exception>
         /// <exception cref="FormatException">s is not in a format compliant with style.</exception>
-        public static Int24 Parse(string s, NumberStyles style, IFormatProvider provider)
+        public static i24 Parse(string s, NumberStyles style, IFormatProvider provider)
         {
-            return (Int24)int.Parse(s, style, provider);
+            return (i24)int.Parse(s, style, provider);
         }
 
         /// <summary>
@@ -435,11 +433,11 @@ namespace System
 
             try
             {
-                result = (Int24)parseResult;
+                result = (i24)parseResult;
             }
             catch
             {
-                result = (Int24)0;
+                result = (i24)0;
                 parseResponse = false;
             }
 
@@ -455,14 +453,14 @@ namespace System
         /// A bitwise combination of System.Globalization.NumberStyles values that indicates the permitted format of s.
         /// A typical value to specify is System.Globalization.NumberStyles.Integer.
         /// </param>
+        /// <param name="provider">
+        /// A <see cref="System.IFormatProvider"/> object that supplies culture-specific formatting information about s.
+        /// </param>
         /// <param name="result">
         /// When this method returns, contains the 24-bit signed integer value equivalent to the number contained in s,
         /// if the conversion succeeded, or zero if the conversion failed. The conversion fails if the s parameter is null,
-        /// is not in a format compliant with style, or represents a number less than Int24.MinValue or greater than
-        /// Int24.MaxValue. This parameter is passed uninitialized.
-        /// </param>
-        /// <param name="provider">
-        /// A <see cref="System.IFormatProvider"/> object that supplies culture-specific formatting information about s.
+        /// is not in a format compliant with style, or represents a number less than i24.MinValue or greater than
+        /// i24.MaxValue. This parameter is passed uninitialized.
         /// </param>
         /// <returns>true if s was converted successfully; otherwise, false.</returns>
         /// <exception cref="ArgumentException">
@@ -473,21 +471,18 @@ namespace System
             string s,
             NumberStyles style,
             IFormatProvider provider,
-            out Int24 result
+            out i24 result
         )
         {
-            int parseResult;
-            bool parseResponse;
-
-            parseResponse = int.TryParse(s, style, provider, out parseResult);
+            var parseResponse = int.TryParse(s, style, provider, out var parseResult);
 
             try
             {
-                result = (Int24)parseResult;
+                result = (i24)parseResult;
             }
             catch
             {
-                result = (Int24)0;
+                result = (i24)0;
                 parseResponse = false;
             }
 
@@ -495,11 +490,11 @@ namespace System
         }
 
         /// <summary>
-        /// Returns the System.TypeCode for value type System.Int32 (there is no defined type code for an Int24).
+        /// Returns the System.TypeCode for value type System.Int32 (there is no defined type code for an i24).
         /// </summary>
         /// <returns>The enumerated constant, System.TypeCode.Int32.</returns>
         /// <remarks>
-        /// There is no defined Int24 type code and since an Int24 will easily fit inside an Int32, the
+        /// There is no defined i24 type code and since an i24 will easily fit inside an Int32, the
         /// Int32 type code is returned.
         /// </remarks>
         public TypeCode GetTypeCode()
@@ -511,79 +506,79 @@ namespace System
 
         // These are explicitly implemented on the native integer implementations, so we do the same...
 
-        bool IConvertible.ToBoolean(IFormatProvider provider)
+        bool IConvertible.ToBoolean(IFormatProvider? provider)
         {
-            return Convert.ToBoolean(m_value, provider);
+            return Convert.ToBoolean(_value, provider);
         }
 
-        char IConvertible.ToChar(IFormatProvider provider)
+        char IConvertible.ToChar(IFormatProvider? provider)
         {
-            return Convert.ToChar(m_value, provider);
+            return Convert.ToChar(_value, provider);
         }
 
-        sbyte IConvertible.ToSByte(IFormatProvider provider)
+        sbyte IConvertible.ToSByte(IFormatProvider? provider)
         {
-            return Convert.ToSByte(m_value, provider);
+            return Convert.ToSByte(_value, provider);
         }
 
-        byte IConvertible.ToByte(IFormatProvider provider)
+        byte IConvertible.ToByte(IFormatProvider? provider)
         {
-            return Convert.ToByte(m_value, provider);
+            return Convert.ToByte(_value, provider);
         }
 
-        short IConvertible.ToInt16(IFormatProvider provider)
+        short IConvertible.ToInt16(IFormatProvider? provider)
         {
-            return Convert.ToInt16(m_value, provider);
+            return Convert.ToInt16(_value, provider);
         }
 
-        ushort IConvertible.ToUInt16(IFormatProvider provider)
+        ushort IConvertible.ToUInt16(IFormatProvider? provider)
         {
-            return Convert.ToUInt16(m_value, provider);
+            return Convert.ToUInt16(_value, provider);
         }
 
-        int IConvertible.ToInt32(IFormatProvider provider)
+        int IConvertible.ToInt32(IFormatProvider? provider)
         {
-            return m_value;
+            return _value;
         }
 
-        uint IConvertible.ToUInt32(IFormatProvider provider)
+        uint IConvertible.ToUInt32(IFormatProvider? provider)
         {
-            return Convert.ToUInt32(m_value, provider);
+            return Convert.ToUInt32(_value, provider);
         }
 
-        long IConvertible.ToInt64(IFormatProvider provider)
+        long IConvertible.ToInt64(IFormatProvider? provider)
         {
-            return Convert.ToInt64(m_value, provider);
+            return Convert.ToInt64(_value, provider);
         }
 
-        ulong IConvertible.ToUInt64(IFormatProvider provider)
+        ulong IConvertible.ToUInt64(IFormatProvider? provider)
         {
-            return Convert.ToUInt64(m_value, provider);
+            return Convert.ToUInt64(_value, provider);
         }
 
-        float IConvertible.ToSingle(IFormatProvider provider)
+        float IConvertible.ToSingle(IFormatProvider? provider)
         {
-            return Convert.ToSingle(m_value, provider);
+            return Convert.ToSingle(_value, provider);
         }
 
-        double IConvertible.ToDouble(IFormatProvider provider)
+        double IConvertible.ToDouble(IFormatProvider? provider)
         {
-            return Convert.ToDouble(m_value, provider);
+            return Convert.ToDouble(_value, provider);
         }
 
-        decimal IConvertible.ToDecimal(IFormatProvider provider)
+        decimal IConvertible.ToDecimal(IFormatProvider? provider)
         {
-            return Convert.ToDecimal(m_value, provider);
+            return Convert.ToDecimal(_value, provider);
         }
 
-        DateTime IConvertible.ToDateTime(IFormatProvider provider)
+        DateTime IConvertible.ToDateTime(IFormatProvider? provider)
         {
-            return Convert.ToDateTime(m_value, provider);
+            return Convert.ToDateTime(_value, provider);
         }
 
-        object IConvertible.ToType(Type type, IFormatProvider provider)
+        object IConvertible.ToType(type conversionType, IFormatProvider? provider)
         {
-            return Convert.ChangeType(m_value, type, provider);
+            return Convert.ChangeType(_value, conversionType, provider);
         }
 
         #endregion
@@ -592,7 +587,7 @@ namespace System
 
         #region [ Operators ]
 
-        // Every effort has been made to make Int24 as cleanly interoperable with Int32 as possible...
+        // Every effort has been made to make i24 as cleanly interoperable with Int32 as possible...
 
         #region [ Comparison Operators ]
 
@@ -602,7 +597,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean value indicating equality.</returns>
-        public static bool operator ==(Int24 value1, Int24 value2)
+        public static bool operator ==(i24 value1, i24 value2)
         {
             return value1.Equals(value2);
         }
@@ -613,7 +608,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean value indicating equality.</returns>
-        public static bool operator ==(int value1, Int24 value2)
+        public static bool operator ==(int value1, i24 value2)
         {
             return value1.Equals((int)value2);
         }
@@ -624,7 +619,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean value indicating equality.</returns>
-        public static bool operator ==(Int24 value1, int value2)
+        public static bool operator ==(i24 value1, int value2)
         {
             return ((int)value1).Equals(value2);
         }
@@ -635,7 +630,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating the result of the inequality.</returns>
-        public static bool operator !=(Int24 value1, Int24 value2)
+        public static bool operator !=(i24 value1, i24 value2)
         {
             return !value1.Equals(value2);
         }
@@ -646,7 +641,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating the result of the inequality.</returns>
-        public static bool operator !=(int value1, Int24 value2)
+        public static bool operator !=(int value1, i24 value2)
         {
             return !value1.Equals((int)value2);
         }
@@ -657,7 +652,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating the result of the inequality.</returns>
-        public static bool operator !=(Int24 value1, int value2)
+        public static bool operator !=(i24 value1, int value2)
         {
             return !((int)value1).Equals(value2);
         }
@@ -668,9 +663,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <(Int24 value1, Int24 value2)
+        public static bool operator <(i24 value1, i24 value2)
         {
-            return (value1.CompareTo(value2) < 0);
+            return value1.CompareTo(value2) < 0;
         }
 
         /// <summary>
@@ -679,9 +674,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <(int value1, Int24 value2)
+        public static bool operator <(int value1, i24 value2)
         {
-            return (value1.CompareTo((int)value2) < 0);
+            return value1.CompareTo((int)value2) < 0;
         }
 
         /// <summary>
@@ -690,9 +685,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <(Int24 value1, int value2)
+        public static bool operator <(i24 value1, int value2)
         {
-            return (value1.CompareTo(value2) < 0);
+            return value1.CompareTo(value2) < 0;
         }
 
         /// <summary>
@@ -701,7 +696,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <=(Int24 value1, Int24 value2)
+        public static bool operator <=(i24 value1, i24 value2)
         {
             return (value1.CompareTo(value2) <= 0);
         }
@@ -712,7 +707,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <=(int value1, Int24 value2)
+        public static bool operator <=(int value1, i24 value2)
         {
             return (value1.CompareTo((int)value2) <= 0);
         }
@@ -723,9 +718,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was less than the right value.</returns>
-        public static bool operator <=(Int24 value1, int value2)
+        public static bool operator <=(i24 value1, int value2)
         {
-            return (value1.CompareTo(value2) <= 0);
+            return value1.CompareTo(value2) <= 0;
         }
 
         /// <summary>
@@ -734,7 +729,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than the right value.</returns>
-        public static bool operator >(Int24 value1, Int24 value2)
+        public static bool operator >(i24 value1, i24 value2)
         {
             return (value1.CompareTo(value2) > 0);
         }
@@ -745,7 +740,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than the right value.</returns>
-        public static bool operator >(int value1, Int24 value2)
+        public static bool operator >(int value1, i24 value2)
         {
             return (value1.CompareTo((int)value2) > 0);
         }
@@ -756,7 +751,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than the right value.</returns>
-        public static bool operator >(Int24 value1, int value2)
+        public static bool operator >(i24 value1, int value2)
         {
             return (value1.CompareTo(value2) > 0);
         }
@@ -767,7 +762,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than or equal to the right value.</returns>
-        public static bool operator >=(Int24 value1, Int24 value2)
+        public static bool operator >=(i24 value1, i24 value2)
         {
             return (value1.CompareTo(value2) >= 0);
         }
@@ -778,7 +773,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than or equal to the right value.</returns>
-        public static bool operator >=(int value1, Int24 value2)
+        public static bool operator >=(int value1, i24 value2)
         {
             return (value1.CompareTo((int)value2) >= 0);
         }
@@ -789,7 +784,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Boolean indicating whether the left value was greater than or equal to the right value.</returns>
-        public static bool operator >=(Int24 value1, int value2)
+        public static bool operator >=(i24 value1, int value2)
         {
             return (value1.CompareTo(value2) >= 0);
         }
@@ -801,101 +796,101 @@ namespace System
         #region [ Explicit Narrowing Conversions ]
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Enum value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(Enum value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(Enum value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">String value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(string value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(string value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Decimal value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(decimal value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(decimal value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Double value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(double value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(double value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Float value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(float value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(float value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Long value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(long value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(long value)
         {
-            return new Int24(Convert.ToInt32(value));
+            return new i24(Convert.ToInt32(value));
         }
 
         /// <summary>
-        /// Explicitly converts value to an <see cref="Int24"/>.
+        /// Explicitly converts value to an <see cref="i24"/>.
         /// </summary>
         /// <param name="value">Integer value that is converted.</param>
-        /// <returns>Int24</returns>
-        public static explicit operator Int24(int value)
+        /// <returns>i24</returns>
+        public static explicit operator i24(int value)
         {
-            return new Int24(value);
+            return new i24(value);
         }
 
         /// <summary>
-        /// Explicitly converts <see cref="Int24"/> to <see cref="Int16"/>.
+        /// Explicitly converts <see cref="i24"/> to <see cref="Int16"/>.
         /// </summary>
-        /// <param name="value">Int24 value that is converted.</param>
+        /// <param name="value">i24 value that is converted.</param>
         /// <returns>Short</returns>
-        public static explicit operator short(Int24 value)
+        public static explicit operator short(i24 value)
         {
             return (short)((int)value);
         }
 
         /// <summary>
-        /// Explicitly converts <see cref="Int24"/> to <see cref="UInt16"/>.
+        /// Explicitly converts <see cref="i24"/> to <see cref="UInt16"/>.
         /// </summary>
-        /// <param name="value">Int24 value that is converted.</param>
+        /// <param name="value">i24 value that is converted.</param>
         /// <returns>Unsigned Short</returns>
-        public static explicit operator ushort(Int24 value)
+        public static explicit operator ushort(i24 value)
         {
             return (ushort)((uint)value);
         }
 
         /// <summary>
-        /// Explicitly converts <see cref="Int24"/> to <see cref="Byte"/>.
+        /// Explicitly converts <see cref="i24"/> to <see cref="Byte"/>.
         /// </summary>
-        /// <param name="value">Int24 value that is converted.</param>
+        /// <param name="value">i24 value that is converted.</param>
         /// <returns>Byte</returns>
-        public static explicit operator byte(Int24 value)
+        public static explicit operator byte(i24 value)
         {
             return (byte)((int)value);
         }
@@ -905,111 +900,111 @@ namespace System
         #region [ Implicit Widening Conversions ]
 
         /// <summary>
-        /// Implicitly converts value to an <see cref="Int24"/>.
+        /// Implicitly converts value to an <see cref="i24"/>.
         /// </summary>
-        /// <param name="value">Byte value that is converted to an <see cref="Int24"/>.</param>
-        /// <returns>An <see cref="Int24"/> value.</returns>
-        public static implicit operator Int24(byte value)
+        /// <param name="value">Byte value that is converted to an <see cref="i24"/>.</param>
+        /// <returns>An <see cref="i24"/> value.</returns>
+        public static implicit operator i24(byte value)
         {
-            return new Int24((int)value);
+            return new i24((int)value);
         }
 
         /// <summary>
-        /// Implicitly converts value to an <see cref="Int24"/>.
+        /// Implicitly converts value to an <see cref="i24"/>.
         /// </summary>
-        /// <param name="value">Char value that is converted to an <see cref="Int24"/>.</param>
-        /// <returns>An <see cref="Int24"/> value.</returns>
-        public static implicit operator Int24(char value)
+        /// <param name="value">Char value that is converted to an <see cref="i24"/>.</param>
+        /// <returns>An <see cref="i24"/> value.</returns>
+        public static implicit operator i24(char value)
         {
-            return new Int24((int)value);
+            return new i24((int)value);
         }
 
         /// <summary>
-        /// Implicitly converts value to an <see cref="Int24"/>.
+        /// Implicitly converts value to an <see cref="i24"/>.
         /// </summary>
-        /// <param name="value">Short value that is converted to an <see cref="Int24"/>.</param>
-        /// <returns>An <see cref="Int24"/> value.</returns>
-        public static implicit operator Int24(short value)
+        /// <param name="value">Short value that is converted to an <see cref="i24"/>.</param>
+        /// <returns>An <see cref="i24"/> value.</returns>
+        public static implicit operator i24(short value)
         {
-            return new Int24((int)value);
+            return new i24((int)value);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="Int32"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="Int32"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="Int32"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="Int32"/>.</param>
         /// <returns>An <see cref="Int32"/> value.</returns>
-        public static implicit operator int(Int24 value)
+        public static implicit operator int(i24 value)
         {
             return ((IConvertible)value).ToInt32(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="UInt32"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="UInt32"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an unsigned integer.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an unsigned integer.</param>
         /// <returns>Unsigned integer</returns>
-        public static implicit operator uint(Int24 value)
+        public static implicit operator uint(i24 value)
         {
             return ((IConvertible)value).ToUInt32(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="Int64"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="Int64"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="Int64"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="Int64"/>.</param>
         /// <returns>An <see cref="Int64"/> value.</returns>
-        public static implicit operator long(Int24 value)
+        public static implicit operator long(i24 value)
         {
             return ((IConvertible)value).ToInt64(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="UInt64"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="UInt64"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="UInt64"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="UInt64"/>.</param>
         /// <returns>An <see cref="UInt64"/> value.</returns>
-        public static implicit operator ulong(Int24 value)
+        public static implicit operator ulong(i24 value)
         {
             return ((IConvertible)value).ToUInt64(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="Double"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="Double"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="Double"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="Double"/>.</param>
         /// <returns>A <see cref="Double"/> value.</returns>
-        public static implicit operator double(Int24 value)
+        public static implicit operator double(i24 value)
         {
             return ((IConvertible)value).ToDouble(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="Single"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="Single"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="Single"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="Single"/>.</param>
         /// <returns>A <see cref="Single"/> value.</returns>
-        public static implicit operator float(Int24 value)
+        public static implicit operator float(i24 value)
         {
             return ((IConvertible)value).ToSingle(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="Decimal"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="Decimal"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="Decimal"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="Decimal"/>.</param>
         /// <returns>A <see cref="Decimal"/> value.</returns>
-        public static implicit operator decimal(Int24 value)
+        public static implicit operator decimal(i24 value)
         {
             return ((IConvertible)value).ToDecimal(null);
         }
 
         /// <summary>
-        /// Implicitly converts <see cref="Int24"/> to <see cref="String"/>.
+        /// Implicitly converts <see cref="i24"/> to <see cref="String"/>.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value that is converted to an <see cref="String"/>.</param>
+        /// <param name="value"><see cref="i24"/> value that is converted to an <see cref="String"/>.</param>
         /// <returns>A <see cref="String"/> value.</returns>
-        public static implicit operator string(Int24 value)
+        public static implicit operator string(i24 value)
         {
             return value.ToString();
         }
@@ -1023,9 +1018,9 @@ namespace System
         /// <summary>
         /// Returns true if value is not zero.
         /// </summary>
-        /// <param name="value">Int24 value to test.</param>
+        /// <param name="value">i24 value to test.</param>
         /// <returns>Boolean to indicate whether the value was not equal to zero.</returns>
-        public static bool operator true(Int24 value)
+        public static bool operator true(i24 value)
         {
             return (value != 0);
         }
@@ -1033,9 +1028,9 @@ namespace System
         /// <summary>
         /// Returns true if value is equal to zero.
         /// </summary>
-        /// <param name="value">Int24 value to test.</param>
+        /// <param name="value">i24 value to test.</param>
         /// <returns>Boolean to indicate whether the value was equal to zero.</returns>
-        public static bool operator false(Int24 value)
+        public static bool operator false(i24 value)
         {
             return (value == 0);
         }
@@ -1043,11 +1038,11 @@ namespace System
         /// <summary>
         /// Returns bitwise complement of value.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value as operand.</param>
-        /// <returns><see cref="Int24"/> as result.</returns>
-        public static Int24 operator ~(Int24 value)
+        /// <param name="value"><see cref="i24"/> value as operand.</param>
+        /// <returns><see cref="i24"/> as result.</returns>
+        public static i24 operator ~(i24 value)
         {
-            return (Int24)ApplyBitMask(~(int)value);
+            return (i24)ApplyBitMask(~(int)value);
         }
 
         /// <summary>
@@ -1055,10 +1050,10 @@ namespace System
         /// </summary>
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
-        /// <returns>Int24 as result of operation.</returns>
-        public static Int24 operator &(Int24 value1, Int24 value2)
+        /// <returns>i24 as result of operation.</returns>
+        public static i24 operator &(i24 value1, i24 value2)
         {
-            return (Int24)ApplyBitMask((int)value1 & (int)value2);
+            return (i24)ApplyBitMask((int)value1 & (int)value2);
         }
 
         /// <summary>
@@ -1067,7 +1062,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer as result of operation.</returns>
-        public static int operator &(int value1, Int24 value2)
+        public static int operator &(int value1, i24 value2)
         {
             return (value1 & (int)value2);
         }
@@ -1078,7 +1073,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer as result of operation.</returns>
-        public static int operator &(Int24 value1, int value2)
+        public static int operator &(i24 value1, int value2)
         {
             return ((int)value1 & value2);
         }
@@ -1088,10 +1083,10 @@ namespace System
         /// </summary>
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
-        /// <returns>Int24 as result of operation.</returns>
-        public static Int24 operator |(Int24 value1, Int24 value2)
+        /// <returns>i24 as result of operation.</returns>
+        public static i24 operator |(i24 value1, i24 value2)
         {
-            return (Int24)ApplyBitMask((int)value1 | (int)value2);
+            return (i24)ApplyBitMask((int)value1 | (int)value2);
         }
 
         /// <summary>
@@ -1100,7 +1095,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer as result of operation.</returns>
-        public static int operator |(int value1, Int24 value2)
+        public static int operator |(int value1, i24 value2)
         {
             return (value1 | (int)value2);
         }
@@ -1111,7 +1106,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer as result of operation.</returns>
-        public static int operator |(Int24 value1, int value2)
+        public static int operator |(i24 value1, int value2)
         {
             return ((int)value1 | value2);
         }
@@ -1122,9 +1117,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer value of the resulting exclusive-OR operation.</returns>
-        public static Int24 operator ^(Int24 value1, Int24 value2)
+        public static i24 operator ^(i24 value1, i24 value2)
         {
-            return (Int24)ApplyBitMask((int)value1 ^ (int)value2);
+            return (i24)ApplyBitMask((int)value1 ^ (int)value2);
         }
 
         /// <summary>
@@ -1133,7 +1128,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer value of the resulting exclusive-OR operation.</returns>
-        public static int operator ^(int value1, Int24 value2)
+        public static int operator ^(int value1, i24 value2)
         {
             return (value1 ^ (int)value2);
         }
@@ -1144,7 +1139,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer value of the resulting exclusive-OR operation.</returns>
-        public static int operator ^(Int24 value1, int value2)
+        public static int operator ^(i24 value1, int value2)
         {
             return ((int)value1 ^ value2);
         }
@@ -1152,23 +1147,23 @@ namespace System
         /// <summary>
         /// Returns value after right shifts of first value by the number of bits specified by second value.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value to shift.</param>
+        /// <param name="value"><see cref="i24"/> value to shift.</param>
         /// <param name="shifts"><see cref="Int32"/> shifts indicates how many places to shift.</param>
-        /// <returns>An <see cref="Int24"/> value.</returns>
-        public static Int24 operator >>(Int24 value, int shifts)
+        /// <returns>An <see cref="i24"/> value.</returns>
+        public static i24 operator >>(i24 value, int shifts)
         {
-            return (Int24)(ApplyBitMask((int)value >> shifts));
+            return (i24)(ApplyBitMask((int)value >> shifts));
         }
 
         /// <summary>
         /// Returns value after left shifts of first value by the number of bits specified by second value.
         /// </summary>
-        /// <param name="value"><see cref="Int24"/> value to shift.</param>
+        /// <param name="value"><see cref="i24"/> value to shift.</param>
         /// <param name="shifts"><see cref="Int32"/> shifts indicates how many places to shift.</param>
-        /// <returns>An <see cref="Int24"/> value.</returns>
-        public static Int24 operator <<(Int24 value, int shifts)
+        /// <returns>An <see cref="i24"/> value.</returns>
+        public static i24 operator <<(i24 value, int shifts)
         {
-            return (Int24)(ApplyBitMask((int)value << shifts));
+            return (i24)(ApplyBitMask((int)value << shifts));
         }
 
         #endregion
@@ -1178,21 +1173,21 @@ namespace System
         /// <summary>
         /// Returns computed remainder after dividing first value by the second.
         /// </summary>
-        /// <param name="value1"><see cref="Int24"/> value as numerator.</param>
-        /// <param name="value2"><see cref="Int24"/> value as denominator.</param>
-        /// <returns><see cref="Int24"/> as remainder</returns>
-        public static Int24 operator %(Int24 value1, Int24 value2)
+        /// <param name="value1"><see cref="i24"/> value as numerator.</param>
+        /// <param name="value2"><see cref="i24"/> value as denominator.</param>
+        /// <returns><see cref="i24"/> as remainder</returns>
+        public static i24 operator %(i24 value1, i24 value2)
         {
-            return (Int24)((int)value1 % (int)value2);
+            return (i24)((int)value1 % (int)value2);
         }
 
         /// <summary>
         /// Returns computed remainder after dividing first value by the second.
         /// </summary>
         /// <param name="value1"><see cref="Int32"/> value as numerator.</param>
-        /// <param name="value2"><see cref="Int24"/> value as denominator.</param>
+        /// <param name="value2"><see cref="i24"/> value as denominator.</param>
         /// <returns><see cref="Int32"/> as remainder</returns>
-        public static int operator %(int value1, Int24 value2)
+        public static int operator %(int value1, i24 value2)
         {
             return (value1 % (int)value2);
         }
@@ -1200,10 +1195,10 @@ namespace System
         /// <summary>
         /// Returns computed remainder after dividing first value by the second.
         /// </summary>
-        /// <param name="value1"><see cref="Int24"/> value as numerator.</param>
+        /// <param name="value1"><see cref="i24"/> value as numerator.</param>
         /// <param name="value2"><see cref="Int32"/> value as denominator.</param>
         /// <returns><see cref="Int32"/> as remainder</returns>
-        public static int operator %(Int24 value1, int value2)
+        public static int operator %(i24 value1, int value2)
         {
             return ((int)value1 % value2);
         }
@@ -1213,10 +1208,10 @@ namespace System
         /// </summary>
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
-        /// <returns>Int24 result of addition.</returns>
-        public static Int24 operator +(Int24 value1, Int24 value2)
+        /// <returns>i24 result of addition.</returns>
+        public static i24 operator +(i24 value1, i24 value2)
         {
-            return (Int24)((int)value1 + (int)value2);
+            return (i24)((int)value1 + (int)value2);
         }
 
         /// <summary>
@@ -1225,7 +1220,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of addition.</returns>
-        public static int operator +(int value1, Int24 value2)
+        public static int operator +(int value1, i24 value2)
         {
             return (value1 + (int)value2);
         }
@@ -1236,7 +1231,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of addition.</returns>
-        public static int operator +(Int24 value1, int value2)
+        public static int operator +(i24 value1, int value2)
         {
             return ((int)value1 + value2);
         }
@@ -1246,10 +1241,10 @@ namespace System
         /// </summary>
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
-        /// <returns>Int24 result of subtraction.</returns>
-        public static Int24 operator -(Int24 value1, Int24 value2)
+        /// <returns>i24 result of subtraction.</returns>
+        public static i24 operator -(i24 value1, i24 value2)
         {
-            return (Int24)((int)value1 - (int)value2);
+            return (i24)((int)value1 - (int)value2);
         }
 
         /// <summary>
@@ -1258,7 +1253,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of subtraction.</returns>
-        public static int operator -(int value1, Int24 value2)
+        public static int operator -(int value1, i24 value2)
         {
             return (value1 - (int)value2);
         }
@@ -1269,7 +1264,7 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of subtraction.</returns>
-        public static int operator -(Int24 value1, int value2)
+        public static int operator -(i24 value1, int value2)
         {
             return ((int)value1 - value2);
         }
@@ -1278,40 +1273,40 @@ namespace System
         /// Returns incremented value.
         /// </summary>
         /// <param name="value">The operand.</param>
-        /// <returns>Int24 result of increment.</returns>
-        public static Int24 operator ++(Int24 value)
+        /// <returns>i24 result of increment.</returns>
+        public static i24 operator ++(i24 value)
         {
-            return (Int24)(value + 1);
+            return (i24)(value + 1);
         }
 
         /// <summary>
         /// Returns decremented value.
         /// </summary>
         /// <param name="value">The operand.</param>
-        /// <returns>Int24 result of decrement.</returns>
-        public static Int24 operator --(Int24 value)
+        /// <returns>i24 result of decrement.</returns>
+        public static i24 operator --(i24 value)
         {
-            return (Int24)(value - 1);
+            return (i24)(value - 1);
         }
 
         /// <summary>
         /// Returns computed product of values.
         /// </summary>
-        /// <param name="value1"><see cref="Int24"/> value as left hand operand.</param>
-        /// <param name="value2"><see cref="Int24"/> value as right hand operand.</param>
-        /// <returns><see cref="Int24"/> as result</returns>
-        public static Int24 operator *(Int24 value1, Int24 value2)
+        /// <param name="value1"><see cref="i24"/> value as left hand operand.</param>
+        /// <param name="value2"><see cref="i24"/> value as right hand operand.</param>
+        /// <returns><see cref="i24"/> as result</returns>
+        public static i24 operator *(i24 value1, i24 value2)
         {
-            return (Int24)((int)value1 * (int)value2);
+            return (i24)((int)value1 * (int)value2);
         }
 
         /// <summary>
         /// Returns computed product of values.
         /// </summary>
         /// <param name="value1"><see cref="Int32"/> value as left hand operand.</param>
-        /// <param name="value2"><see cref="Int24"/> value as right hand operand.</param>
+        /// <param name="value2"><see cref="i24"/> value as right hand operand.</param>
         /// <returns><see cref="Int32"/> as result</returns>
-        public static int operator *(int value1, Int24 value2)
+        public static int operator *(int value1, i24 value2)
         {
             return (value1 * (int)value2);
         }
@@ -1319,12 +1314,12 @@ namespace System
         /// <summary>
         /// Returns computed product of values.
         /// </summary>
-        /// <param name="value1"><see cref="Int24"/> value as left hand operand.</param>
+        /// <param name="value1"><see cref="i24"/> value as left hand operand.</param>
         /// <param name="value2"><see cref="Int32"/> value as right hand operand.</param>
         /// <returns><see cref="Int32"/> as result</returns>
-        public static int operator *(Int24 value1, int value2)
+        public static int operator *(i24 value1, int value2)
         {
-            return ((int)value1 * value2);
+            return (int)value1 * value2;
         }
 
         // Integer division operators
@@ -1334,10 +1329,10 @@ namespace System
         /// </summary>
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
-        /// <returns>Int24 result of operation.</returns>
-        public static Int24 operator /(Int24 value1, Int24 value2)
+        /// <returns>i24 result of operation.</returns>
+        public static i24 operator /(i24 value1, i24 value2)
         {
-            return (Int24)((int)value1 / (int)value2);
+            return (i24)((int)value1 / (int)value2);
         }
 
         /// <summary>
@@ -1346,9 +1341,9 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of operation.</returns>
-        public static int operator /(int value1, Int24 value2)
+        public static int operator /(int value1, i24 value2)
         {
-            return (value1 / (int)value2);
+            return value1 / (int)value2;
         }
 
         /// <summary>
@@ -1357,23 +1352,23 @@ namespace System
         /// <param name="value1">Left hand operand.</param>
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Integer result of operation.</returns>
-        public static int operator /(Int24 value1, int value2)
+        public static int operator /(i24 value1, int value2)
         {
-            return ((int)value1 / value2);
+            return (int)value1 / value2;
         }
 
         //// Standard division operators
-        //public static double operator /(Int24 value1, Int24 value2)
+        //public static double operator /(i24 value1, i24 value2)
         //{
         //    return ((double)value1 / (double)value2);
         //}
 
-        //public static double operator /(int value1, Int24 value2)
+        //public static double operator /(int value1, i24 value2)
         //{
         //    return ((double)value1 / (double)value2);
         //}
 
-        //public static double operator /(Int24 value1, int value2)
+        //public static double operator /(i24 value1, int value2)
         //{
         //    return ((double)value1 / (double)value2);
         //}
@@ -1388,7 +1383,7 @@ namespace System
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Double that is the result of the operation.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced), SpecialName]
-        public static double op_Exponent(Int24 value1, Int24 value2)
+        public static double op_Exponent(i24 value1, i24 value2)
         {
             return Math.Pow((double)value1, (double)value2);
         }
@@ -1400,9 +1395,9 @@ namespace System
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Double that is the result of the operation.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced), SpecialName]
-        public static double op_Exponent(int value1, Int24 value2)
+        public static double op_Exponent(int value1, i24 value2)
         {
-            return Math.Pow((double)value1, (double)value2);
+            return Pow((double)value1, (double)value2);
         }
 
         /// <summary>
@@ -1412,9 +1407,9 @@ namespace System
         /// <param name="value2">Right hand operand.</param>
         /// <returns>Double that is the result of the operation.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced), SpecialName]
-        public static double op_Exponent(Int24 value1, int value2)
+        public static double op_Exponent(i24 value1, int value2)
         {
-            return Math.Pow((double)value1, (double)value2);
+            return Pow((double)value1, (double)value2);
         }
 
         #endregion
@@ -1424,28 +1419,28 @@ namespace System
         #region [ Static ]
 
         /// <summary>
-        /// Represents the largest possible value of an Int24. This field is constant.
+        /// Represents the largest possible value of an i24. This field is constant.
         /// </summary>
-        public static readonly Int24 MaxValue = (Int24)MaxValue32;
+        public static readonly i24 MaxValue = (i24)MaxValue32;
 
         /// <summary>
-        /// Represents the smallest possible value of an Int24. This field is constant.
+        /// Represents the smallest possible value of an i24. This field is constant.
         /// </summary>
-        public static readonly Int24 MinValue = (Int24)MinValue32;
+        public static readonly i24 MinValue = (i24)MinValue32;
 
-        /// <summary>Returns the specified Int24 value as an array of three bytes.</summary>
-        /// <param name="value">Int24 value to convert to bytes.</param>
+        /// <summary>Returns the specified i24 value as an array of three bytes.</summary>
+        /// <param name="value">i24 value to convert to bytes.</param>
         /// <returns>An array of bytes with length 3.</returns>
         /// <remarks>
-        /// <para>You can use this function in-lieu of a System.BitConverter.GetBytes(Int24) function.</para>
+        /// <para>You can use this function in-lieu of a System.BitConverter.GetBytes(i24) function.</para>
         /// <para>Bytes will be returned in endian order of currently executing process architecture (little-endian on Intel platforms).</para>
         /// </remarks>
-        public static byte[] GetBytes(Int24 value)
+        public static byte[] GetBytes(i24 value)
         {
             // We use a 32-bit integer to store 24-bit integer internally
-            byte[] data = new byte[3];
+            var data = new byte[3];
             int valueInt = value;
-            if (BitConverter.IsLittleEndian)
+            if (IsLittleEndian)
             {
                 data[0] = (byte)valueInt;
                 data[1] = (byte)(valueInt >> 8);
@@ -1455,10 +1450,10 @@ namespace System
             {
                 data[0] = (byte)(valueInt >> 16);
                 data[1] = (byte)(valueInt >> 8);
-                data[2] = (byte)(valueInt);
+                data[2] = (byte)valueInt;
             }
 
-            // Return serialized 3-byte representation of Int24
+            // Return serialized 3-byte representation of i24
             return data;
         }
 
@@ -1467,54 +1462,57 @@ namespace System
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 24-bit signed integer formed by three bytes beginning at startIndex.</returns>
         /// <remarks>
-        /// <para>You can use this function in-lieu of a System.BitConverter.ToInt24 function.</para>
+        /// <para>You can use this function in-lieu of a System.BitConverter.Toi24 function.</para>
         /// <para>Bytes endian order assumed to match that of currently executing process architecture (little-endian on Intel platforms).</para>
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> cannot be null.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is greater than <paramref name="value"/> length.</exception>
-        /// <exception cref="ArgumentException"><paramref name="value"/> length from <paramref name="startIndex"/> is too small to represent an <see cref="Int24"/>.</exception>
-        public static Int24 GetValue(byte[] value, int startIndex)
+        /// <exception cref="ArgumentException"><paramref name="value"/> length from <paramref name="startIndex"/> is too small to represent an <see cref="i24"/>.</exception>
+        public static i24 GetValue(byte[] value, int startIndex)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value), "Cannot be null");
             if (startIndex > value.Length)
+            {
                 throw new ArgumentOutOfRangeException(
                     nameof(startIndex),
                     "Cannot be greater than length of value"
                 );
+            }
+
             if (value.Length - startIndex < 3)
+            {
                 throw new ArgumentException(
                     "Array length from startIndex must be at least 3",
                     nameof(value)
                 );
+            }
+
             if (value.Length - startIndex > 3)
+            {
                 throw new ArgumentException(
                     "Array length from startIndex must be no more than 3",
                     nameof(value)
                 );
+            }
+
             if (value.Length == 0)
                 return 0;
-            int valueInt;
-            if (BitConverter.IsLittleEndian)
-            {
-                valueInt =
-                    value[startIndex] | value[startIndex + 1] << 8 | value[startIndex + 2] << 16;
-            }
-            else
-            {
-                valueInt =
-                    value[startIndex] << 16 | value[startIndex + 1] << 8 | value[startIndex + 2];
-            }
+            var valueInt = IsLittleEndian
+                ? value[startIndex] | (value[startIndex + 1] << 8) | (value[startIndex + 2] << 16)
+                : (value[startIndex] << 16) | (value[startIndex + 1] << 8) | value[startIndex + 2];
             // Deserialize value
-            return (Int24)ApplyBitMask(valueInt);
+            return (i24)ApplyBitMask(valueInt);
         }
 
         private static void ValidateNumericRange(int value)
         {
             if (value > (MaxValue32 + 1) || value < MinValue32)
+            {
                 throw new OverflowException(
-                    string.Format("Value of {0} will not fit in a 24-bit signed integer", value)
+                    Format("Value of {0} will not fit in a 24-bit signed integer", value)
                 );
+            }
         }
 
         private static int ApplyBitMask(int value)

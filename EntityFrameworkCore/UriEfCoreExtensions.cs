@@ -39,7 +39,8 @@ public static class UriEfCoreExtensions
             new CreateFunctionOperation(
                 schema,
                 functionName,
-                "@value nvarchar(MAX)",
+                ["@value nvarchar(MAX)"],
+                "bit",
                 typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsUri + _sql)
             )
         );

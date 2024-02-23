@@ -6,6 +6,9 @@
     <PackageReference Include="Dgmjr.EntityFrameworkCore.Constants.All" />
     <PackageReference Include="Dgmjr.EntityFrameworkCore.Migrations" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Vogen" IncludeAssets="All" ExludeAssets="None" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../src/Dgmjr.Primitives.csproj" />
   </ItemGroup>
   <ItemGroup>

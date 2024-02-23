@@ -53,7 +53,8 @@ public static class ObjectIdEfCoreConversionExtensions
             new CreateFunctionOperation(
                 schema,
                 functionName,
-                "@value nvarchar(MAX)",
+                ["@value nvarchar(MAX)"],
+                "bit",
                 typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsValidObjectId + _sql)
             )
         );

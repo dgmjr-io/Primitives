@@ -118,7 +118,7 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
         }
     }
 
-    private const RegexOptions RegexOptions =
+    private const Rxo RegexOptions =
         Compiled | CultureInvariant | IgnoreCase | Singleline | IgnorePatternWhitespace;
 
 #if NET7_0_OR_GREATER
@@ -160,13 +160,13 @@ public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
     public readonly uri ToUri() => IsEmpty ? uri.Empty : uri.From($"tel:{this}");
 
 #if NET6_0_OR_GREATER
-    public static Validation Validate(string s) =>
-        Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
+    public static Validation Validate(string? s) =>
+        s is not null && Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
             ? Validation.Ok
             : Validation.Invalid("Phone number is not valid.");
 #else
-    public static Validation Validate(string s) =>
-        Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
+    public static Validation Validate(string? s) =>
+        s is not null && Util.IsViablePhoneNumber(s) && Regex().IsMatch(s)
             ? Validation.Ok
             : Validation.Invalid("Phone number is not valid.");
 #endif

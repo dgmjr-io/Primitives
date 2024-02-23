@@ -84,7 +84,7 @@ public interface IRegexValueObject<TSelf>
 //     string OriginalString { get; }
 // }
 
-internal record struct RegexValueObject : IRegexValueObject<RegexValueObject>
+internal readonly record struct RegexValueObject : IRegexValueObject<RegexValueObject>
 {
     /// <summary>Gets <inheritdoc cref="RegexString" path="/returns" /></summary>
     /// <returns>the regular expression (as a string), which can be used to parse/validate string versions of the value object</returns>
@@ -142,7 +142,7 @@ internal record struct RegexValueObject : IRegexValueObject<RegexValueObject>
         throw new NotImplementedException();
     }
 
-    public int CompareTo(object obj)
+    public int CompareTo(object? obj)
     {
         throw new NotImplementedException();
     }

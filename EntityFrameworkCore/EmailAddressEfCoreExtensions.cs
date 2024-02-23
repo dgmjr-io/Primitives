@@ -82,7 +82,8 @@ public static class EmailAddressEfCoreExtensions
             new CreateFunctionOperation(
                 schema,
                 functionName,
-                "@value nvarchar(MAX)",
+                ["@value nvarchar(MAX)"],
+                "bit",
                 typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsValidEmailAddress + _sql)
             )
         );

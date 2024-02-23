@@ -40,12 +40,12 @@ public readonly partial record struct iri
     public const string DescriptionString = "an internationalized resource identifier (iri)";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string ExampleStringValue = "urn:example:emoji:🤬😈🤮";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntax.Regex)]
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
@@ -59,7 +59,7 @@ public readonly partial record struct iri
         );
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string EmptyStringValue = "empty:about:🚫";
     public static iri Empty => From(EmptyStringValue);

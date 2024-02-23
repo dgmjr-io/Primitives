@@ -36,12 +36,12 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
     public const string DescriptionString = "a uniform resource name (urn)";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string ExampleStringValue = "urn:isbn:978-951-0-18435-6 ";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntax.Regex)]
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>urn):(?<Namespace:string?>[a-zA-Z0-9][a-zA-Z0-9-]{0,31}):(?<NamespaceSpecificString:string?>(?:.)*)$";
@@ -52,7 +52,7 @@ public readonly partial record struct urn : IRegexValueObject<urn>, IResourceIde
         );
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string EmptyStringValue = "urn:about:blank";
     public static urn Empty => From(EmptyStringValue);

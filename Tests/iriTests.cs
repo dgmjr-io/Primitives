@@ -9,7 +9,7 @@ public partial class iriTests : PrimitivesTests<iri, iriTests>
     public iriTests(ITestOutputHelper output)
         : base(output) { }
 
-    [@StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntax.Regex)]
     private const string RegexString =
         @"^(?<Scheme>
         [a-z][a-z0-9+\-.]*

@@ -50,7 +50,8 @@ public static class UrnEfCoreExtensions
             new CreateFunctionOperation(
                 schema,
                 functionName,
-                "@value nvarchar(MAX)",
+                ["@value nvarchar(MAX)"],
+                "bit",
                 typeof(Constants).Assembly.ReadAssemblyResourceAllText(IsUrn + _sql)
             )
         );

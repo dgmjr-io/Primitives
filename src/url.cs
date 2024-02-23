@@ -41,12 +41,12 @@ public readonly partial record struct url
     public const string DescriptionString = "a uniform resource locator (URL)";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string ExampleStringValue = "https://dgmjr.io/";
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Regex)]
+    [@StringSyntax(StringSyntax.Regex)]
 #endif
     public const string _RegexString =
         @"^(?<Scheme:string?>[^:]+):(?:(?<DoubleSlashes:string?>\/\/)?(?<Authority:string?>(?:(?<UserInfo:string?>(?:[^@]+))@)?(?<Host:string?>(?:[^\/]+))(?::(?<Port:int?>[0-9]+))?)?)?(?<Path:string?>\/(?:[^?]+)?)?(?:\?(?<Query:string?>(?:.+)))?(?:#(?<Fragment:string?>(?:.+?)))?$";
@@ -55,7 +55,7 @@ public readonly partial record struct url
         ("Uniform Resource Locator (URL)", new Uri("https://en.wikipedia.org/wiki/URL"));
 
 #if NET7_0_OR_GREATER
-    [@StringSyntax(StringSyntaxAttribute.Uri)]
+    [@StringSyntax(StringSyntax.Uri)]
 #endif
     public const string EmptyStringValue = "about:blank";
     public static url Empty => From(EmptyStringValue);
