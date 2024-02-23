@@ -10,7 +10,8 @@ public class RegexValueObjectEfCoreConverter<TValueObject> : ValueConverter<TVal
             vo => vo.ToString(),
             v =>
                 IsValid(v) ? From(v) : Empty
-        ) { }
+        )
+    { }
 
     public static TValueObject Empty => (TValueObject)typeof(TValueObject).GetProperty("Empty")!.GetValue(null)!;
 

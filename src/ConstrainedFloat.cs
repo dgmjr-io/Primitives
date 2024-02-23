@@ -30,7 +30,7 @@ public readonly struct ConstrainedFloat
     {
         Range = range;
         Value = value;
-        if(!range.Contains(value))
+        if (!range.Contains(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), $"Value must be within the following values: {Join(", ", range)}.");
         }
@@ -57,12 +57,12 @@ public readonly struct ConstrainedFloat
 
     public override string ToString() => Value.ToString();
 
-    public static cfloat Parse (string s, IFormatProvider? provider) => float.Parse(s, provider);
+    public static cfloat Parse(string s, IFormatProvider? provider) => float.Parse(s, provider);
 
-    public static bool TryParse (string? s, IFormatProvider? provider, out cfloat result)
+    public static bool TryParse(string? s, IFormatProvider? provider, out cfloat result)
     {
         var bResult = float.TryParse(s, Globalization.NumberStyles.Any, provider, out var floatResult);
-        result = bResult ? new (floatResult) : default;
+        result = bResult ? new(floatResult) : default;
         return bResult;
     }
 }
