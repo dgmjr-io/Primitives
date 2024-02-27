@@ -31,7 +31,7 @@ public abstract class ConstrainedFloat<TSelf>
     {
         Range = range;
         Value = value;
-        if(!range.Contains(value))
+        if (!range.Contains(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), $"Value must be within the following values: {Join(", ", range)}.");
         }
@@ -59,9 +59,9 @@ public abstract class ConstrainedFloat<TSelf>
 
     public override string ToString() => Value.ToString();
 
-    public static TSelf Parse (string s, IFormatProvider? provider) => (ConstrainedFloat<TSelf>)float.Parse(s, provider);
+    public static TSelf Parse(string s, IFormatProvider? provider) => (ConstrainedFloat<TSelf>)float.Parse(s, provider);
 
-    public static bool TryParse (string? s, IFormatProvider? provider, out TSelf result)
+    public static bool TryParse(string? s, IFormatProvider? provider, out TSelf result)
     {
         var bResult = float.TryParse(s, Globalization.NumberStyles.Any, provider, out var floatResult);
         result = bResult ? (TSelf)Activator.CreateInstance(typeof(TSelf), floatResult) : default;
