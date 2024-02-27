@@ -1,15 +1,16 @@
 namespace System;
 using System.Numerics;
 
-public readonly struct ConstrainedFloat
+public abstract class ConstrainedFloat<TSelf>
 #if NET7_0_OR_GREATER
-    : IParsable<ConstrainedFloat>
+    : IParsable<TSelf>
 #endif
+    where TSelf : ConstrainedFloat<TSelf>, new()
 {
     private const float DefaultMin = float.MinValue;
     private const float DefaultMax = float.MaxValue;
 
-    public ConstrainedFloat(float value, float min = DefaultMin, float max = DefaultMax)
+    protected ConstrainedFloat(float value, float min = DefaultMin, float max = DefaultMax)
     {
         if (min > max)
         {
@@ -26,7 +27,7 @@ public readonly struct ConstrainedFloat
         Max = max;
     }
 
-    public ConstrainedFloat(float value, float[] range)
+    protected ConstrainedFloat(float value, float[] range)
     {
         Range = range;
         Value = value;
@@ -41,28 +42,29 @@ public readonly struct ConstrainedFloat
     public float Min { get; }
     public float Max { get; }
 
-    public static implicit operator float(cfloat cfloat) => cfloat.Value;
+    public static implicit operator float(ConstrainedFloat<TSelf> cfloat) => cfloat.Value;
 
-    public static implicit operator cfloat(float value) => new(value, float.MinValue, float.MaxValue);
+    public static implicit operator ConstrainedFloat<TSelf>(float value) => (TSelf)Activator.CreateInstance(typeof(TSelf), value);
+    public static implicit operator TSelf(ConstrainedFloat<TSelf> value) => (TSelf)value;
 
-    public static bool operator ==(cfloat left, cfloat right) => left.Equals(right);
+    public static bool operator ==(ConstrainedFloat<TSelf> left, ConstrainedFloat<TSelf> right) => left.Equals(right);
 
-    public static bool operator !=(cfloat left, cfloat right) => !left.Equals(right);
+    public static bool operator !=(ConstrainedFloat<TSelf> left, ConstrainedFloat<TSelf> right) => !left.Equals(right);
 
-    public override bool Equals(object? obj) => obj is cfloat cfloat && Equals(cfloat);
+    public override bool Equals(object? obj) => obj is ConstrainedFloat<TSelf> cfloat && Equals(cfloat);
 
-    public bool Equals(cfloat other) => Value == other.Value;
+    public bool Equals(ConstrainedFloat<TSelf> other) => Value == other.Value;
 
     public override int GetHashCode() => HashCode.Combine(Value, Min, Max, Range);
 
     public override string ToString() => Value.ToString();
 
-    public static cfloat Parse (string s, IFormatProvider? provider) => float.Parse(s, provider);
+    public static TSelf Parse (string s, IFormatProvider? provider) => (ConstrainedFloat<TSelf>)float.Parse(s, provider);
 
-    public static bool TryParse (string? s, IFormatProvider? provider, out cfloat result)
+    public static bool TryParse (string? s, IFormatProvider? provider, out TSelf result)
     {
         var bResult = float.TryParse(s, Globalization.NumberStyles.Any, provider, out var floatResult);
-        result = bResult ? new (floatResult) : default;
+        result = bResult ? (TSelf)Activator.CreateInstance(typeof(TSelf), floatResult) : default;
         return bResult;
     }
 }

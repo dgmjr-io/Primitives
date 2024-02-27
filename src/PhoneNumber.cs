@@ -33,7 +33,7 @@ using Validation = global::Validation;
 /// </summary>
 [ValueObject(typeof(string), conversions: Conversions.SystemTextJson | Conversions.TypeConverter)]
 [StructLayout(LayoutKind.Auto)]
-[PhoneNumber.JConverter]
+// [PhoneNumber.JConverter]
 public partial record struct PhoneNumber : IRegexValueObject<PhoneNumber>
 {
     /// <summary>
