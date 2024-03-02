@@ -31,7 +31,7 @@ public abstract class ConstrainedDouble<TSelf>
     {
         Range = range;
         Value = value;
-        if(!range.Contains(value))
+        if (!range.Contains(value))
         {
             throw new ArgumentOutOfRangeException(nameof(value), $"Value must be within the following values: {Join(", ", range)}.");
         }
