@@ -94,7 +94,7 @@ public static class PhoneNumberEfCoreExtensions
     {
         tableBuilder.HasCheckConstraint(
             ck_ + columnName,
-            $"[{schema}].[{functionName}]({columnName}) = 1"
+            $"[{columnName}] = '' OR [{columnName}] IS NULL OR [{schema}].[{functionName}]([{columnName}]) = 1"
         );
         return tableBuilder;
     }

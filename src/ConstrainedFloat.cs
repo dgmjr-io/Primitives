@@ -3,7 +3,7 @@ using System.Numerics;
 
 public abstract class ConstrainedFloat<TSelf>
 #if NET7_0_OR_GREATER
-    : IParsable<TSelf>
+    // : IParsable<TSelf>
 #endif
     where TSelf : ConstrainedFloat<TSelf>, new()
 {
@@ -42,10 +42,10 @@ public abstract class ConstrainedFloat<TSelf>
     public float Min { get; }
     public float Max { get; }
 
-    public static implicit operator float(ConstrainedFloat<TSelf> cfloat) => cfloat.Value;
+    // public static implicit operator float(ConstrainedFloat<TSelf> cfloat) => cfloat.Value;
 
-    public static implicit operator ConstrainedFloat<TSelf>(float value) => (TSelf)Activator.CreateInstance(typeof(TSelf), value);
-    public static implicit operator TSelf(ConstrainedFloat<TSelf> value) => (TSelf)value;
+    // public static implicit operator ConstrainedFloat<TSelf>(float? value) => (TSelf)Activator.CreateInstance(typeof(TSelf), value);
+    // public static implicit operator TSelf(ConstrainedFloat<TSelf> value) => (TSelf)value;
 
     public static bool operator ==(ConstrainedFloat<TSelf> left, ConstrainedFloat<TSelf> right) => left.Equals(right);
 
@@ -59,12 +59,12 @@ public abstract class ConstrainedFloat<TSelf>
 
     public override string ToString() => Value.ToString();
 
-    public static TSelf Parse (string s, IFormatProvider? provider) => (ConstrainedFloat<TSelf>)float.Parse(s, provider);
+    // public static TSelf Parse (string s, IFormatProvider? provider) => (ConstrainedFloat<TSelf>)float.Parse(s, provider);
 
-    public static bool TryParse (string? s, IFormatProvider? provider, out TSelf result)
-    {
-        var bResult = float.TryParse(s, Globalization.NumberStyles.Any, provider, out var floatResult);
-        result = bResult ? (TSelf)Activator.CreateInstance(typeof(TSelf), floatResult) : default;
-        return bResult;
-    }
+    // public static bool TryParse (string? s, IFormatProvider? provider, out TSelf result)
+    // {
+    //     var bResult = float.TryParse(s, Globalization.NumberStyles.Any, provider, out var floatResult);
+    //     result = bResult ? (TSelf)Activator.CreateInstance(typeof(TSelf), floatResult) : default;
+    //     return bResult;
+    // }
 }
