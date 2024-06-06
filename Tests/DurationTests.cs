@@ -33,25 +33,25 @@ public class DurationTests(ITestOutputHelper output) : BaseTest(output)
         [
             [
                 "-P12DT13H27M12S",
-                - new duration(12, 13, 27, 12)
+                -new duration(12, 13, 27, 12)
             ],
-            [ "-PT525600M", duration.FromMinutes(-525600) ],
-            [ "PT525600M", duration.FromMinutes(525600) ]
+            [ "-PT525600M", duration.FromMinutes(-525600)],
+            [ "PT525600M", duration.FromMinutes(525600)]
         ];
 
     public static IEnumerable<object[]> YearMonthDurationTestData =>
         [
-            [ "P1Y", duration.FromDays(YearMonthDuration.DaysPerYear) ],
-            [ "-P1Y", duration.FromDays(-YearMonthDuration.DaysPerYear) ],
-            [ "P1M", duration.FromDays(YearMonthDuration.DaysPerMonth) ],
-            [ "-P1M", duration.FromDays(-YearMonthDuration.DaysPerMonth) ],
-            [ "P1Y1M", duration.FromDays(YearMonthDuration.DaysPerYear + YearMonthDuration.DaysPerMonth) ],
-            [ "-P1Y1M", duration.FromDays(-(YearMonthDuration.DaysPerYear + YearMonthDuration.DaysPerMonth)) ],
-            [ "P6500Y1M", duration.FromDays((6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth) ],
-            [ "-P6500Y1M", duration.FromDays(((6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth) * -1) ],
-            [ "P1Y3M", duration.FromDays(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth)) ],
-            [ "-P1Y3M", duration.FromDays(-(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth))) ],
-            [ "P3M", duration.FromDays(90) ],
+            ["P1Y", duration.FromDays(YearMonthDuration.DaysPerYear)],
+            [ "-P1Y", duration.FromDays(-YearMonthDuration.DaysPerYear)],
+            [ "P1M", duration.FromDays(YearMonthDuration.DaysPerMonth)],
+            [ "-P1M", duration.FromDays(-YearMonthDuration.DaysPerMonth)],
+            [ "P1Y1M", duration.FromDays(YearMonthDuration.DaysPerYear + YearMonthDuration.DaysPerMonth)],
+            [ "-P1Y1M", duration.FromDays(-(YearMonthDuration.DaysPerYear + YearMonthDuration.DaysPerMonth))],
+            [ "P6500Y1M", duration.FromDays((6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth)],
+            [ "-P6500Y1M", duration.FromDays(((6500 * YearMonthDuration.DaysPerYear) + YearMonthDuration.DaysPerMonth) * -1)],
+            [ "P1Y3M", duration.FromDays(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth))],
+            [ "-P1Y3M", duration.FromDays(-(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth)))],
+            [ "P3M", duration.FromDays(90)],
             [
                 "-P6500Y1M",
                 duration.FromDays(
@@ -74,6 +74,6 @@ public class DurationTests(ITestOutputHelper output) : BaseTest(output)
                     -(YearMonthDuration.DaysPerYear + (3 * YearMonthDuration.DaysPerMonth))
                 )
             ],
-            [ "P3M", duration.FromDays(90) ]
+            [ "P3M", duration.FromDays(90)]
         ];
 }
