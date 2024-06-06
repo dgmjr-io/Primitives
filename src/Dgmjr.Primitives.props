@@ -16,6 +16,6 @@
     <Using Include="System" />
     <Using Include="System.Text.RegularExpressions.RegexOptions" Alias="Rxo" />
     <Using Include="System.Text.RegularExpressions.Regex" Alias="Regx" />
-    <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives' And '$(MSBuildProjectName)' != 'Dgmjr.Primitives.EntityFrameworkCore'" />
+    <Compile Include="$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs" Condition="'$(MSBuildProjectName)' != 'Dgmjr.Primitives' And '$(MSBuildProjectName)' != 'Dgmjr.Primitives.EntityFrameworkCore' And Exists('$(MSBuildThisFileDirectory)PrimitivesGlobalUsings.cs')" />
   </ItemGroup>
 </Project>
