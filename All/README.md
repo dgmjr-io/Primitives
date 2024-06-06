@@ -1,4 +1,5 @@
 ---
+
 title: DGMJR All Primitives Metapackage
 lastmod: 2023-38-07T22:38:16.7505-05:00Z
 date: 2023-38-07T22:38:16.7507-05:00Z
@@ -25,7 +26,7 @@ keywords:
 - xri
 - iri
 type: readme
----
+------------
 
 # DGMJR All Primitives Metapackage
 
